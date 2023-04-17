@@ -11,23 +11,21 @@ import makeStyles from './styles';
 type Props = {
   onPressEdit?: any;
   onPressDelete?: any;
-  bankName?: String;
-  accountTitle?: String;
-  accountNumber?: String;
-  accountType?: String;
-  ifscCode?: String;
-  branch?: String;
+  title?: String;
+  subTitle?: String;
+  price?: String;
+  icon?: any;
+  srNo?: String;
 };
 
 const PaymentMethodCard = ({
   onPressEdit,
   onPressDelete,
-  bankName,
-  accountTitle,
-  accountNumber,
-  accountType,
-  ifscCode,
-  branch,
+  title,
+  subTitle,
+  price,
+  icon,
+  srNo,
 }: Props) => {
   const navigations = useNavigation();
   const {colors} = useTheme();
@@ -36,32 +34,19 @@ const PaymentMethodCard = ({
     <View style={styles.main}>
       <View
         style={{
-          width: '100%',
           flexDirection: 'row',
-          justifyContent: 'space-between',
+          alignItems: 'center',
         }}>
-        <Text style={styles.middleText}>{bankName}</Text>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            width: '20%',
-          }}>
-          <Icon name="edit" size={20} color="#fff" onPress={onPressEdit} />
-          <AntIcon
-            name="delete"
-            size={22}
-            color="red"
-            onPress={onPressDelete}
-          />
+        <View style={styles.circleView}>{icon}</View>
+        <View style={{marginLeft: 10}}>
+          <Text style={styles.middleText}>{title}</Text>
+          <View style={{flexDirection: 'row'}}>
+            <Text style={[styles.detailText, {width: '50%'}]}>{subTitle}</Text>
+            <Text style={styles.detailText}>{srNo}</Text>
+          </View>
         </View>
       </View>
-
-      <Text style={styles.detailText}>{accountTitle}</Text>
-      <Text style={styles.headingText}>{accountNumber}</Text>
-      <Text style={styles.entityText}>IFSC Code: {ifscCode}</Text>
-      <Text style={styles.entityText}>Account Type: {accountType}</Text>
-      <Text style={styles.entityText}>Branch Name: {branch}</Text>
+      <Text style={styles.headingText}>{price}</Text>
     </View>
   );
 };

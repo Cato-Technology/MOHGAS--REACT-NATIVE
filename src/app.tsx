@@ -18,8 +18,8 @@ const App = () => {
             : 'light-content'
         }
       />
-      <SafeAreaView style={{flex: 0, backgroundColor: '#272828'}} />
-      <SafeAreaView style={{flex: 1, backgroundColor: '#272828'}}>
+      <SafeAreaView style={{flex: 0, backgroundColor: '#f3faf5'}} />
+      <SafeAreaView style={{flex: 1, backgroundColor: '#ffffff'}}>
         <Router />
       </SafeAreaView>
       {/* </MenuProvider> */}

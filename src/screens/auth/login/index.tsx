@@ -32,7 +32,6 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import colors from '../../../utils/themes/light-colors';
 // import i18next from 'i18next';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 export const PASS_REGIX =

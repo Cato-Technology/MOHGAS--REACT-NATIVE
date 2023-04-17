@@ -9,3 +9,4 @@ export {default as AmountPickerView} from './amount-picker-view';
 export {default as DatePickerModal} from './date-picker-modal';
 export {default as EditProfileModal} from './edit-profile-menu';
 export {default as DeleteModal} from './delete-modal';
+export {default as PaymentMethodCard} from './payment-method-card';

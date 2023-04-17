@@ -8,35 +8,46 @@ import {
 export const makeStyles = (colors: any) =>
   StyleSheet.create({
     main: {
-      height: heightPercentageToDP(18),
       marginTop: heightPercentageToDP(2),
       paddingHorizontal: widthPercentageToDP(3),
       paddingVertical: heightPercentageToDP(1),
-      backgroundColor: colors.cardBackground,
       borderRadius: widthPercentageToDP(2),
+      width: '100%',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
     },
 
     entityText: {
-      color: colors.disable,
+      color: '#000000',
       marginTop: 2,
       //fontFamily: 'Poppins-SemiBold',
     },
     middleText: {
-      color: colors.text,
+      color: '#000000',
       marginTop: 2,
+
       //fontFamily: 'Poppins-SemiBold',
     },
     detailText: {
-      width: '100%',
-      color: colors.text,
+      color: 'gray',
       marginTop: 2,
+      fontSize: 9,
+
       //fontFamily: 'Poppins-Regular',
     },
     headingText: {
-      width: '100%',
-      color: colors.text,
-      marginTop: 2,
-      fontFamily: 'Poppins-Bold',
+      color: '#000000',
+      marginTop: 12,
+
+      //fontFamily: 'Poppins-Bold',
+    },
+    circleView: {
+      backgroundColor: '#e0eff8',
+      width: 40,
+      height: 40,
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderRadius: 50,
     },
   });
 export default makeStyles;
