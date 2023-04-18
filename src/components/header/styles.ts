@@ -8,8 +8,7 @@ export const makeStyles = (colors: any) =>
       height: 50,
       width: '100%',
       alignItems: 'center',
-      paddingHorizontal: 10,
-      backgroundColor: colors.primary,
+
       //  shadowColor: '#000',
       // shadowOffset: {width: 1, height: 1},
       shadowOpacity: 0.4,
@@ -24,10 +23,15 @@ export const makeStyles = (colors: any) =>
       alignItems: 'center',
     },
     title: {
-      marginLeft: 5,
-      fontSize: RFValue(16),
+      fontSize: RFValue(24),
+      fontWeight: 'bold',
       color: colors.yellowHeading,
-      fontFamily: 'Poppins-Bold',
+      //  fontFamily: 'Poppins-Bold',
+    },
+    subTitle: {
+      fontSize: RFValue(9),
+      fontWeight: 'bold',
+      color: colors.yellowHeading,
     },
   });
 export default makeStyles;

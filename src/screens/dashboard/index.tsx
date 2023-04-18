@@ -29,7 +29,7 @@ import {
   // PhoneNumber,
   CheckBox,
   InputWithLabel,
-  PaymentMethodCard,
+  DetailCard,
 } from '../../components';
 
 import SCREENS from '../../utils/constants';
@@ -159,7 +159,8 @@ export default function DashBoard({navigation}) {
         </View>
 
         <View style={{paddingHorizontal: 20}}>
-          <View
+          <TouchableOpacity
+            onPress={() => navigation.navigate(SCREENS.ORDER_HISTORY)}
             style={{
               width: '100%',
               flexDirection: 'row',
@@ -169,11 +170,11 @@ export default function DashBoard({navigation}) {
             <Text style={{color: 'gray'}}>
               View All <Icon6 name="arrowright" size={10} color="gray" />{' '}
             </Text>
-          </View>
+          </TouchableOpacity>
           <FlatList
             data={[1, 2, 3, 4, 5, 6, 7]}
             renderItem={({item, index}) => (
-              <PaymentMethodCard
+              <DetailCard
                 title={'Top Up - LPG 25kg'}
                 subTitle={'Today - 02.15 PM'}
                 price={'N12.34'}

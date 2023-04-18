@@ -15,6 +15,9 @@ import HomeNavigator from './home-navigator';
 import Chat from '../screens/chat';
 import Mail from '../screens/mail';
 import Profile from '../screens/profile';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon2 from 'react-native-vector-icons/Entypo';
+import Icon3 from 'react-native-vector-icons/Ionicons';
 
 const Tab = createBottomTabNavigator();
 
@@ -37,7 +40,7 @@ const BottomTabNavigator = () => {
         tabBarLabel: ({focused}) => (
           <Text
             style={{
-              color: focused ? '#f9d649' : '#a38630',
+              color: focused ? '#4ca757' : 'gray',
               fontSize: 9,
               paddingBottom: 5,
             }}>
@@ -73,47 +76,51 @@ const BottomTabNavigator = () => {
       <Tab.Screen
         name={'Home'}
         component={HomeNavigator}
-        // options={{
-        //   tabBarIcon: ({focused}) => (
-        //     <MatchesIcon fill={focused ? '#f9d649' : '#a38630'} />
-        //   ),
-        // }}
+        options={{
+          tabBarIcon: ({focused}) => (
+            <Icon name="home" size={30} color={focused ? '#4ca757' : 'gray'} />
+          ),
+        }}
       />
       {/* <Tab.Screen
         name={SCREENS.SPORTS}
         component={SportsNavigator}
         options={{
           tabBarIcon: ({focused}) => (
-            <SportIcon fill={focused ? '#f9d649' : '#a38630'} />
+            <SportIcon fill={focused ? '#4ca757' : 'gray'} />
           ),
         }}
       /> */}
       <Tab.Screen
         name={SCREENS.CHAT}
         component={Chat}
-        // options={{
-        //   tabBarIcon: ({focused}) => (
-        //     <BetIcon fill={focused ? '#f9d649' : '#a38630'} />
-        //   ),
-        // }}
+        options={{
+          tabBarIcon: ({focused}) => (
+            <Icon2 name="chat" size={26} color={focused ? '#4ca757' : 'gray'} />
+          ),
+        }}
       />
       <Tab.Screen
         name={SCREENS.MAIL}
         component={Mail}
-        // options={{
-        //   tabBarIcon: ({focused}) => (
-        //     <NewsIcon fill={focused ? '#f9d649' : '#a38630'} />
-        //   ),
-        // }}
+        options={{
+          tabBarIcon: ({focused}) => (
+            <Icon name="bell" size={24} color={focused ? '#4ca757' : 'gray'} />
+          ),
+        }}
       />
       <Tab.Screen
         name={SCREENS.PROFILE}
         component={Profile}
-        // options={{
-        //   tabBarIcon: ({focused}) => (
-        //     <ProfileIcon fill={focused ? '#f9d649' : '#a38630'} />
-        //   ),
-        // }}
+        options={{
+          tabBarIcon: ({focused}) => (
+            <Icon3
+              name="person"
+              size={24}
+              color={focused ? '#4ca757' : 'gray'}
+            />
+          ),
+        }}
       />
     </Tab.Navigator>
   );

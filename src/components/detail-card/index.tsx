@@ -18,7 +18,7 @@ type Props = {
   srNo?: String;
 };
 
-const PaymentMethodCard = ({
+const DetailCard = ({
   onPressEdit,
   onPressDelete,
   title,
@@ -41,7 +41,7 @@ const PaymentMethodCard = ({
         <View style={{marginLeft: 10}}>
           <Text style={styles.middleText}>{title}</Text>
           <View style={{flexDirection: 'row'}}>
-            <Text style={[styles.detailText, {width: '50%'}]}>{subTitle}</Text>
+            <Text style={[styles.detailText, {width: '60%'}]}>{subTitle}</Text>
             <Text style={styles.detailText}>{srNo}</Text>
           </View>
         </View>
@@ -51,4 +51,4 @@ const PaymentMethodCard = ({
   );
 };
 
-export default PaymentMethodCard;
+export default DetailCard;

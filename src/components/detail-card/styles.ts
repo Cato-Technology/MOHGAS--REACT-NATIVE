@@ -9,7 +9,7 @@ export const makeStyles = (colors: any) =>
   StyleSheet.create({
     main: {
       marginTop: heightPercentageToDP(2),
-      paddingHorizontal: widthPercentageToDP(3),
+
       paddingVertical: heightPercentageToDP(1),
       borderRadius: widthPercentageToDP(2),
       width: '100%',
