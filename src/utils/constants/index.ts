@@ -1,6 +1,7 @@
 export default {
   // Auth
   SPLASH: 'SPLASH',
+  ONBOARD: 'ONBOARD',
   LOGIN: 'LOGIN',
   SIGNUP: 'SIGNUP',
 

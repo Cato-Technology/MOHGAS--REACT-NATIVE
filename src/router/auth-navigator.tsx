@@ -2,6 +2,8 @@ import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Login from '../screens/auth/login';
 import SCREENS from '../utils/constants';
+import BottomTabNavigator from './bottom-tab-navigator';
+import OnBoard from '../screens/on-board';
 
 const Stack = createNativeStackNavigator();
 
@@ -12,6 +14,7 @@ const AuthNavigator = () => {
       screenOptions={{
         headerShown: false,
       }}>
+      <Stack.Screen name={SCREENS.ONBOARD} component={OnBoard} />
       <Stack.Screen name={SCREENS.LOGIN} component={Login} />
     </Stack.Navigator>
   );
