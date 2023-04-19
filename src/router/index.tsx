@@ -13,6 +13,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import AuthContext from '../utils/auth-context';
 import SCREENS from '../utils/constants';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import Splash from '../screens/splash';
 const Router = () => {
   const Stack = createNativeStackNavigator();
   const scheme = useColorScheme();
@@ -114,6 +115,10 @@ const Router = () => {
     }),
     [],
   );
+  if (state.isLoading) {
+    // We haven't finished checking for the token yet
+    return <Splash />;
+  }
   return (
     <AuthContext.Provider value={{authContext, userData, setUserData}}>
       <NavigationContainer theme={scheme === 'dark' ? MyDarkTheme : MyThemes}>
