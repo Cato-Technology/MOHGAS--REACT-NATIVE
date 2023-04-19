@@ -1,8 +1,7 @@
 import {Text, View} from 'react-native';
 import React from 'react';
 import {useTheme} from 'react-native-paper';
-
-import {GradientButton} from '../buttons/gradient-button';
+import GradientButton from '../../components/buttons/gradient-button';
 
 import styles from './styles';
 

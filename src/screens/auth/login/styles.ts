@@ -13,6 +13,11 @@ export const makeStyles = (colors: any) =>
       flex: 1,
       backgroundColor: colors.primary,
     },
+    logo: {
+      marginTop: 100,
+      width: 250,
+      height: 250,
+    },
     icon: {
       overflow: 'hidden',
       width: 500,

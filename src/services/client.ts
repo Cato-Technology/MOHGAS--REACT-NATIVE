@@ -1,12 +1,12 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import Config from 'react-native-config';
+//import Config from 'react-native-config';
 
 const request = axios.create({
-  baseURL: Config.BASE_URL,
+  baseURL: 'https://admin.mohgasapp.com',
   headers: {
-    'Content-Type': 'application/json',
     Accept: 'application/json',
+    'Content-Type': 'multipart/form-data',
   },
 });
 
