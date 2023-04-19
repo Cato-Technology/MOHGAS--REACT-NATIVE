@@ -16,10 +16,6 @@ const AuthNavigator = () => {
       }}>
       <Stack.Screen name={SCREENS.ONBOARD} component={OnBoard} />
       <Stack.Screen name={SCREENS.LOGIN} component={Login} />
-      <Stack.Screen
-        name={SCREENS.MAIN_NAVIGATOR}
-        component={BottomTabNavigator}
-      />
     </Stack.Navigator>
   );
 };

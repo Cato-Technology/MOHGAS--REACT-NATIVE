@@ -13,7 +13,12 @@ const AppNavigator = () => {
       // initialRouteName={SCREENS.SPLASH}
       screenOptions={{
         headerShown: false,
-      }}></Stack.Navigator>
+      }}>
+      <Stack.Screen
+        name={SCREENS.MAIN_NAVIGATOR}
+        component={BottomTabNavigator}
+      />
+    </Stack.Navigator>
   );
 };
 

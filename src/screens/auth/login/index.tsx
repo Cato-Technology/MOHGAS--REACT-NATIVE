@@ -40,6 +40,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import AuthContext from '../../../utils/auth-context';
 import {useTheme} from '@react-navigation/native';
 import GradientButton from '../../../components/buttons/gradient-button';
+import {authService} from '../../../services';
+import ErrorModal from '../../../components/error-modal';
+import Logo from '../../../assets/images/logo.png';
 export default function Login({navigation}) {
   const {colors} = useTheme();
   const styles = makeStyles(colors);
@@ -49,20 +52,43 @@ export default function Login({navigation}) {
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState(false);
   const [checked, setChecked] = useState(false);
+  const [loader, setLoader] = useState(false);
 
   const handleLogin = async () => {
-    Keyboard.dismiss();
+    try {
+      setLoader(true);
+      let data = new FormData();
+      data.append('email', userName);
+      data.append('password', password);
+      data.append('firebase_token', 'bfbdf');
+      data.append('device_name', 'gfbdf');
 
-    navigation.navigate(SCREENS.MAIN_NAVIGATOR);
+      const result = await authService.login(data);
+      console.log('result', result);
+
+      if (result?.status == '0') {
+        setLoader(false);
+        setLoginError(true);
+      }
+      if (result?.message == 'Login Success') {
+        await AsyncStorage.setItem('token', result?.message);
+        authContext.setUserData(result?.response);
+        auth.authContext.signIn(result?.message);
+        setLoader(false);
+      }
+    } catch (e) {
+      setLoader(false);
+      console.log('error', e);
+    }
   };
 
   return (
     <View style={styles.container}>
-      <ActivityIndicator visible={false} />
-      {/* <ErrorModal
+      <ActivityIndicator visible={loader} />
+      <ErrorModal
         onPress={() => setLoginError(!loginError)}
         visible={loginError}
-      /> */}
+      />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={{flex: 1}}>
@@ -74,7 +100,7 @@ export default function Login({navigation}) {
               alignItems: 'center',
             }}>
             <View style={styles.icon}>
-              <Text style={{marginTop: 100}}>LOGO</Text>
+              <Image style={styles.logo} source={Logo} />
             </View>
           </View>
           <View style={{marginTop: 230, paddingHorizontal: 25}}>

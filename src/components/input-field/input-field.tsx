@@ -94,7 +94,7 @@ const makeStyles = (colors: any) =>
 
       alignContent: 'center',
       width: '100%',
-      color: '#fff',
+      color: '#000000',
       //fontFamily: 'Poppins-Regular',
     },
   });
