@@ -18,7 +18,7 @@ export const makeStyles = (colors: any) =>
     errorContainer: {
       width: '100%',
       paddingVertical: heightPercentageToDP(0.3),
-      // paddingHorizontal: widthPercentageToDP(4),
+      paddingHorizontal: widthPercentageToDP(4),
       backgroundColor: colors.danger,
       borderBottomLeftRadius: widthPercentageToDP(2),
       borderBottomRightRadius: widthPercentageToDP(2),

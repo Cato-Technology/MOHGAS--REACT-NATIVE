@@ -5,7 +5,7 @@ import colors from '../../utils/themes/light-colors';
 export default StyleSheet.create({
   countryPickerView: {
     alignSelf: 'center',
-    backgroundColor: colors.inputBg,
+    backgroundColor: '#f9f9f9',
     justifyContent: 'flex-start',
     borderRadius: 9,
     alignContent: 'center',

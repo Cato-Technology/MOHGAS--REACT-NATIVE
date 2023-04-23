@@ -25,12 +25,10 @@ export default function (props: Props) {
   const {width, placeholder} = props;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [preferredCountries, setPreferredCountries] = useState([
-    'MY',
-    'PH',
-    'SG',
-    'ID',
-    'TH',
-    'VN',
+    'NG',
+    'NE',
+    'CM',
+    'BJ',
   ]);
 
   const onSelect = (Country: any) => {

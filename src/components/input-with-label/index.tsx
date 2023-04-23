@@ -50,6 +50,7 @@ const InputWithLabel = ({
   const styles = makeStyles(colors);
 
   const ifLabelSize = labelFontSize ? {fontSize: RFValue(labelFontSize)} : {};
+  console.log('errr', error);
 
   return (
     <>

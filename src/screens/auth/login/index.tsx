@@ -145,7 +145,9 @@ export default function Login({navigation}) {
                   <Text style={styles.tcTextStyle}>Remember me</Text>
                 </View>
               </View>
-              <Text style={[styles.tcTextStyle, {color: '#4ca757'}]}>
+              <Text
+                onPress={() => navigation.navigate(SCREENS.FORGET_PASSWORLD)}
+                style={[styles.tcTextStyle, {color: '#4ca757'}]}>
                 Forgot Password?
               </Text>
             </View>
@@ -155,9 +157,17 @@ export default function Login({navigation}) {
               disabled={false}
               title={'Login'}
             />
+            <Text
+              onPress={() => navigation.navigate(SCREENS.SIGNUP_CUSTOMER)}
+              style={[styles.centerText, {fontSize: RFValue(12)}]}>
+              Register as Customer
+            </Text>
 
             <Text style={styles.centerText}>Or</Text>
-            <Text style={styles.centerText}>Connect With</Text>
+            <Text style={[styles.centerText, {fontSize: RFValue(12)}]}>
+              Register as Vendor
+            </Text>
+            {/* <Text style={styles.centerText}>Connect With</Text>
             <View style={{width: '100%', alignItems: 'center'}}>
               <View
                 style={{
@@ -189,7 +199,7 @@ export default function Login({navigation}) {
                   <Text style={styles.centerViewText}>Phone</Text>
                 </View>
               </View>
-            </View>
+            </View> */}
           </View>
         </ScrollView>
       </KeyboardAvoidingView>

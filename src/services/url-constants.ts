@@ -1,7 +1,7 @@
 const API_URLS = {
   //Auth constants
   LOGIN: '/Api/login',
-  DASHBOARD: '/api/matches/match-board',
+  SIGNUP: '/Api/user_register',
   SESSIONS: 'api/session',
   PROFILE: 'api/users/getProfile',
   UPDATEPROFILE: 'api/users/update-profile',

@@ -4,7 +4,7 @@ import {UserResponse} from '../redux/types/auth/auth-types';
 //import { ErrorResponse } from 'types/ErrorResponse';
 //import { setAuthAsyncStorage } from '../async-storage/auth-async-storage';
 import client from './client';
-import {API_URLS} from './url-constants';
+import {API_URLS} from '../../src/services/url-constants';
 //import {store} from '../redux';
 
 function login(data: any) {
@@ -30,7 +30,31 @@ function login(data: any) {
       });
   });
 }
+function signUp(data: any) {
+  console.log('data', data);
+
+  return new Promise<UserResponse>((resolve, reject) => {
+    client
+      .post(API_URLS.SIGNUP, data)
+      .then(async response => {
+        try {
+          console.log('res SIGN', response);
+
+          //  await setAuthAsyncStorage(response.data);
+          resolve(response);
+        } catch (e) {
+          console.log('User SIFNUP service error block SIFNUP1.', e);
+          reject(e);
+        }
+      })
+      .catch(async err => {
+        console.log('User SIFNUP service error block SIFNUP.', err);
+        reject(err);
+      });
+  });
+}
 
 export const authService = {
   login,
+  signUp,
 };
