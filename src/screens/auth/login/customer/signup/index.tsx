@@ -274,7 +274,7 @@ export default function SignUpCustomer({navigation}) {
                     />
                     <InputWithLabel
                       label={'Password'}
-                      placeholder={'Inser your password here'}
+                      placeholder={'Enter your password here'}
                       containerStyles={{paddingHorizontal: 20}}
                       labelStyle={{
                         // fontFamily: fonts.mulishSemiBold,
@@ -298,7 +298,7 @@ export default function SignUpCustomer({navigation}) {
                       }}
                       // leftIcon={<Icon2 name="locked" size={20} color="#fff" />}
                       showEye={true}
-                      placeholder={'Inser your same password here'}
+                      placeholder={'Enter your same password here'}
                       error={
                         touched.confirmPassword ? errors.confirmPassword : ''
                       }

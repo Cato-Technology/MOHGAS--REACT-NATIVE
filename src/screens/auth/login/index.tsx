@@ -112,7 +112,7 @@ export default function Login({navigation}) {
                 fontSize: 15,
               }}
               // leftIcon={<Icon name="person" size={20} color="#fff" />}
-              placeholder={'Insert your name here'}
+              placeholder={'Enter your username here'}
               onChange={text => setUserName(text)}
               // value={ammount + ''}
             />
@@ -128,7 +128,7 @@ export default function Login({navigation}) {
               }}
               // leftIcon={<Icon2 name="locked" size={20} color="#fff" />}
               showEye={true}
-              placeholder={'Inser your password here'}
+              placeholder={'Enter your password here'}
               onChange={text => setPassword(text)}
               // value={ammount + ''}
             />

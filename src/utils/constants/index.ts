@@ -14,4 +14,10 @@ export default {
   CHAT: 'CHAT',
   MAIL: 'MAIL',
   PROFILE: 'PROFILE',
+
+  //Drawer Screens
+  EDIT_PROFILE: 'EDIT_PROFILE',
+  EDIT_EMAIL: 'EDIT_EMAIL',
+  EDIT_USERNAME: 'EDIT_USERNAME',
+  PASSWORD: 'PASSWORD',
 };

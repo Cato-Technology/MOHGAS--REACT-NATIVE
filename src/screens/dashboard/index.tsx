@@ -11,6 +11,7 @@ import {
   Pressable,
   KeyboardAvoidingView,
   FlatList,
+  Button,
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/FontAwesome5';
@@ -49,7 +50,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import AuthContext from '../../utils/auth-context';
 import {useTheme} from '@react-navigation/native';
 import GradientButton from '../../components/buttons/gradient-button';
-export default function DashBoard({navigation}) {
+export default function DashBoard({navigation, props}) {
   const {colors} = useTheme();
   const styles = makeStyles(colors);
   const auth = React.useContext(AuthContext);
@@ -87,13 +88,14 @@ export default function DashBoard({navigation}) {
               justifyContent: 'space-between',
               alignItems: 'center',
             }}>
-            <View>
+            <View style={{marginTop: 20}}>
               <Text style={{fontWeight: 'bold', fontSize: 15}}>
                 Good Afternoon
               </Text>
               <Text style={{fontWeight: 'bold', fontSize: 25}}>
                 Emeka Adams
               </Text>
+
               <Text style={{fontWeight: 'bold', color: 'gray', fontSize: 10}}>
                 <Icon4 name="crown" size={10} color="gray" /> Premium Member
               </Text>

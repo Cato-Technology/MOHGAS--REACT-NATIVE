@@ -8,6 +8,7 @@ import Chat from '../screens/chat';
 import Profile from '../screens/profile';
 import Mail from '../screens/mail';
 import OrderHistory from '../screens/order-history';
+import DrawerNavigator from './drawer-navigator';
 
 const Stack = createNativeStackNavigator();
 
@@ -19,6 +20,7 @@ const HomeNavigator = () => {
       }}>
       <Stack.Screen name={SCREENS.DASHBOARD} component={DashBoard} />
       <Stack.Screen name={SCREENS.ORDER_HISTORY} component={OrderHistory} />
+      <Stack.Screen name="AppDrawerStack" component={DrawerNavigator} />
     </Stack.Navigator>
   );
 };

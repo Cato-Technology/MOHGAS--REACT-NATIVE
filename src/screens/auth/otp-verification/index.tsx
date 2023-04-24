@@ -240,7 +240,7 @@ export default function OtpVerification({navigation}) {
                         <Text style={[styles.label]}>Set Password</Text>
                         <InputWithLabel
                           label={'Password'}
-                          placeholder={'Inser your password here'}
+                          placeholder={'Enter your password here'}
                           labelStyle={{
                             // fontFamily: fonts.mulishSemiBold,
                             color: colors.yellowHeading,
@@ -262,7 +262,7 @@ export default function OtpVerification({navigation}) {
                           }}
                           // leftIcon={<Icon2 name="locked" size={20} color="#fff" />}
                           showEye={true}
-                          placeholder={'Inser your same password here'}
+                          placeholder={'Enter your same password here'}
                           error={
                             touched.confirmPassword
                               ? errors.confirmPassword
