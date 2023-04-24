@@ -281,7 +281,9 @@ export default function OtpVerification({navigation}) {
                         justifyContent: 'flex-end',
                       }}>
                       <GradientButton
-                        //  onPress={() => handleSubmit()}
+                        onPress={() =>
+                          navigation.navigate(SCREENS.PASSWORD_RESET_SUCCESS)
+                        }
                         disabled={false}
                         title={confirmed ? 'Submit' : 'Verify'}
                       />

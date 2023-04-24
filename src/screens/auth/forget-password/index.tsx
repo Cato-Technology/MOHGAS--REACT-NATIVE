@@ -115,8 +115,7 @@ export default function ForgetPassword({navigation}) {
               style={{
                 paddingHorizontal: widthPercentageToDP(5),
                 paddingVertical: heightPercentageToDP(2),
-                height: '100%',
-                justifyContent: 'flex-end',
+                marginTop: 30,
               }}>
               <GradientButton
                 onPress={() => navigation.navigate(SCREENS.OTP_VERIFICATION)}

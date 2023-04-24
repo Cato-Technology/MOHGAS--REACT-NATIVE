@@ -18,3 +18,6 @@ export {default as BioNotification} from './bio-notification';
 export {default as BioPolicies} from './bio-policies';
 export {default as BioSettings} from './bio-settings';
 export {default as BioSupport} from './bio-support';
+
+//Images
+export {default as SuccessImage} from './success-image';

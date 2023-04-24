@@ -7,6 +7,7 @@ import OnBoard from '../screens/on-board';
 import SignUpCustomer from '../screens/auth/login/customer/signup';
 import ForgetPassword from '../screens/auth/forget-password';
 import OtpVerification from '../screens/auth/otp-verification';
+import PasswordResetSuccess from '../screens/auth/pwd-reset-success';
 
 const Stack = createNativeStackNavigator();
 
@@ -27,6 +28,10 @@ const AuthNavigator = () => {
       <Stack.Screen
         name={SCREENS.OTP_VERIFICATION}
         component={OtpVerification}
+      />
+      <Stack.Screen
+        name={SCREENS.PASSWORD_RESET_SUCCESS}
+        component={PasswordResetSuccess}
       />
     </Stack.Navigator>
   );
