@@ -117,7 +117,7 @@ const Router = () => {
   return (
     <AuthContext.Provider value={{authContext, userData, setUserData}}>
       <NavigationContainer theme={scheme === 'dark' ? MyDarkTheme : MyThemes}>
-        {state.userToken == null ? <AuthNavigator /> : <AppNavigator />}
+        {!state.userToken == null ? <AuthNavigator /> : <AppNavigator />}
       </NavigationContainer>
     </AuthContext.Provider>
   );
