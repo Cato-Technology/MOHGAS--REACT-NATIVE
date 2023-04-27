@@ -1,7 +1,7 @@
 const lightColors = {
   primary: '#ffffff',
   secondary: '#f9d649',
-  text: '#fff',
+  text: '#000000',
   disable: '#8b8f92',
   yellowHeading: '#000000',
   tabTextColor: '#f9d649',

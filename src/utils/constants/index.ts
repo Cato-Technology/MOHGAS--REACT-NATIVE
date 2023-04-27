@@ -13,6 +13,7 @@ export default {
   ORDER_HISTORY: 'ORDER_HISTORY',
   CHAT: 'CHAT',
   MAIL: 'MAIL',
+  PROFILE_NAVIGATOR: 'PROFILE_NAVIGATOR',
   PROFILE: 'PROFILE',
 
   //Drawer Screens

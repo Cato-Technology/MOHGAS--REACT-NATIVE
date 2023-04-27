@@ -18,6 +18,7 @@ import Profile from '../screens/profile';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon2 from 'react-native-vector-icons/Entypo';
 import Icon3 from 'react-native-vector-icons/Ionicons';
+import ProfileNavigator from './profile-navigator';
 
 const Tab = createBottomTabNavigator();
 
@@ -110,9 +111,11 @@ const BottomTabNavigator = () => {
         }}
       />
       <Tab.Screen
-        name={SCREENS.PROFILE}
-        component={Profile}
+        name={SCREENS.PROFILE_NAVIGATOR}
+        component={ProfileNavigator}
         options={{
+          tabBarLabel: 'Profile',
+          tabBarLabelStyle: {color: 'gray', paddingBottom: 4},
           tabBarIcon: ({focused}) => (
             <Icon3
               name="person"
