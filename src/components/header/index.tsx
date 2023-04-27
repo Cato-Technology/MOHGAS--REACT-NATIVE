@@ -7,6 +7,7 @@ import {ArrowBack, IndianRupee} from '../../assets/images/svgs';
 import SCREENS from '../../utils/constants';
 import makeStyles from './styles';
 import AuthContext from '../../utils/auth-context';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 type Props = {
   title?: string;
@@ -36,19 +37,15 @@ const Header = (props: Props) => {
           width: '100%',
         }}>
         {props.back && (
-          <TouchableRipple
-            borderless
-            style={styles.ripple}
+          <MaterialIcons
+            name="arrow-back-ios"
+            size={30}
+            color={colors.text}
             onPress={() => navigations.goBack()}
-            rippleColor={'#8493AE20'}>
-            <ArrowBack fill={colors.text} />
-          </TouchableRipple>
+          />
         )}
         {props.title && (
-          <View>
-            <Text style={[styles.title, props.titleStyle]}>{props.title}</Text>
-            <Text style={[styles.subTitle]}>{props.subTitle}</Text>
-          </View>
+          <Text style={[styles.title, props.titleStyle]}>{props.title}</Text>
         )}
         {props.rightIcon}
       </View>

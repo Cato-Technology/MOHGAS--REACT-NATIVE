@@ -1,22 +1,21 @@
 import React from 'react';
 import {Linking, Text, View} from 'react-native';
 import {useNavigation, useTheme} from '@react-navigation/native';
-import Config from 'react-native-config';
 import {Switch, TouchableRipple} from 'react-native-paper';
 import Fontisto from 'react-native-vector-icons/Fontisto';
-import SCREENS from 'utils/constants';
-import {
-  BioAboutIcon,
-  BioDependent,
-  BioLogout,
-  BioNotification,
-  BioPolicies,
-  BioSupport,
-  BioSettings,
-} from 'assets/images/svgs';
+import SCREENS from '../../../utils/constants';
+// import {
+//   BioAboutIcon,
+//   BioDependent,
+//   BioLogout,
+//   BioNotification,
+//   BioPolicies,
+//   BioSupport,
+//   BioSettings,
+// } from 'assets/images/svgs';
 
 import makeStyles from './styles';
-import AuthContext from 'utils/auth-context';
+import AuthContext from '../../../utils/auth-context';
 
 const AccountMenu = props => {
   const {colors} = useTheme();
@@ -36,7 +35,6 @@ const AccountMenu = props => {
         style={styles.singleItem}>
         <>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <BioDependent width={5} height={5} />
             <Text style={styles.text}>Deposit</Text>
           </View>
           <View style={styles.iconWithSecondText}>
@@ -51,7 +49,6 @@ const AccountMenu = props => {
         style={styles.singleItem}>
         <>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <BioDependent width={5} height={5} />
             <Text style={styles.text}>Payment Methods</Text>
           </View>
           <View style={styles.iconWithSecondText}>
@@ -66,7 +63,6 @@ const AccountMenu = props => {
         style={styles.singleItem}>
         <>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <BioSettings width={5} height={5} />
             <Text style={styles.text}>Withdraw</Text>
           </View>
           <Fontisto name="angle-right" size={22} color={colors.secondary} />
@@ -96,7 +92,6 @@ const AccountMenu = props => {
       >
         <>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <BioAboutIcon width={5} height={5} />
             <Text style={styles.text}>About</Text>
           </View>
           <Fontisto name="angle-right" size={22} color={colors.secondary} />
@@ -115,7 +110,6 @@ const AccountMenu = props => {
         }>
         <>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <BioPolicies width={5} height={5} />
             <Text style={styles.text}>Policies</Text>
           </View>
           <Fontisto name="angle-right" size={22} color={colors.secondary} />
@@ -127,7 +121,6 @@ const AccountMenu = props => {
         onPress={() => auth.authContext.signOut()}
         style={styles.singleItem}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <BioLogout width={4.5} height={4.5} />
           <Text style={styles.text}>Logout</Text>
         </View>
       </TouchableRipple>

@@ -5,14 +5,13 @@ export const makeStyles = (colors: any) =>
   StyleSheet.create({
     header: {
       flexDirection: 'row',
-      height: 50,
+      height: 55,
       width: '100%',
       alignItems: 'center',
-
+      padding: 12,
       //  shadowColor: '#000',
       // shadowOffset: {width: 1, height: 1},
-      shadowOpacity: 0.4,
-      shadowRadius: 3,
+
       elevation: 5,
     },
     ripple: {
@@ -23,9 +22,9 @@ export const makeStyles = (colors: any) =>
       alignItems: 'center',
     },
     title: {
-      fontSize: RFValue(24),
+      fontSize: RFValue(20),
       fontWeight: 'bold',
-      color: colors.yellowHeading,
+      color: colors.text,
       //  fontFamily: 'Poppins-Bold',
     },
     subTitle: {
