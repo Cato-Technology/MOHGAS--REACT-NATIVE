@@ -14,23 +14,24 @@ import {
   SafeAreaView,
 } from 'react-native';
 
-import Icon from 'react-native-vector-icons/FontAwesome5';
+import Icon from 'react-native-vector-icons/Ionicons';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon3 from 'react-native-vector-icons/Entypo';
 import Icon4 from 'react-native-vector-icons/FontAwesome5';
 import Icon5 from 'react-native-vector-icons/MaterialIcons';
-import Icon6 from 'react-native-vector-icons/AntDesign';
 import card from '../../../assets/card.png';
 import aImage from '../../../assets/avatar.jpg';
 import {Avatar} from 'react-native-paper';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 import {
   // ErrorModal,
   ActivityIndicator,
+  CheckOutCard,
   // PhoneNumber,
   Header,
   InputWithLabel,
-  DetailCard,
+  ProductView,
 } from '../../../components';
 
 import SCREENS from '../../../utils/constants';
@@ -40,6 +41,8 @@ import {RFValue} from 'react-native-responsive-fontsize';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
+  widthPercentageToDP,
+  heightPercentageToDP,
 } from 'react-native-responsive-screen';
 
 // import i18next from 'i18next';
@@ -50,6 +53,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import AuthContext from '../../../utils/auth-context';
 import {useTheme} from '@react-navigation/native';
 import GradientButton from '../../../components/buttons/gradient-button';
+import HeaderBottom from '../../../components/header-bottom';
 export default function CheckOut({navigation}) {
   const {colors} = useTheme();
   const styles = makeStyles(colors);
@@ -80,42 +84,32 @@ export default function CheckOut({navigation}) {
             alignItems: 'center',
           }}>
           <View style={styles.icon} />
+          <Header
+            title={'Market Place'}
+            back={true}
+            rightIcon={
+              <AntDesign name="setting" size={25} color={colors.text} />
+            }
+          />
           <View style={{width: '100%', paddingHorizontal: 20}}>
-            <Header
-              title="CheckOut"
-              subTitle={'Review Past and Present Orders'}
-              contentStyle={{marginTop: 100}}
-              rightIcon={
-                <View
-                  style={{
-                    backgroundColor: '#2f65a2',
-                    height: 30,
-                    borderRadius: 5,
-                  }}>
-                  <Icon5 name="sort" size={30} color="#fff" />
-                </View>
-              }
-            />
-            <View
-              style={{
-                width: '100%',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-              }}>
-              <Text>Recent Transcations</Text>
-              <Text style={{color: 'gray'}}>
-                View All <Icon6 name="arrowright" size={10} color="gray" />{' '}
+            <View style={{height: 40}} />
+
+            <Text style={{color: 'gray', fontSize: 12, paddingVertical: 10}}>
+              <Icon name="location-sharp" size={20} color="#357bc3" /> Deliver
+              to{' '}
+              <Text style={{color: '#000000', fontSize: 12}}>
+                100 Main Street fake, City, Country
               </Text>
-            </View>
+            </Text>
+            <View style={{height: 8}} />
             <FlatList
-              data={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]}
+              data={[1, 2, 3, 4]}
               renderItem={({item, index}) => (
-                <DetailCard
+                <CheckOutCard
                   title={'Top Up - LPG 25kg'}
                   subTitle={'Today - 02.15 PM'}
                   price={'N12.34'}
-                  srNo={'Pending'}
-                  icon={<Icon3 name="arrow-up" size={25} color="#4ca757" />}
+                  image={aImage}
                   onPressDelete={() => {
                     console.log('item', item._id);
                   }}
@@ -132,6 +126,50 @@ export default function CheckOut({navigation}) {
               )}
               keyExtractor={(item, index) => index.toString()}
             />
+            <View
+              style={{
+                backgroundColor: 'gray',
+                width: '100%',
+                height: 0.3,
+                marginVertical: 15,
+              }}
+            />
+            <View style={styles.rowView}>
+              <Text style={styles.metaText}>Sub Total</Text>
+              <Text>N 12000.00</Text>
+            </View>
+            <View style={styles.rowView}>
+              <Text style={styles.metaText}>Delivery Cost</Text>
+              <Text>N 400.00</Text>
+            </View>
+            <View style={styles.rowView}>
+              <Text style={styles.metaText}>Coupon Discount</Text>
+              <Text>N 0.00</Text>
+            </View>
+            <View
+              style={{
+                backgroundColor: 'gray',
+                width: '100%',
+                height: 0.3,
+                marginVertical: 15,
+              }}
+            />
+            <View style={styles.rowView}>
+              <Text style={styles.metaText}>Total</Text>
+              <Text>N 12400.00</Text>
+            </View>
+            <View
+              style={{
+                paddingHorizontal: widthPercentageToDP(3),
+                paddingVertical: heightPercentageToDP(2),
+                zIndex: -1,
+              }}>
+              <GradientButton
+                // onPress={() => handleSubmit()}
+                // disabled={!isValid || loader || !checked}
+                title="Checkout"
+              />
+            </View>
           </View>
         </View>
       </ScrollView>

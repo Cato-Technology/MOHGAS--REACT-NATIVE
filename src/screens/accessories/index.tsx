@@ -14,7 +14,7 @@ import {
   SafeAreaView,
 } from 'react-native';
 
-import Icon from 'react-native-vector-icons/FontAwesome5';
+import Icon from 'react-native-vector-icons/Ionicons';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon3 from 'react-native-vector-icons/Entypo';
 import Icon4 from 'react-native-vector-icons/FontAwesome5';
@@ -23,6 +23,7 @@ import Icon6 from 'react-native-vector-icons/AntDesign';
 import card from '../../assets/card.png';
 import aImage from '../../assets/avatar.jpg';
 import {Avatar} from 'react-native-paper';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 import {
   // ErrorModal,
@@ -30,7 +31,7 @@ import {
   // PhoneNumber,
   Header,
   InputWithLabel,
-  DetailCard,
+  ProductView,
 } from '../../components';
 
 import SCREENS from '../../utils/constants';
@@ -40,6 +41,8 @@ import {RFValue} from 'react-native-responsive-fontsize';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
+  widthPercentageToDP,
+  heightPercentageToDP,
 } from 'react-native-responsive-screen';
 
 // import i18next from 'i18next';
@@ -50,6 +53,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import AuthContext from '../../utils/auth-context';
 import {useTheme} from '@react-navigation/native';
 import GradientButton from '../../components/buttons/gradient-button';
+import HeaderBottom from '../../components/header-bottom';
 export default function Accessories({navigation}) {
   const {colors} = useTheme();
   const styles = makeStyles(colors);
@@ -80,11 +84,18 @@ export default function Accessories({navigation}) {
             alignItems: 'center',
           }}>
           <View style={styles.icon} />
+          <Header
+            title={'Market Place'}
+            back={true}
+            rightIcon={
+              <AntDesign name="setting" size={25} color={colors.text} />
+            }
+          />
           <View style={{width: '100%', paddingHorizontal: 20}}>
-            <Header
+            <HeaderBottom
               title="Accessories"
-              subTitle={'Review Past and Present Orders'}
-              contentStyle={{marginTop: 100}}
+              subTitle={'Find and Buy gas accessories'}
+              contentStyle={{marginTop: 50}}
               rightIcon={
                 <View
                   style={{
@@ -96,35 +107,43 @@ export default function Accessories({navigation}) {
                 </View>
               }
             />
-            <View
-              style={{
-                width: '100%',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-              }}>
-              <Text>Recent Transcations</Text>
-              <Text style={{color: 'gray'}}>
-                View All <Icon6 name="arrowright" size={10} color="gray" />{' '}
+            <InputWithLabel
+              placeholder={'Search'}
+              labelStyle={{
+                //   fontFamily: fonts.mulishSemiBold,
+                color: colors.yellowHeading,
+                fontSize: 15,
+              }}
+              // onChange={handleChange('email')}
+              // value={values.email}
+              // error={touched.email ? errors.email : ''}
+              // onBlur={() => setFieldTouched('email')}
+            />
+            <View style={{height: 8}} />
+            <Text style={{color: 'gray', fontSize: 12, paddingVertical: 10}}>
+              <Icon name="location-sharp" size={20} color="#357bc3" /> Deliver
+              to{' '}
+              <Text style={{color: '#000000', fontSize: 12}}>
+                100 Main Street fake, City, Country
               </Text>
-            </View>
+            </Text>
+
             <FlatList
-              data={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]}
+              data={[
+                1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
+                19, 20, 21, 22, 23, 24,
+              ]}
+              numColumns={4}
+              scrollEnabled={true}
+              contentContainerStyle={{marginTop: 10}}
+              columnWrapperStyle={{
+                justifyContent: 'space-evenly',
+              }}
               renderItem={({item, index}) => (
-                <DetailCard
-                  title={'Top Up - LPG 25kg'}
-                  subTitle={'Today - 02.15 PM'}
-                  price={'N12.34'}
-                  srNo={'Pending'}
-                  icon={<Icon3 name="arrow-up" size={25} color="#4ca757" />}
-                  onPressDelete={() => {
-                    console.log('item', item._id);
-                  }}
-                  // onPressEdit={() =>
-                  //   navigation.navigate(SCREENS.ADDPAYMENTMETHOD, {
-                  //     edit: true,
-                  //     item: item,
-                  //   })
-                  // }
+                <ProductView
+                  title={'Name of Product'}
+                  price={'N 8.00'}
+                  image={aImage}
                 />
               )}
               ListEmptyComponent={() => (
@@ -132,6 +151,18 @@ export default function Accessories({navigation}) {
               )}
               keyExtractor={(item, index) => index.toString()}
             />
+            <View
+              style={{
+                paddingHorizontal: widthPercentageToDP(3),
+                paddingVertical: heightPercentageToDP(2),
+                zIndex: -1,
+              }}>
+              <GradientButton
+                // onPress={() => handleSubmit()}
+                // disabled={!isValid || loader || !checked}
+                title="Countinue to Checkout"
+              />
+            </View>
           </View>
         </View>
       </ScrollView>
