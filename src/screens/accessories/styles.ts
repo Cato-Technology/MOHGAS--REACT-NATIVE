@@ -22,7 +22,7 @@ export const makeStyles = (colors: any) =>
       top: -200,
       borderBottomRightRadius: 300,
       borderBottomLeftRadius: 300,
-      backgroundColor: '#edeff3',
+      backgroundColor: '#f1f9f0',
       justifyContent: 'center',
       alignItems: 'center',
     },

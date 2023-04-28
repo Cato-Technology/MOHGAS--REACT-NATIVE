@@ -22,7 +22,7 @@ export const makeStyles = (colors: any) =>
       top: -200,
       borderBottomRightRadius: 300,
       borderBottomLeftRadius: 300,
-      backgroundColor: '#edeff3',
+      backgroundColor: '#f1f9f0',
       justifyContent: 'center',
       alignItems: 'center',
     },
@@ -146,6 +146,26 @@ export const makeStyles = (colors: any) =>
       paddingTop: 0,
       paddingLeft: 15,
       marginRight: 0,
+    },
+    tagText: {
+      color: '#000000',
+      fontSize: 16,
+      backgroundColor: '#efefef',
+      paddingHorizontal: 18,
+      paddingVertical: 3,
+      borderRadius: 3,
+      overflow: 'hidden',
+      marginRight: 15,
+    },
+    rowView: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      width: '100%',
+      paddingHorizontal: 10,
+    },
+    metaText: {
+      fontSize: 13,
+      fontWeight: '200',
     },
   });
 export default makeStyles;

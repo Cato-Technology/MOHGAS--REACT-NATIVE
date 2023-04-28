@@ -14,15 +14,15 @@ import {
   SafeAreaView,
 } from 'react-native';
 
-import Icon from 'react-native-vector-icons/FontAwesome5';
+import Icon from 'react-native-vector-icons/Ionicons';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon3 from 'react-native-vector-icons/Entypo';
 import Icon4 from 'react-native-vector-icons/FontAwesome5';
 import Icon5 from 'react-native-vector-icons/MaterialIcons';
-import Icon6 from 'react-native-vector-icons/AntDesign';
 import card from '../../../assets/card.png';
 import aImage from '../../../assets/avatar.jpg';
 import {Avatar} from 'react-native-paper';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 import {
   // ErrorModal,
@@ -30,7 +30,7 @@ import {
   // PhoneNumber,
   Header,
   InputWithLabel,
-  DetailCard,
+  ProductView,
 } from '../../../components';
 
 import SCREENS from '../../../utils/constants';
@@ -40,6 +40,8 @@ import {RFValue} from 'react-native-responsive-fontsize';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
+  widthPercentageToDP,
+  heightPercentageToDP,
 } from 'react-native-responsive-screen';
 
 // import i18next from 'i18next';
@@ -50,6 +52,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import AuthContext from '../../../utils/auth-context';
 import {useTheme} from '@react-navigation/native';
 import GradientButton from '../../../components/buttons/gradient-button';
+import HeaderBottom from '../../../components/header-bottom';
 export default function ViewProduct({navigation}) {
   const {colors} = useTheme();
   const styles = makeStyles(colors);
@@ -80,58 +83,64 @@ export default function ViewProduct({navigation}) {
             alignItems: 'center',
           }}>
           <View style={styles.icon} />
+          <Header
+            title={'Market Place'}
+            back={true}
+            rightIcon={
+              <AntDesign name="setting" size={25} color={colors.text} />
+            }
+          />
           <View style={{width: '100%', paddingHorizontal: 20}}>
-            <Header
-              title="ViewProduct"
-              subTitle={'Review Past and Present Orders'}
-              contentStyle={{marginTop: 100}}
-              rightIcon={
-                <View
-                  style={{
-                    backgroundColor: '#2f65a2',
-                    height: 30,
-                    borderRadius: 5,
-                  }}>
-                  <Icon5 name="sort" size={30} color="#fff" />
-                </View>
-              }
+            <View style={{height: 8}} />
+
+            <Image
+              style={{height: 200, width: '100%'}}
+              source={aImage}
+              resizeMode={'cover'}
             />
+            <View style={{height: 8}} />
+            <Text style={{color: 'gray', fontSize: 16}}>Gas Cylinder</Text>
+            <Text style={{color: '#000000', fontSize: 16}}>N 8.00</Text>
+            <View style={{height: 8}} />
+            <Text style={{color: '#000000', fontSize: 12}}>
+              <AntDesign name="star" size={12} color={'#debf5a'} />
+              3.8{'   '}|{'   '}
+              23 Solid{'   '}|{'   '}5 Reviews
+            </Text>
+            <View style={{height: 8}} />
+            <Text style={{color: 'gray', fontSize: 13}}>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+              eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            </Text>
+            <View style={{height: 8}} />
+            <Text style={{color: '#000000', fontWeight: 'bold', fontSize: 16}}>
+              Size
+            </Text>
+            <View style={{flexDirection: 'row', marginTop: 10}}>
+              <Text style={styles.tagText}>6KG</Text>
+              <Text style={styles.tagText}>12KG</Text>
+              <Text
+                style={[
+                  styles.tagText,
+                  {backgroundColor: '#4ca757', color: '#fff'},
+                ]}>
+                25KG
+              </Text>
+              <Text style={styles.tagText}>50KG</Text>
+            </View>
             <View
               style={{
-                width: '100%',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
+                paddingHorizontal: widthPercentageToDP(3),
+                paddingVertical: heightPercentageToDP(2),
+                zIndex: -1,
+                marginTop: 50,
               }}>
-              <Text>Recent Transcations</Text>
-              <Text style={{color: 'gray'}}>
-                View All <Icon6 name="arrowright" size={10} color="gray" />{' '}
-              </Text>
+              <GradientButton
+                // onPress={() => handleSubmit()}
+                // disabled={!isValid || loader || !checked}
+                title="Countinue to Checkout"
+              />
             </View>
-            <FlatList
-              data={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]}
-              renderItem={({item, index}) => (
-                <DetailCard
-                  title={'Top Up - LPG 25kg'}
-                  subTitle={'Today - 02.15 PM'}
-                  price={'N12.34'}
-                  srNo={'Pending'}
-                  icon={<Icon3 name="arrow-up" size={25} color="#4ca757" />}
-                  onPressDelete={() => {
-                    console.log('item', item._id);
-                  }}
-                  // onPressEdit={() =>
-                  //   navigation.navigate(SCREENS.ADDPAYMENTMETHOD, {
-                  //     edit: true,
-                  //     item: item,
-                  //   })
-                  // }
-                />
-              )}
-              ListEmptyComponent={() => (
-                <Text style={styles.noDataText}>No Data</Text>
-              )}
-              keyExtractor={(item, index) => index.toString()}
-            />
           </View>
         </View>
       </ScrollView>

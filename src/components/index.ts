@@ -10,3 +10,5 @@ export {default as DatePickerModal} from './date-picker-modal';
 export {default as EditProfileModal} from './edit-profile-menu';
 export {default as DeleteModal} from './delete-modal';
 export {default as DetailCard} from './detail-card';
+export {default as ProductView} from './product-view';
+export {default as CheckOutCard} from './checkout-card';
