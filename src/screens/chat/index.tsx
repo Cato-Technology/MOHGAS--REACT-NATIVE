@@ -4,8 +4,9 @@ import SCREENS from '../../utils/constants';
 
 const Chat = ({navigation}) => {
   return (
-    <View>
-      <Text>Chat</Text>
+    <View style={{justifyContent: 'center', alignItems: 'center'}}>
+      <Text style={{fontSize: 20}}>Chat</Text>
+      <Text style={{fontSize: 20}}>Buy Accessories</Text>
       <Button
         title="Accessories"
         onPress={() => navigation.navigate(SCREENS.ACCESSORIES)}
@@ -25,6 +26,27 @@ const Chat = ({navigation}) => {
       <Button
         title="Track Order"
         onPress={() => navigation.navigate(SCREENS.TRACK_ORDER)}
+      />
+      <Text style={{fontSize: 20}}>Customer New Order</Text>
+      <Button
+        title="Order refill"
+        onPress={() =>
+          navigation.navigate(SCREENS.ADD_DELIVERY_ADDRESS, {
+            render: 'refill',
+          })
+        }
+      />
+      <Button
+        title="Pin Location"
+        onPress={() => navigation.navigate(SCREENS.PIN_LOCATION)}
+      />
+      <Button
+        title="Connect Vendor"
+        onPress={() => navigation.navigate(SCREENS.CONNECT_VENDOR)}
+      />
+      <Button
+        title="Order Summary"
+        onPress={() => navigation.navigate(SCREENS.ORDER_SUMMARY)}
       />
     </View>
   );

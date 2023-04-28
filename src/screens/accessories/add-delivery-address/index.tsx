@@ -49,7 +49,7 @@ import AuthContext from '../../../utils/auth-context';
 import {useTheme} from '@react-navigation/native';
 import GradientButton from '../../../components/buttons/gradient-button';
 import HeaderBottom from '../../../components/header-bottom';
-export default function AddDeliveryAddress({navigation}) {
+export default function AddDeliveryAddress({navigation, route}) {
   const {colors} = useTheme();
   const styles = makeStyles(colors);
   const auth = React.useContext(AuthContext);
@@ -58,7 +58,7 @@ export default function AddDeliveryAddress({navigation}) {
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState(false);
   const [checked, setChecked] = useState(false);
-
+  const render = route?.params?.render;
   const goToNewCard = () => {
     navigation.navigate('card');
   };
@@ -79,14 +79,18 @@ export default function AddDeliveryAddress({navigation}) {
         }}>
         <View style={styles.icon} />
         <Header
-          title={'Market Place'}
+          title={render == 'refill' ? 'Refill' : 'Market Place'}
           back={true}
           rightIcon={<AntDesign name="setting" size={25} color={colors.text} />}
         />
         <View style={{width: '100%', paddingHorizontal: 20}}>
           <HeaderBottom
-            title="Accessories"
-            subTitle={'Find and Buy gas accessories'}
+            title={render == 'refill' ? 'New Order' : 'Accessories'}
+            subTitle={
+              render == 'refill'
+                ? 'Request for Refill'
+                : 'Find and Buy gas accessories'
+            }
             contentStyle={{marginTop: 50}}
             rightIcon={
               <View

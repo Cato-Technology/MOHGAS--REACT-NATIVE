@@ -7,7 +7,6 @@ export {default as PhoneNumber} from './phone-number';
 export {default as Header} from './header';
 export {default as AmountPickerView} from './amount-picker-view';
 export {default as DatePickerModal} from './date-picker-modal';
-export {default as EditProfileModal} from './edit-profile-menu';
 export {default as DeleteModal} from './delete-modal';
 export {default as DetailCard} from './detail-card';
 export {default as ProductView} from './product-view';
