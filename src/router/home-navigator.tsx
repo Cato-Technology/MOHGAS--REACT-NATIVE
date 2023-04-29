@@ -17,6 +17,7 @@ import TrackOrder from '../screens/accessories/track-order';
 import PinLocation from '../screens/accessories/pinlocation';
 import ConnectVendor from '../screens/accessories/connect-vendor';
 import OrderSummary from '../screens/accessories/order-summary';
+import SwapCylinder from '../screens/accessories/swap-cylinder';
 
 const Stack = createNativeStackNavigator();
 
@@ -39,7 +40,7 @@ const HomeNavigator = () => {
       <Stack.Screen name={SCREENS.TRACK_ORDER} component={TrackOrder} />
       <Stack.Screen name={SCREENS.PIN_LOCATION} component={PinLocation} />
       <Stack.Screen name={SCREENS.CONNECT_VENDOR} component={ConnectVendor} />
-      <Stack.Screen name={SCREENS.ORDER_SUMMARY} component={OrderSummary} />
+      <Stack.Screen name={SCREENS.SWAP_CYLINDER} component={SwapCylinder} />
     </Stack.Navigator>
   );
 };

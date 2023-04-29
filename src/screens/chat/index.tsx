@@ -48,6 +48,11 @@ const Chat = ({navigation}) => {
         title="Order Summary"
         onPress={() => navigation.navigate(SCREENS.ORDER_SUMMARY)}
       />
+      <Text style={{fontSize: 20}}>Customer Swap Cylinder</Text>
+      <Button
+        title="Swap Cylinder"
+        onPress={() => navigation.navigate(SCREENS.SWAP_CYLINDER)}
+      />
     </View>
   );
 };

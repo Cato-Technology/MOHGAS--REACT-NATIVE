@@ -72,7 +72,13 @@ export default function Login({navigation}) {
       }
       if (result?.message == 'Login Success') {
         await AsyncStorage.setItem('token', result?.message);
-        authContext.setUserData(result?.response);
+        try {
+          const jsonValue = JSON.stringify(result?.response);
+          await AsyncStorage.setItem('userData', jsonValue);
+        } catch (e) {
+          console.error('Failed to save user data to storage');
+        }
+
         auth.authContext.signIn(result?.message);
         setLoader(false);
       }

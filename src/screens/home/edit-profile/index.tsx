@@ -7,10 +7,12 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   Platform,
+  PermissionsAndroid,
 } from 'react-native';
 
 import {
   ActivityIndicator,
+  EditProfileModal,
   Header,
   InputWithLabel,
   PhoneNumber,
@@ -33,6 +35,12 @@ import {
   heightPercentageToDP,
   widthPercentageToDP,
 } from 'react-native-responsive-screen';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import ImagePicker from 'react-native-image-crop-picker';
+import {profileService} from '../../../services';
+import {showMessage} from 'react-native-flash-message';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+let cameraIs = false;
 const EditProfile = () => {
   const navigation = useNavigation();
   const {colors} = useTheme();
@@ -43,10 +51,11 @@ const EditProfile = () => {
   const authContext = React.useContext(AuthContext);
   const [checked, setChecked] = useState(false);
   const [loader, setLoader] = useState(false);
-  const [countryCode, setCountryCode] = useState('NG');
-  const [phoneNumber, setPhoneNumber] = useState('989087897');
-  const [selectCountryCode, setSelectCountryCode] = useState('');
-  const [numberCondition, setNumberCondition] = useState({min: 8, max: 11});
+  const [showModal, setShowModal] = React.useState(false);
+  const [edit, setEdit] = React.useState(false);
+  const [image, setImage] = useState('');
+
+  console.log('uuser', authContext);
 
   const signUpSchema = useMemo(
     () =>
@@ -56,9 +65,10 @@ const EditProfile = () => {
           .matches(NAME, 'Name should only contain latin letters')
           .required('Full name is Required'),
 
-        password: Yup.string().required('Password is Required'),
-
-        referal_code: Yup.string().required('Refferal Code is Required'),
+        phone_no: Yup.number().required('Phone number is Required'),
+        street_name: Yup.string().required('Street Address Required'),
+        state: Yup.string().required('State is Required'),
+        city: Yup.string().required('City is Required'),
         email: Yup.string()
           .email('Please provide correct email')
           .required('Email is required'),
@@ -67,16 +77,158 @@ const EditProfile = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   );
+  const imagePickerFromGallery = () => {
+    // setImageModal(false);
+
+    ImagePicker.openPicker({
+      // width: 113,
+      // height: 113,
+      cropping: true,
+      includeBase64: true,
+      avoidEmptySpaceAroundImage: true,
+      // cropperCircleOverlay: true,
+      // compressImageMaxWidth: 113,
+      // compressImageMaxHeight: 113,
+    })
+      .then(image => {
+        let img = `data:${image.mime};base64,${image.data}`;
+        setImage(img);
+        setShowModal(false);
+        //   setProfile({...profile, dp: image.path});
+        //   updateProfilePicture(image?.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+
+  const imagePickerFromCamera = async () => {
+    // setImageModal(false);
+
+    const granted =
+      Platform.OS == 'ios' ||
+      (await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.CAMERA, {
+        title: 'App Camera Permission',
+        message: 'App needs access to your camera',
+        buttonNeutral: 'Ask Me Later',
+        buttonNegative: 'Cancel',
+        buttonPositive: 'OK',
+      }));
+    if (granted) {
+      if (!cameraIs) {
+        cameraIs = true;
+
+        let options = {
+          mediaType: 'photo',
+          includeBase64: true,
+          quality: 0.5,
+        };
+        launchCamera(options, res => {
+          if (res.didCancel) {
+            cameraIs = false;
+          } else if (res.errorMessage) {
+            cameraIs = false;
+          } else {
+            //setImage(res.assets[0].base64);
+            let img = `data:${image[0].mime};base64,${image[0].base64}`;
+            setImage(img);
+            setShowModal(false);
+            cameraIs = false;
+          }
+        });
+      }
+    }
+  };
+  const handleUpdateUser = async values => {
+    try {
+      setLoader(true);
+      let data = new FormData();
+      data.append('user_id', authContext?.userData?.user_id);
+      if (image) {
+        data.append('image', image);
+      }
+
+      data.append('fullname', values.fullname);
+      data.append('phone_no', values.phone_no);
+      data.append('email', values.email);
+      data.append('street_name', values.street_name);
+      data.append('lga', 'abc');
+      data.append('state', values.state);
+      data.append('city', values.city);
+      console.log('data==>', data);
+
+      const result = await profileService.updateProfile(data);
+      console.log('result', result);
+
+      if (result?.status == '0') {
+        setLoader(false);
+        showMessage({
+          message: result?.message,
+          type: 'danger',
+          icon: 'warning',
+        });
+      }
+      if (result?.message == 'Profile Updated Successfully') {
+        try {
+          let dataUpdate = new FormData();
+          dataUpdate.append('user_id', authContext?.userData?.user_id);
+          const resultUpdate = await profileService.getProfile(dataUpdate);
+          console.log('resultUpdate', resultUpdate);
+          if (resultUpdate?.message == 'User Details Received') {
+            const updatedUserData = {
+              ...authContext?.userData,
+              image: resultUpdate?.responsedata.image,
+              type: resultUpdate?.responsedata.type,
+              full_name: resultUpdate?.responsedata.full_name,
+              email: resultUpdate?.responsedata.email,
+              phone_no: resultUpdate?.responsedata.phone_no,
+              street_name: resultUpdate?.responsedata.street_name,
+              province: resultUpdate?.responsedata.province,
+              city: resultUpdate?.responsedata.city,
+              lga: resultUpdate?.responsedata.lga,
+              referal_code: resultUpdate?.responsedata.referal_code,
+            };
+            console.log('updatedUserData', updatedUserData);
+
+            try {
+              const jsonValue = JSON.stringify(updatedUserData);
+              await AsyncStorage.setItem('userData', jsonValue);
+            } catch (e) {
+              console.error('Failed to save user data to storage');
+            }
+
+            authContext.setUserData(updatedUserData);
+            setLoader(false);
+            navigation.goBack();
+          }
+        } catch (e) {
+          setLoader(false);
+          console.log('error', e);
+        }
+      }
+    } catch (e) {
+      setLoader(false);
+      console.log('error', e);
+    }
+  };
+
   return (
     <View
       style={{
         flex: 1,
         backgroundColor: colors.primary,
       }}>
+      <ActivityIndicator visible={loader} />
       <Header
         title={'Profile'}
         back={true}
         rightIcon={<AntDesign name="setting" size={25} color={colors.text} />}
+      />
+      <EditProfileModal
+        iconPress={() => setShowModal(false)}
+        visible={showModal}
+        onPressGallery={() => imagePickerFromGallery()}
+        onPressPhoto={() => imagePickerFromCamera()}
       />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -87,7 +239,17 @@ const EditProfile = () => {
               <Image
                 onLoadStart={() => setProfileLoader(true)}
                 onLoadEnd={() => setProfileLoader(false)}
-                source={aImage}
+                source={
+                  image
+                    ? {
+                        uri: image,
+                      }
+                    : !authContext?.userData?.image
+                    ? authContext?.userData?.gender == 'Female'
+                      ? Images.femaleAvatar
+                      : Images.avatar
+                    : {uri: authContext?.userData?.image}
+                }
                 style={styles.image}
               />
               <View
@@ -103,18 +265,21 @@ const EditProfile = () => {
                   name="pencil"
                   size={25}
                   color={'#fff'}
+                  onPress={() => setShowModal(true)}
                 />
               </View>
             </View>
             <View style={{marginTop: 40, paddingHorizontal: 25}}>
               <Formik
                 initialValues={{
-                  fullname: 'Waqar Hussain',
-                  email: 'test@gmaqil.com',
-                  password: 'fafdsafas',
-                  referal_code: 'Burjman Dubai',
+                  fullname: authContext?.userData?.full_name,
+                  email: authContext?.userData?.email,
+                  phone_no: authContext?.userData?.phone_no,
+                  street_name: authContext?.userData?.street_name,
+                  state: authContext?.userData?.state,
+                  city: authContext?.userData?.city,
                 }}
-                onSubmit={values => handleLogin(values)}
+                onSubmit={values => handleUpdateUser(values)}
                 validationSchema={signUpSchema}>
                 {({
                   handleSubmit,
@@ -145,44 +310,21 @@ const EditProfile = () => {
                         onBlur={() => setFieldTouched('fullname')}
                       />
                       <View style={{height: 20}} />
-                      <Text style={styles.inputLablel}>Phone</Text>
-                      <PhoneNumber
-                        countryCode={countryCode}
-                        setCountryCode={setCountryCode}
-                        phoneNumber={phoneNumber}
-                        setPhoneNumber={setPhoneNumber}
-                        setSelectCountryCode={setSelectCountryCode}
-                        maxLength={numberCondition.max}
+                      <InputWithLabel
+                        label={'Phone number'}
+                        placeholder={'Eg. 564564565'}
+                        containerStyles={{paddingHorizontal: 20}}
+                        labelStyle={{
+                          //   fontFamily: fonts.mulishSemiBold,
+                          color: colors.yellowHeading,
+                          fontSize: 15,
+                        }}
+                        onChange={handleChange('phone_no')}
+                        value={values.phone_no}
+                        error={touched.phone_no ? errors.phone_no : ''}
+                        onBlur={() => setFieldTouched('phone_no')}
                       />
-                      {phoneNumber !== '' &&
-                        (selectCountryCode == 63 ? (
-                          phoneNumber.charAt(0) == 0 ? (
-                            <Text style={styles.errorMessage}>
-                              Phonenumber must not start with 0
-                            </Text>
-                          ) : (
-                            phoneNumber.length < numberCondition.min && (
-                              <Text style={styles.errorMessage}>
-                                Must have
-                                {numberCondition.min}
-                                {numberCondition.max !== numberCondition.min &&
-                                  -numberCondition.max}
-                                4-13 characters
-                              </Text>
-                            )
-                          )
-                        ) : (
-                          phoneNumber.length < numberCondition.min && (
-                            <Text style={styles.errorMessage}>
-                              Must have
-                              {numberCondition.min}
-                              {numberCondition.max !== numberCondition.min &&
-                                -numberCondition.max}
-                              4-13 characters
-                            </Text>
-                          )
-                        ))}
-
+                      <View style={{height: 20}} />
                       <InputWithLabel
                         label={'Email'}
                         placeholder={'Eg. abc@abc.com'}
@@ -200,34 +342,46 @@ const EditProfile = () => {
                       <View style={{height: 20}} />
 
                       <InputWithLabel
-                        label="Address"
-                        placeholder={'Eg. Burjman, Dubai'}
+                        label="Street Address"
+                        placeholder={'Eg. Street 1'}
                         containerStyles={{paddingHorizontal: 20}}
                         labelStyle={{
                           // fontFamily: fonts.mulishSemiBold,
                           color: colors.yellowHeading,
                           fontSize: 15,
                         }}
-                        onChange={handleChange('referal_code')}
-                        value={values.referal_code}
-                        error={touched.referal_code ? errors.referal_code : ''}
-                        onBlur={() => setFieldTouched('referal_code')}
+                        onChange={handleChange('street_name')}
+                        value={values.street_name}
+                        error={touched.street_name ? errors.street_name : ''}
+                        onBlur={() => setFieldTouched('street_name')}
                       />
                       <InputWithLabel
-                        label={'Password'}
-                        placeholder={'Enter your password here'}
+                        label="State"
+                        placeholder={'Eg.Nigeria'}
                         containerStyles={{paddingHorizontal: 20}}
                         labelStyle={{
                           // fontFamily: fonts.mulishSemiBold,
                           color: colors.yellowHeading,
                           fontSize: 15,
                         }}
-                        value={values.password}
-                        error={touched.password ? errors.password : ''}
-                        onChange={handleChange('password')}
-                        // leftIcon={<Icon2 name="locked" size={20} color="#fff" />}
-                        onBlur={() => setFieldTouched('password')}
-                        showEye={true}
+                        onChange={handleChange('state')}
+                        value={values.state}
+                        error={touched.state ? errors.state : ''}
+                        onBlur={() => setFieldTouched('state')}
+                      />
+                      <InputWithLabel
+                        label="City"
+                        placeholder={'Eg.Islamabad'}
+                        containerStyles={{paddingHorizontal: 20}}
+                        labelStyle={{
+                          // fontFamily: fonts.mulishSemiBold,
+                          color: colors.yellowHeading,
+                          fontSize: 15,
+                        }}
+                        onChange={handleChange('city')}
+                        value={values.city}
+                        error={touched.city ? errors.city : ''}
+                        onBlur={() => setFieldTouched('city')}
                       />
                     </View>
 
@@ -239,7 +393,7 @@ const EditProfile = () => {
                       }}>
                       <GradientButton
                         onPress={() => handleSubmit()}
-                        disabled={!isValid || loader || !checked}
+                        disabled={!isValid}
                         title="Update"
                       />
                     </View>

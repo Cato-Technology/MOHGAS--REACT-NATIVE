@@ -2,14 +2,12 @@ const API_URLS = {
   //Auth constants
   LOGIN: '/Api/login',
   SIGNUP: '/Api/user_register',
-  SESSIONS: 'api/session',
-  PROFILE: 'api/users/getProfile',
-  UPDATEPROFILE: 'api/users/update-profile',
-  BANK_DETAILS: 'api/user-bank-details',
-  BETS: 'api/bets',
-  GET_BANK_DETAILS: 'api/company-bank-detail',
-  DEPOSIT_AMOUNT: 'api/deposit',
-  WITHDRAW_AMOUNT: 'api/withdraw',
+  FORGOT_PASSWORD: '/Api/forget_password',
+  VERIFY_OTP: '/Api/verify_otp',
+
+  //Profile constants
+  UPDATE_USER: '/Api/update_user',
+  GET_USER: '/Api/user_details',
 };
 
 export {API_URLS};

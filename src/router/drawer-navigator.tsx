@@ -38,15 +38,18 @@ const CustomDrawerContent = props => {
           style={{
             flexDirection: 'row',
             width: '100%',
-            justifyContent: 'space-around',
 
             alignItems: 'center',
             marginTop: 10,
           }}>
           <Avatar.Image size={45} source={aImage} />
-          <View>
-            <Text style={{fontWeight: 'bold', fontSize: 22}}>Emeka Adams</Text>
-            <Text style={{fontSize: 12}}>waqarhussain4154@gmail.com</Text>
+          <View style={{marginLeft: 10}}>
+            <Text style={{fontWeight: 'bold', fontSize: 22}}>
+              {auth?.userData?.full_name}
+            </Text>
+            <Text style={{fontSize: 12, textAlign: 'left'}}>
+              {auth?.userData?.email}
+            </Text>
           </View>
         </View>
       </View>

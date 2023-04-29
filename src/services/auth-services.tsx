@@ -53,8 +53,56 @@ function signUp(data: any) {
       });
   });
 }
+function forgotPassword(data: any) {
+  console.log('data', data);
+
+  return new Promise<UserResponse>((resolve, reject) => {
+    client
+      .post(API_URLS.FORGOT_PASSWORD, data)
+      .then(async response => {
+        try {
+          console.log('res', response);
+
+          //  await setAuthAsyncStorage(response.data);
+          resolve(response);
+        } catch (e) {
+          console.log(e);
+          reject(e);
+        }
+      })
+      .catch(async err => {
+        console.log('User SIFNUP service error block SIFNUP.', err);
+        reject(err);
+      });
+  });
+}
+function verifyOtp(data: any) {
+  console.log('data', data);
+
+  return new Promise<UserResponse>((resolve, reject) => {
+    client
+      .post(API_URLS.VERIFY_OTP, data)
+      .then(async response => {
+        try {
+          console.log('res', response);
+
+          //  await setAuthAsyncStorage(response.data);
+          resolve(response);
+        } catch (e) {
+          console.log(e);
+          reject(e);
+        }
+      })
+      .catch(async err => {
+        console.log('User SIFNUP service error block SIFNUP.', err);
+        reject(err);
+      });
+  });
+}
 
 export const authService = {
   login,
   signUp,
+  forgotPassword,
+  verifyOtp,
 };

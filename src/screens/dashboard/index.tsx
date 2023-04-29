@@ -53,12 +53,21 @@ import GradientButton from '../../components/buttons/gradient-button';
 export default function DashBoard({navigation, props}) {
   const {colors} = useTheme();
   const styles = makeStyles(colors);
-  const auth = React.useContext(AuthContext);
   const authContext = React.useContext(AuthContext);
-  const [userName, setUserName] = useState('');
-  const [password, setPassword] = useState('');
-  const [loginError, setLoginError] = useState(false);
-  const [checked, setChecked] = useState(false);
+  console.log('authContext==>', authContext);
+  React.useEffect(() => {
+    // Load the user data from storage when the app starts
+    const loadUserData = async () => {
+      try {
+        const jsonValue = await AsyncStorage.getItem('userData');
+        const data = jsonValue != null ? JSON.parse(jsonValue) : null;
+        console.log('data', data);
+      } catch (e) {
+        console.error('Failed to load user data from storage');
+      }
+    };
+    loadUserData();
+  }, []);
 
   const goToNewCard = () => {
     navigation.navigate('card');
@@ -89,18 +98,19 @@ export default function DashBoard({navigation, props}) {
               alignItems: 'center',
             }}>
             <View style={{marginTop: 20}}>
-              <Text style={{fontWeight: 'bold', fontSize: 15}}>
-                Good Afternoon
-              </Text>
+              <Text style={{fontWeight: 'bold', fontSize: 15}}>Wellcome</Text>
               <Text style={{fontWeight: 'bold', fontSize: 25}}>
-                Emeka Adams
+                {authContext?.userData?.full_name}
               </Text>
 
               <Text style={{fontWeight: 'bold', color: 'gray', fontSize: 10}}>
                 <Icon4 name="crown" size={10} color="gray" /> Premium Member
               </Text>
             </View>
-            <Avatar.Image size={45} source={aImage} />
+            <Avatar.Image
+              size={45}
+              source={{uri: authContext?.userData?.image}}
+            />
           </View>
           <View style={[styles.backContainer, styles.extraStyle]}>
             <ScrollView horizontal={true}>
@@ -134,27 +144,41 @@ export default function DashBoard({navigation, props}) {
               }}>
               <View style={{alignItems: 'center'}}>
                 <View style={styles.circleView}>
-                  <Icon3 name="arrow-up" size={25} color="#fff" />
+                  <Icon3
+                    name="arrow-up"
+                    size={25}
+                    color="#fff"
+                    onPress={() =>
+                      navigation.navigate(SCREENS.ADD_DELIVERY_ADDRESS, {
+                        render: 'refill',
+                      })
+                    }
+                  />
                 </View>
-                <Text style={styles.centerViewText}>Phone</Text>
+                <Text style={styles.centerViewText}>Top Up</Text>
               </View>
               <View style={{alignItems: 'center'}}>
                 <View style={styles.circleView}>
                   <Icon name="angle-double-left" size={25} color="#fff" />
                 </View>
-                <Text style={styles.centerViewText}>Phone</Text>
+                <Text style={styles.centerViewText}>Swap</Text>
               </View>
               <View style={{alignItems: 'center'}}>
                 <View style={styles.circleView}>
-                  <Icon2 name="line-scan" size={25} color="#fff" />
+                  <Icon2
+                    name="line-scan"
+                    size={25}
+                    color="#fff"
+                    onPress={() => navigation.navigate(SCREENS.ACCESSORIES)}
+                  />
                 </View>
-                <Text style={styles.centerViewText}>Email</Text>
+                <Text style={styles.centerViewText}>Accessories</Text>
               </View>
               <View style={{alignItems: 'center'}}>
                 <View style={styles.circleView}>
                   <Icon5 name="support-agent" size={25} color="#fff" />
                 </View>
-                <Text style={styles.centerViewText}>Phone</Text>
+                <Text style={styles.centerViewText}>Support</Text>
               </View>
             </View>
           </View>

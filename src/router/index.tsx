@@ -114,10 +114,25 @@ const Router = () => {
     }),
     [],
   );
+  React.useEffect(() => {
+    // Load the user data from storage when the app starts
+    const loadUserData = async () => {
+      try {
+        const jsonValue = await AsyncStorage.getItem('userData');
+        const data = jsonValue != null ? JSON.parse(jsonValue) : null;
+        console.log('dataStack', data);
+
+        setUserData(data);
+      } catch (e) {
+        console.error('Failed to load user data from storage');
+      }
+    };
+    loadUserData();
+  }, []);
   return (
     <AuthContext.Provider value={{authContext, userData, setUserData}}>
       <NavigationContainer theme={scheme === 'dark' ? MyDarkTheme : MyThemes}>
-        {!state.userToken == null ? <AuthNavigator /> : <AppNavigator />}
+        {state.userToken == null ? <AuthNavigator /> : <AppNavigator />}
       </NavigationContainer>
     </AuthContext.Provider>
   );

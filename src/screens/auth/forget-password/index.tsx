@@ -29,7 +29,7 @@ import SCREENS from '../../../utils/constants';
 
 import makeStyles from './styles';
 import {RFValue} from 'react-native-responsive-fontsize';
-import * as Yup from 'yup';
+import {showMessage} from 'react-native-flash-message';
 import {Formik} from 'formik';
 import {
   widthPercentageToDP as wp,
@@ -49,7 +49,6 @@ import {authService} from '../../../services';
 import ErrorModal from '../../../components/error-modal';
 import Logo from '../../../assets/images/logo.png';
 import {NAME} from '../../../utils/regix';
-import {showMessage} from 'react-native-flash-message';
 
 export default function ForgetPassword({navigation}) {
   const {colors} = useTheme();
@@ -65,9 +64,38 @@ export default function ForgetPassword({navigation}) {
   const [loader, setLoader] = useState(false);
   const [countryCode, setCountryCode] = useState('NG');
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [selectCountryCode, setSelectCountryCode] = useState('');
+  const [selectCountryCode, setSelectCountryCode] = useState('234');
   const [numberCondition, setNumberCondition] = useState({min: 8, max: 11});
 
+  const forgotPassowd = async () => {
+    try {
+      setLoader(true);
+      let data = new FormData();
+      data.append('phone', phoneNumber);
+
+      const result = await authService.forgotPassword(data);
+      console.log('result', result);
+
+      if (result?.status == '0') {
+        setLoader(false);
+        showMessage({
+          message: result?.message,
+          type: 'danger',
+          icon: 'warning',
+        });
+      }
+      if (result?.message == 'Otp Received') {
+        setLoader(false);
+        navigation.navigate(SCREENS.OTP_VERIFICATION, {
+          phNumber: phoneNumber,
+          userId: result?.user_id,
+        });
+      }
+    } catch (e) {
+      setLoader(false);
+      console.log('error', e);
+    }
+  };
   return (
     <View style={styles.container}>
       <ActivityIndicator visible={loader} />
@@ -118,19 +146,13 @@ export default function ForgetPassword({navigation}) {
                 marginTop: 30,
               }}>
               <GradientButton
-                onPress={() => navigation.navigate(SCREENS.OTP_VERIFICATION)}
-                disabled={false}
+                onPress={() => forgotPassowd()}
+                disabled={loader || !phoneNumber}
                 title="Continue"
               />
               <Text style={styles.tcTextStyle}>
                 Suddenly remembered it?{' '}
-                <Pressable
-                  onPress={() =>
-                    navigation.navigate(SCREENS.OTP_VERIFICATION, {
-                      privacyPolicy: false,
-                      disableData: true,
-                    })
-                  }>
+                <Pressable onPress={() => navigation.navigate(SCREENS.LOGIN)}>
                   {({pressed}) => (
                     <Text
                       style={[

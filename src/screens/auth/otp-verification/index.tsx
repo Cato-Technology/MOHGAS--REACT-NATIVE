@@ -52,7 +52,7 @@ import Logo from '../../../assets/images/logo.png';
 import {NAME} from '../../../utils/regix';
 import {showMessage} from 'react-native-flash-message';
 
-export default function OtpVerification({navigation}) {
+export default function OtpVerification({navigation, route}) {
   const {colors} = useTheme();
   const styles = makeStyles(colors);
   const auth = React.useContext(AuthContext);
@@ -62,22 +62,18 @@ export default function OtpVerification({navigation}) {
   const [confirmPassword, setConfirmPassword] = useState('');
 
   const [loginError, setLoginError] = useState(false);
-  const [confirmed, setConfirmed] = useState(true);
+  const [confirmed, setConfirmed] = useState(false);
   const [checked, setChecked] = useState(false);
   const [loader, setLoader] = useState(false);
   const [countryCode, setCountryCode] = useState('NG');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [selectCountryCode, setSelectCountryCode] = useState('');
   const [numberCondition, setNumberCondition] = useState({min: 8, max: 11});
+  console.log('route', route.params);
 
   const signUpSchema = useMemo(
     () =>
       Yup.object({
-        fullname: Yup.string()
-          // .required('First Name is Required')
-          .matches(NAME, 'Name should only contain latin letters')
-          .required('Full name is Required'),
-
         password: Yup.string().required('Password is Required'),
         confirmPassword: Yup.string().test(
           'passwords-match',
@@ -86,15 +82,33 @@ export default function OtpVerification({navigation}) {
             return this.parent.password === value;
           },
         ),
-        referal_code: Yup.string().required('Refferal Code is Required'),
-        email: Yup.string()
-          .email('Please provide correct email')
-          .required('Email is required'),
-        // .required('Email is required'),
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   );
+  const veryfyOtp = async code => {
+    try {
+      setLoader(true);
+      let data = new FormData();
+      data.append('order_id', route?.params?.order_id);
+      data.append('otp', code);
+
+      const result = await authService.verifyOtp(data);
+      console.log('result', result);
+
+      if (result?.message == 'Wrong OTP') {
+        setLoader(false);
+        showMessage({
+          message: result?.message,
+          type: 'danger',
+          icon: 'warning',
+        });
+      }
+    } catch (e) {
+      setLoader(false);
+      console.log('error', e);
+    }
+  };
 
   const handleLogin = async values => {
     setLoader(true);
@@ -189,7 +203,7 @@ export default function OtpVerification({navigation}) {
                 codeInputFieldStyle={styles.underlineStyleBase}
                 codeInputHighlightStyle={styles.underlineStyleHighLighted}
                 onCodeFilled={code => {
-                  console.log(`Code is ${code}, you are good to go!`);
+                  veryfyOtp(code);
                 }}
               />
             </View>
@@ -215,11 +229,8 @@ export default function OtpVerification({navigation}) {
             <View style={{marginTop: 40, paddingHorizontal: 25}}>
               <Formik
                 initialValues={{
-                  fullname: '',
-                  email: '',
                   password: '',
                   confirmPassword: '',
-                  referal_code: '',
                 }}
                 onSubmit={values => handleLogin(values)}
                 validationSchema={signUpSchema}>
