@@ -7,8 +7,8 @@ import {
   DrawerItemList,
   DrawerItem,
 } from '@react-navigation/drawer';
-import EditProfile from '../screens/home/edit-profile';
-import EditEmail from '../screens/home/edit-email';
+//import EditProfile from '../cutstomer/screens/home/edit-profile';
+
 import BottomTabNavigator from './bottom-tab-navigator';
 import Icon from 'react-native-vector-icons/Feather';
 import Icon2 from 'react-native-vector-icons/Ionicons';
@@ -17,9 +17,11 @@ import Icon4 from 'react-native-vector-icons/MaterialIcons';
 
 import {Avatar} from 'react-native-paper';
 import aImage from '../assets/avatar.jpg';
-import EditUsername from '../screens/home/edit-username';
-import ForgetPassword from '../screens/auth/forget-password';
+import EditUsername from '../screens/customer/home/edit-username';
+
 import AuthContext from '../utils/auth-context';
+import EditEmail from '../screens/customer/home/edit-email';
+import ForgetPassword from '../screens/auth/forget-password';
 const Drawer = createDrawerNavigator();
 
 const CustomDrawerContent = props => {

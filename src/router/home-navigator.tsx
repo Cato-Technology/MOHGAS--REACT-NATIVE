@@ -2,22 +2,22 @@ import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import SCREENS from '../utils/constants';
-import DashBoard from '../screens/dashboard';
-import Chat from '../screens/chat';
+import DashBoard from '../screens/customer/dashboard';
+// import Chat from '../screens/cutomer/screens/chat';
 
-import Profile from '../screens/profile';
-import Mail from '../screens/mail';
-import OrderHistory from '../screens/order-history';
+// import Profile from '../screens/cutomer/profile';
+// import Mail from '../screens/cutomer/mail';
+import OrderHistory from '../screens/customer/order-history';
 import DrawerNavigator from './drawer-navigator';
-import Accessories from '../screens/accessories';
-import AddDeliveryAddress from '../screens/accessories/add-delivery-address';
-import ViewProduct from '../screens/accessories/view-product';
-import CheckOut from '../screens/accessories/checkout';
-import TrackOrder from '../screens/accessories/track-order';
-import PinLocation from '../screens/accessories/pinlocation';
-import ConnectVendor from '../screens/accessories/connect-vendor';
-import OrderSummary from '../screens/accessories/order-summary';
-import SwapCylinder from '../screens/accessories/swap-cylinder';
+import Accessories from '../screens/customer/accessories';
+import AddDeliveryAddress from '../screens/customer/accessories/add-delivery-address';
+import ViewProduct from '../screens/customer/accessories/view-product';
+import CheckOut from '../screens/customer/accessories/checkout';
+import TrackOrder from '../screens/customer/accessories/track-order';
+import PinLocation from '../screens/customer/accessories/pinlocation';
+import ConnectVendor from '../screens/customer/accessories/connect-vendor';
+import OrderSummary from '../screens/customer/accessories/order-summary';
+import SwapCylinder from '../screens/customer/accessories/swap-cylinder';
 
 const Stack = createNativeStackNavigator();
 
@@ -39,6 +39,7 @@ const HomeNavigator = () => {
       <Stack.Screen name={SCREENS.CHECKOUT} component={CheckOut} />
       <Stack.Screen name={SCREENS.TRACK_ORDER} component={TrackOrder} />
       <Stack.Screen name={SCREENS.PIN_LOCATION} component={PinLocation} />
+      <Stack.Screen name={SCREENS.ORDER_SUMMARY} component={OrderSummary} />
       <Stack.Screen name={SCREENS.CONNECT_VENDOR} component={ConnectVendor} />
       <Stack.Screen name={SCREENS.SWAP_CYLINDER} component={SwapCylinder} />
     </Stack.Navigator>

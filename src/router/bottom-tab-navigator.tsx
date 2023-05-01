@@ -12,9 +12,9 @@ import {
 } from 'react-native-responsive-screen';
 import {TabRouter, useTheme} from '@react-navigation/native';
 import HomeNavigator from './home-navigator';
-import Chat from '../screens/chat';
-import Mail from '../screens/mail';
-import Profile from '../screens/profile';
+import Chat from '../screens/customer/chat';
+import Mail from '../screens/customer/mail';
+import Profile from '../screens/customer/profile';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon2 from 'react-native-vector-icons/Entypo';
 import Icon3 from 'react-native-vector-icons/Ionicons';

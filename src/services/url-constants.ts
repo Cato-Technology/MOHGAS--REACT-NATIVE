@@ -8,6 +8,9 @@ const API_URLS = {
   //Profile constants
   UPDATE_USER: '/Api/update_user',
   GET_USER: '/Api/user_details',
+
+  //order history contants
+  ORDER_HISTORY: '/Api/user_order_history',
 };
 
 export {API_URLS};

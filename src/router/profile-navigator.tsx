@@ -3,8 +3,8 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import SCREENS from '../utils/constants';
 
-import Profile from '../screens/profile';
-import EditProfile from '../screens/home/edit-profile';
+import Profile from '../screens/customer/profile';
+import EditProfile from '../screens/customer/home/edit-profile';
 
 const Stack = createNativeStackNavigator();
 

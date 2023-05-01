@@ -1,6 +1,7 @@
+import {OrderState} from './orders/OrderState';
 import {UserState} from './user/UserState';
 
 export interface IAppState {
-  //auth: AuthState;
+  order: OrderState;
   user: UserState;
 }
