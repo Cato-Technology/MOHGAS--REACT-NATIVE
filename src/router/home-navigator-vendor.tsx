@@ -25,6 +25,7 @@ import AddProduct from '../screens/vendor/add-product';
 import Products from '../screens/vendor/products';
 import UpdatePrice from '../screens/vendor/update-price';
 import UpdateVendorAccount from '../screens/vendor/update-account';
+import VendorRequest from '../screens/vendor/request';
 
 const Stack = createNativeStackNavigator();
 
@@ -51,6 +52,7 @@ const HomeNavigatorVendor = () => {
         name={SCREENS.UPDATE_ACCOUNT_VENDOR}
         component={UpdateVendorAccount}
       />
+      <Stack.Screen name={SCREENS.VENDOR_REQUEST} component={VendorRequest} />
       <Stack.Screen name="AppDrawerStack" component={DrawerNavigator} />
       <Stack.Screen name={SCREENS.ACCESSORIES} component={Accessories} />
       <Stack.Screen

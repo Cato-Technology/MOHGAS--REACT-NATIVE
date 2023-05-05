@@ -80,6 +80,10 @@ const Support = ({navigation}) => {
           title="Update Account"
           onPress={() => navigation.navigate(SCREENS.UPDATE_ACCOUNT_VENDOR)}
         />
+        <Button
+          title="Vendor Request"
+          onPress={() => navigation.navigate(SCREENS.VENDOR_REQUEST)}
+        />
       </View>
     </ScrollView>
   );

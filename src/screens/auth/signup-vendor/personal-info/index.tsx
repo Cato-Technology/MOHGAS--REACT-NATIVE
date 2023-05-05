@@ -22,9 +22,9 @@ import {
   PhoneNumber,
   CheckBox,
   InputWithLabel,
-} from '../../../../../components';
+} from '../../../../components';
 
-import SCREENS from '../../../../../utils/constants';
+import SCREENS from '../../../../utils/constants';
 
 import makeStyles from './styles';
 import {RFValue} from 'react-native-responsive-fontsize';
@@ -41,16 +41,16 @@ import {
 export const PASS_REGIX =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import AuthContext from '../../../../../utils/auth-context';
+import AuthContext from '../../../../utils/auth-context';
 import {useTheme} from '@react-navigation/native';
-import GradientButton from '../../../../../components/buttons/gradient-button';
-import {authService} from '../../../../../services';
-import ErrorModal from '../../../../../components/error-modal';
-import Logo from '../../../../../assets/images/logo.png';
-import {NAME} from '../../../../../utils/regix';
+import GradientButton from '../../../../components/buttons/gradient-button';
+import {authService} from '../../../../services';
+import ErrorModal from '../../../../components/error-modal';
+import Logo from '../../../../assets/images/logo.png';
+import {NAME} from '../../../../utils/regix';
 import {showMessage} from 'react-native-flash-message';
 
-export default function SignUpCustomer({navigation}) {
+export default function PersonalInformation({navigation}) {
   const {colors} = useTheme();
   const styles = makeStyles(colors);
   const auth = React.useContext(AuthContext);
@@ -164,6 +164,15 @@ export default function SignUpCustomer({navigation}) {
             </View>
           </View>
           <View style={{marginTop: 40, paddingHorizontal: 25}}>
+            <Text
+              style={{
+                color: '#4ca735',
+                fontSize: RFValue(14),
+                fontWeight: 'bold',
+                paddingHorizontal: 16,
+              }}>
+              Manger's Detail
+            </Text>
             <Formik
               initialValues={{
                 fullname: '',
@@ -202,61 +211,6 @@ export default function SignUpCustomer({navigation}) {
                       error={touched.fullname ? errors.fullname : ''}
                       onBlur={() => setFieldTouched('fullname')}
                     />
-
-                    <InputWithLabel
-                      label={'Email'}
-                      placeholder={'Eg. abc@abc.com'}
-                      containerStyles={{paddingHorizontal: 20}}
-                      labelStyle={{
-                        //   fontFamily: fonts.mulishSemiBold,
-                        color: colors.yellowHeading,
-                        fontSize: 15,
-                      }}
-                      onChange={handleChange('email')}
-                      value={values.email}
-                      error={touched.email ? errors.email : ''}
-                      onBlur={() => setFieldTouched('email')}
-                    />
-                    <View style={{height: 20}} />
-                    <Text style={styles.inputLablel}>Phone</Text>
-                    <PhoneNumber
-                      countryCode={countryCode}
-                      setCountryCode={setCountryCode}
-                      phoneNumber={phoneNumber}
-                      setPhoneNumber={setPhoneNumber}
-                      setSelectCountryCode={setSelectCountryCode}
-                      maxLength={numberCondition.max}
-                    />
-                    {phoneNumber !== '' &&
-                      (selectCountryCode == 63 ? (
-                        phoneNumber.charAt(0) == 0 ? (
-                          <Text style={styles.errorMessage}>
-                            Phonenumber must not start with 0
-                          </Text>
-                        ) : (
-                          phoneNumber.length < numberCondition.min && (
-                            <Text style={styles.errorMessage}>
-                              Must have
-                              {numberCondition.min}
-                              {numberCondition.max !== numberCondition.min &&
-                                -numberCondition.max}
-                              4-13 characters
-                            </Text>
-                          )
-                        )
-                      ) : (
-                        phoneNumber.length < numberCondition.min && (
-                          <Text style={styles.errorMessage}>
-                            Must have
-                            {numberCondition.min}
-                            {numberCondition.max !== numberCondition.min &&
-                              -numberCondition.max}
-                            4-13 characters
-                          </Text>
-                        )
-                      ))}
-
-                    <View style={{height: 20}} />
 
                     <InputWithLabel
                       label="Referral Code"
@@ -348,9 +302,12 @@ export default function SignUpCustomer({navigation}) {
                       zIndex: -1,
                     }}>
                     <GradientButton
-                      onPress={() => handleSubmit()}
-                      disabled={!isValid || loader || !checked}
-                      title="Save and continue"
+                      onPress={() => {
+                        // handleSubmit()
+                        navigation.navigate(SCREENS.OTP_VERIFICATION);
+                      }}
+                      // disabled={!isValid || loader || !checked}
+                      title="Create Account"
                     />
                     <Text
                       style={[

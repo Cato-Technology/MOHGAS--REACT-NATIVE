@@ -114,17 +114,6 @@ export default function DashBoard({navigation, props}) {
           </View>
           <View style={[styles.backContainer, styles.extraStyle]}>
             <ScrollView horizontal={true}>
-              {/* <TouchableOpacity
-                style={styles.leftContainer}
-                onPress={goToNewCard}>
-                <Image source={add} style={styles.logoImage} />
-                <MaterialIcon
-                  name="plus"
-                  size={30}
-                  color={theme.cardTextColor}
-                  style={styles.nexStyle}
-                />
-              </TouchableOpacity> */}
               <View style={[styles.rightContainer, styles.extraContainer]}>
                 <Image source={card} style={styles.styleImage} />
               </View>

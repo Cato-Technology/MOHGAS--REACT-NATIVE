@@ -31,6 +31,7 @@ export const makeStyles = (colors: any) =>
       fontSize: RFValue(9),
       fontWeight: 'bold',
       color: colors.yellowHeading,
+      width: '70%',
     },
   });
 export default makeStyles;

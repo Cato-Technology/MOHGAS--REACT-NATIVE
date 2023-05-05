@@ -170,42 +170,11 @@ export default function Login({navigation}) {
             </Text>
 
             <Text style={styles.centerText}>Or</Text>
-            <Text style={[styles.centerText, {fontSize: RFValue(12)}]}>
+            <Text
+              style={[styles.centerText, {fontSize: RFValue(12)}]}
+              onPress={() => navigation.navigate(SCREENS.SIGNUP_VENDOR)}>
               Register as Vendor
             </Text>
-            {/* <Text style={styles.centerText}>Connect With</Text>
-            <View style={{width: '100%', alignItems: 'center'}}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  width: '55%',
-                  justifyContent: 'space-between',
-                  paddingVertical: 30,
-                }}>
-                <View style={{alignItems: 'center'}}>
-                  <View style={styles.circleView}>
-                    <Icon name="phone" size={25} color="#fff" />
-                  </View>
-                  <Text style={styles.centerViewText}>Phone</Text>
-                </View>
-                <View style={{alignItems: 'center'}}>
-                  <View style={styles.circleView}>
-                    <Icon2 name="email" size={25} color="#fff" />
-                  </View>
-                  <Text style={styles.centerViewText}>Email</Text>
-                </View>
-                <View style={{alignItems: 'center'}}>
-                  <View style={styles.circleView}>
-                    <Icon3
-                      name="dots-three-horizontal"
-                      size={25}
-                      color="#fff"
-                    />
-                  </View>
-                  <Text style={styles.centerViewText}>Phone</Text>
-                </View>
-              </View>
-            </View> */}
           </View>
         </ScrollView>
       </KeyboardAvoidingView>

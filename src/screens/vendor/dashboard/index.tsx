@@ -115,17 +115,6 @@ export default function VendorDashBoard({navigation, props}) {
           </View>
           <View style={[styles.backContainer, styles.extraStyle]}>
             <ScrollView horizontal={true}>
-              {/* <TouchableOpacity
-                style={styles.leftContainer}
-                onPress={goToNewCard}>
-                <Image source={add} style={styles.logoImage} />
-                <MaterialIcon
-                  name="plus"
-                  size={30}
-                  color={theme.cardTextColor}
-                  style={styles.nexStyle}
-                />
-              </TouchableOpacity> */}
               <View style={[styles.rightContainer, styles.extraContainer]}>
                 <Image source={card} style={styles.styleImage} />
               </View>
@@ -244,12 +233,6 @@ export default function VendorDashBoard({navigation, props}) {
                 onPressDelete={() => {
                   console.log('item', item._id);
                 }}
-                // onPressEdit={() =>
-                //   navigation.navigate(SCREENS.ADDPAYMENTMETHOD, {
-                //     edit: true,
-                //     item: item,
-                //   })
-                // }
               />
             )}
             ListEmptyComponent={() => (
