@@ -23,7 +23,7 @@ import HomeNavigatorVendor from './home-navigator-vendor';
 
 const Tab = createBottomTabNavigator();
 
-const BottomTabNavigator = () => {
+const BottomTabNavigatorVendor = () => {
   const {colors} = useTheme();
 
   return (
@@ -42,7 +42,7 @@ const BottomTabNavigator = () => {
         tabBarLabel: ({focused}) => (
           <Text
             style={{
-              color: focused ? '#4ca757' : 'gray',
+              color: focused ? '#455F9B' : 'gray',
               fontSize: 9,
               paddingBottom: 5,
             }}>
@@ -80,7 +80,7 @@ const BottomTabNavigator = () => {
         component={HomeNavigatorVendor}
         options={{
           tabBarIcon: ({focused}) => (
-            <Icon name="home" size={30} color={focused ? '#4ca757' : 'gray'} />
+            <Icon name="home" size={30} color={focused ? '#455F9B' : 'gray'} />
           ),
         }}
       />
@@ -89,16 +89,16 @@ const BottomTabNavigator = () => {
         component={SportsNavigator}
         options={{
           tabBarIcon: ({focused}) => (
-            <SportIcon fill={focused ? '#4ca757' : 'gray'} />
+            <SportIcon fill={focused ? '#455F9B' : 'gray'} />
           ),
         }}
       /> */}
       <Tab.Screen
-        name={SCREENS.CHAT}
+        name={SCREENS.SUPPORT}
         component={Chat}
         options={{
           tabBarIcon: ({focused}) => (
-            <Icon2 name="chat" size={26} color={focused ? '#4ca757' : 'gray'} />
+            <Icon2 name="chat" size={26} color={focused ? '#455F9B' : 'gray'} />
           ),
         }}
       />
@@ -107,7 +107,7 @@ const BottomTabNavigator = () => {
         component={Mail}
         options={{
           tabBarIcon: ({focused}) => (
-            <Icon name="bell" size={24} color={focused ? '#4ca757' : 'gray'} />
+            <Icon name="bell" size={24} color={focused ? '#455F9B' : 'gray'} />
           ),
         }}
       />
@@ -121,7 +121,7 @@ const BottomTabNavigator = () => {
             <Icon3
               name="person"
               size={24}
-              color={focused ? '#4ca757' : 'gray'}
+              color={focused ? '#455F9B' : 'gray'}
             />
           ),
         }}
@@ -141,4 +141,4 @@ const styles = StyleSheet.create({
     zIndex: 3,
   },
 });
-export default BottomTabNavigator;
+export default BottomTabNavigatorVendor;

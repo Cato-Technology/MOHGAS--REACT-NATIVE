@@ -16,6 +16,7 @@ type Props = {
   price?: String;
   icon?: any;
   srNo?: String;
+  style?: any;
 };
 
 const DetailCard = ({
@@ -26,6 +27,7 @@ const DetailCard = ({
   price,
   icon,
   srNo,
+  style,
 }: Props) => {
   const navigations = useNavigation();
   const {colors} = useTheme();
@@ -37,7 +39,7 @@ const DetailCard = ({
           flexDirection: 'row',
           alignItems: 'center',
         }}>
-        <View style={styles.circleView}>{icon}</View>
+        <View style={[styles.circleView, style]}>{icon}</View>
         <View style={{marginLeft: 10}}>
           <Text style={styles.middleText}>{title}</Text>
           <View style={{flexDirection: 'row'}}>

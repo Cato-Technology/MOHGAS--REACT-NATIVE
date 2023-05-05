@@ -5,6 +5,7 @@ import BottomTabNavigator from './bottom-tab-navigator';
 
 import SCREENS from '../utils/constants';
 import DrawerNavigator from './drawer-navigator';
+import DrawerNavigatorVendor from './drawer-navigator-vendor';
 
 const Stack = createNativeStackNavigator();
 
@@ -15,6 +16,10 @@ const AppNavigator = () => {
       screenOptions={{
         headerShown: false,
       }}>
+      <Stack.Screen
+        name="AppDrawerStackVendor"
+        component={DrawerNavigatorVendor}
+      />
       <Stack.Screen name="AppDrawerStack" component={DrawerNavigator} />
     </Stack.Navigator>
   );

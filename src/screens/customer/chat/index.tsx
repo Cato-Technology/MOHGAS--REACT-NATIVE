@@ -57,6 +57,11 @@ const Chat = ({navigation}) => {
         title="Order Summary"
         onPress={() => navigation.navigate(SCREENS.ORDER_SUMMARY)}
       />
+      <Text style={{fontSize: 20}}>Vendor Branch</Text>
+      <Button
+        title="Add Branch"
+        onPress={() => navigation.navigate(SCREENS.ADD_BRANCH)}
+      />
     </View>
   );
 };

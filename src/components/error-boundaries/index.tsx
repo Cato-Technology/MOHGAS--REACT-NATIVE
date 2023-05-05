@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import {Text, View} from 'react-native';
+import {Image, Text, View} from 'react-native';
 
-//import { Logo } from 'assets/svgs/index';
+import Logo from '../../assets/images/logo.png';
 
 import {styles} from './styles';
 class ErrorBoundary extends Component {
@@ -27,12 +27,14 @@ class ErrorBoundary extends Component {
         <>
           <View style={styles.container}>
             <View style={styles.icon}>
-              {/* <Logo height="120" width="170" /> */}
-              <Text>replacr with logo</Text>
+              <Image
+                style={{marginTop: 100, width: 250, height: 250}}
+                source={Logo}
+              />
             </View>
             <Text style={styles.heading}>System Under Maintenance</Text>
             <Text style={styles.subHeading}>
-              BioMark App is not available at the moment.
+              Mohgas App is not available at the moment.
             </Text>
             <Text style={styles.subHeading}>Please come again later.</Text>
           </View>
