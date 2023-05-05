@@ -12,20 +12,26 @@ type Props = {
   onPressEdit?: any;
   onPressDelete?: any;
   title?: String;
-  subTitle?: String;
+  category?: String;
+  size?: String;
+  lastSeen?: String;
+  status?: String;
   price?: String;
-  icon?: any;
-  srNo?: String;
+  firstLetter?: string;
+  srNo?: Number;
   style?: any;
 };
 
-const BranchCard = ({
+const ProductCard = ({
   onPressEdit,
   onPressDelete,
   title,
-  subTitle,
+  category,
+  size,
+  lastSeen,
+  status,
   price,
-  icon,
+  firstLetter,
   srNo,
   style,
 }: Props) => {
@@ -34,23 +40,28 @@ const BranchCard = ({
   const styles = makeStyles(colors);
   return (
     <View style={styles.main}>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-        }}>
-        <View style={[styles.circleView, style]}>{icon}</View>
+      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <Text style={{paddingRight: 13}}>{srNo}</Text>
+        <View style={[styles.circleView, style]}>
+          <Text style={styles.middleText}>{firstLetter}</Text>
+        </View>
         <View style={{marginLeft: 10}}>
           <Text style={styles.middleText}>{title}</Text>
-          <View style={{flexDirection: 'row'}}>
-            <Text style={[styles.detailText, {width: '60%'}]}>{subTitle}</Text>
-            <Text style={styles.detailText}>{srNo}</Text>
-          </View>
+          <Text style={styles.detailText}>{category}</Text>
+          <Text style={styles.detailText}>{size}</Text>
         </View>
       </View>
-      <Text style={styles.headingText}>{price}</Text>
+      <View>
+        <Text style={[styles.detailText, {color: 'green', textAlign: 'right'}]}>
+          {status}
+        </Text>
+
+        <Text style={[styles.detailText, {textAlign: 'right', color: '#000'}]}>
+          {price}
+        </Text>
+      </View>
     </View>
   );
 };
 
-export default BranchCard;
+export default ProductCard;

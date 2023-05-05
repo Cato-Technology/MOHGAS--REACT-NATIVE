@@ -25,6 +25,7 @@ type Props = {
   rightIcon?: any;
   showEye?: any;
   footerTextInput?: string;
+  styleInput?: any;
 };
 
 const InputWithLabel = ({
@@ -45,6 +46,7 @@ const InputWithLabel = ({
   rightIcon,
   showEye,
   footerTextInput,
+  styleInput,
 }: Props) => {
   const {colors} = useTheme();
   const styles = makeStyles(colors);
@@ -71,6 +73,7 @@ const InputWithLabel = ({
           leftIcon={leftIcon}
           rightIcon={rightIcon}
           showEye={showEye}
+          styleInput={styleInput}
         />
         {footerTextInput && (
           <Text style={styles.bottomText}>{footerTextInput}</Text>

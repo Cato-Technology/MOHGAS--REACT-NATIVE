@@ -33,15 +33,20 @@ const HeaderBottom = (props: Props) => {
       <View
         style={{
           width: '100%',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
         }}>
-        {props.title && (
-          <Text style={[styles.title, props.titleStyle]}>{props.title}</Text>
-        )}
-        {props.subTitle && (
-          <Text style={[styles.subTitle, props.titleStyle]}>
-            {props.subTitle}
-          </Text>
-        )}
+        <View>
+          {props.title && (
+            <Text style={[styles.title, props.titleStyle]}>{props.title}</Text>
+          )}
+          {props.subTitle && (
+            <Text style={[styles.subTitle, props.titleStyle]}>
+              {props.subTitle}
+            </Text>
+          )}
+        </View>
+        {props.rightIcon}
       </View>
     </View>
   );

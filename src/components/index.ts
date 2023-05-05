@@ -12,3 +12,5 @@ export {default as DetailCard} from './detail-card';
 export {default as ProductView} from './product-view';
 export {default as CheckOutCard} from './checkout-card';
 export {default as EditProfileModal} from './edit-profile-image';
+export {default as BranchCard} from './branch-card';
+export {default as ProductCard} from './product-card';

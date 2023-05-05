@@ -23,6 +23,7 @@ type Props = {
   leftIcon?: any;
   rightIcon?: any;
   showEye?: any;
+  styleInput: any;
 };
 
 export default function InputField(props: Props) {
@@ -40,6 +41,7 @@ export default function InputField(props: Props) {
         value={props.value}
         style={[
           styles.textFieldStyle,
+          props.styleInput,
           props.leftIcon && (props.showEye || props.rightIcon)
             ? {
                 width: '80%',

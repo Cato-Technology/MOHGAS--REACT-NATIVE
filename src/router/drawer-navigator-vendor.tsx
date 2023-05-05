@@ -56,22 +56,23 @@ const CustomDrawerContent = props => {
           </View>
         </View>
       </View>
-      <DrawerItemList {...props} />
       <DrawerItem
-        label="Edit Profile"
+        label="Business Account"
         labelStyle={{color: '#000000'}}
-        style={{marginVertical: -4, borderRadius: 0}}
+        style={{borderRadius: 0}}
         onPress={() =>
-          props.navigation.navigate(SCREENS.PROFILE_NAVIGATOR, {
-            screen: SCREENS.EDIT_PROFILE,
+          props.navigation.navigate(SCREENS.PROFILE_NAVIGATOR_VENDOR, {
+            screen: SCREENS.VENDOR_EDIT_PROFILE,
           })
         }
         icon={() => <Icon name="edit" size={20} color="#000000" />}
       />
+      <DrawerItemList {...props} />
+
       <DrawerItem
         label="Logout"
         labelStyle={{color: '#000000'}}
-        style={{marginVertical: -4, borderRadius: 0}}
+        style={{marginVertical: -5, borderRadius: 0}}
         onPress={() => auth.authContext.signOut()}
         icon={() => <Icon4 name="logout" size={22} color="#000000" />}
       />
@@ -93,8 +94,11 @@ const DrawerNavigatorVendor = () => {
       <Drawer.Screen
         name={SCREENS.MAIN_NAVIGATOR_VENDOR}
         component={BottomTabNavigatorVendor}
+        options={{
+          drawerLabel: () => null,
+          drawerItemStyle: {height: 0, marginBottom: -10, padding: 0},
+        }}
       />
-
       <Drawer.Screen
         name={SCREENS.EDIT_USERNAME}
         component={EditUsername}

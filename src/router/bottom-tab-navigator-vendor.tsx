@@ -18,8 +18,12 @@ import Profile from '../screens/customer/profile';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon2 from 'react-native-vector-icons/Entypo';
 import Icon3 from 'react-native-vector-icons/Ionicons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+
 import ProfileNavigator from './profile-navigator';
 import HomeNavigatorVendor from './home-navigator-vendor';
+import Support from '../screens/vendor/support';
+import ProfileNavigatorVendor from './profile-navigator-vendor';
 
 const Tab = createBottomTabNavigator();
 
@@ -80,7 +84,12 @@ const BottomTabNavigatorVendor = () => {
         component={HomeNavigatorVendor}
         options={{
           tabBarIcon: ({focused}) => (
-            <Icon name="home" size={30} color={focused ? '#455F9B' : 'gray'} />
+            <Icon
+              name="home"
+              size={25}
+              color={focused ? '#455F9B' : 'gray'}
+              style={{transform: [{rotateY: '180deg'}]}}
+            />
           ),
         }}
       />
@@ -95,10 +104,14 @@ const BottomTabNavigatorVendor = () => {
       /> */}
       <Tab.Screen
         name={SCREENS.SUPPORT}
-        component={Chat}
+        component={Support}
         options={{
           tabBarIcon: ({focused}) => (
-            <Icon2 name="chat" size={26} color={focused ? '#455F9B' : 'gray'} />
+            <MaterialIcons
+              name="support-agent"
+              size={26}
+              color={focused ? '#455F9B' : 'gray'}
+            />
           ),
         }}
       />
@@ -107,20 +120,20 @@ const BottomTabNavigatorVendor = () => {
         component={Mail}
         options={{
           tabBarIcon: ({focused}) => (
-            <Icon name="bell" size={24} color={focused ? '#455F9B' : 'gray'} />
+            <Icon name="bell" size={20} color={focused ? '#455F9B' : 'gray'} />
           ),
         }}
       />
       <Tab.Screen
-        name={SCREENS.PROFILE_NAVIGATOR}
-        component={ProfileNavigator}
+        name={SCREENS.PROFILE_NAVIGATOR_VENDOR}
+        component={ProfileNavigatorVendor}
         options={{
           tabBarLabel: 'Profile',
           tabBarLabelStyle: {color: 'gray', paddingBottom: 4},
           tabBarIcon: ({focused}) => (
             <Icon3
               name="person"
-              size={24}
+              size={22}
               color={focused ? '#455F9B' : 'gray'}
             />
           ),

@@ -20,6 +20,11 @@ import SwapCylinder from '../screens/customer/accessories/swap-cylinder';
 import VendorDashBoard from '../screens/vendor/dashboard';
 import OrderHistoryVendor from '../screens/vendor/order-history';
 import AddBranch from '../screens/vendor/add-branch';
+import Branches from '../screens/vendor/branches';
+import AddProduct from '../screens/vendor/add-product';
+import Products from '../screens/vendor/products';
+import UpdatePrice from '../screens/vendor/update-price';
+import UpdateVendorAccount from '../screens/vendor/update-account';
 
 const Stack = createNativeStackNavigator();
 
@@ -38,6 +43,14 @@ const HomeNavigatorVendor = () => {
         component={OrderHistoryVendor}
       />
       <Stack.Screen name={SCREENS.ADD_BRANCH} component={AddBranch} />
+      <Stack.Screen name={SCREENS.BRANCHES} component={Branches} />
+      <Stack.Screen name={SCREENS.ADD_PRODUCT} component={AddProduct} />
+      <Stack.Screen name={SCREENS.PRODUCTS} component={Products} />
+      <Stack.Screen name={SCREENS.UPDATE_PRICE} component={UpdatePrice} />
+      <Stack.Screen
+        name={SCREENS.UPDATE_ACCOUNT_VENDOR}
+        component={UpdateVendorAccount}
+      />
       <Stack.Screen name="AppDrawerStack" component={DrawerNavigator} />
       <Stack.Screen name={SCREENS.ACCESSORIES} component={Accessories} />
       <Stack.Screen

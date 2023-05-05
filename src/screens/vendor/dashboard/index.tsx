@@ -15,7 +15,8 @@ import {
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
-import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import Icon3 from 'react-native-vector-icons/Entypo';
 import Icon4 from 'react-native-vector-icons/FontAwesome5';
 import Icon5 from 'react-native-vector-icons/MaterialIcons';
@@ -148,14 +149,10 @@ export default function VendorDashBoard({navigation, props}) {
                     name="plus"
                     size={25}
                     color="#fff"
-                    onPress={() =>
-                      navigation.navigate(SCREENS.ADD_DELIVERY_ADDRESS, {
-                        render: 'refill',
-                      })
-                    }
+                    onPress={() => navigation.navigate(SCREENS.PRODUCTS)}
                   />
                 </View>
-                <Text style={styles.centerViewText}>Add Product</Text>
+                <Text style={styles.centerViewText}>Product</Text>
               </View>
               <View style={{alignItems: 'center'}}>
                 <View style={styles.circleView}>
@@ -165,18 +162,18 @@ export default function VendorDashBoard({navigation, props}) {
               </View>
               <View style={{alignItems: 'center'}}>
                 <View style={styles.circleView}>
-                  <Icon2
-                    name="line-scan"
+                  <FontAwesome5
+                    name="map-marker-alt"
                     size={25}
                     color="#fff"
-                    onPress={() => navigation.navigate(SCREENS.ACCESSORIES)}
+                    onPress={() => navigation.navigate(SCREENS.BRANCHES)}
                   />
                 </View>
                 <Text style={styles.centerViewText}>Branches</Text>
               </View>
               <View style={{alignItems: 'center'}}>
                 <View style={styles.circleView}>
-                  <Icon5 name="support-agent" size={25} color="#fff" />
+                  <AntDesign name="copy1" size={25} color="#fff" />
                 </View>
                 <Text style={styles.centerViewText}>Order History</Text>
               </View>
@@ -235,7 +232,7 @@ export default function VendorDashBoard({navigation, props}) {
             </Text>
           </TouchableOpacity>
           <FlatList
-            data={[1, 2, 3, 4, 5, 6, 7]}
+            data={[1, 2]}
             renderItem={({item, index}) => (
               <DetailCard
                 style={{backgroundColor: '#f9f5fc'}}
@@ -260,6 +257,38 @@ export default function VendorDashBoard({navigation, props}) {
             )}
             keyExtractor={(item, index) => index.toString()}
           />
+          <View
+            style={{
+              width: '100%',
+              backgroundColor: '#eb473d',
+              height: 60,
+
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginBottom: 10,
+              padding: 10,
+            }}>
+            <Text
+              style={[
+                styles.hardText,
+                {
+                  fontSize: 12,
+                  fontWeight: '700',
+                  textAlign: 'center',
+                  lineHeight: 20,
+                },
+              ]}>
+              Your account is pending. Upload CAC, License Permit and a Valid
+              ID...{'  '}
+              <Text
+                style={[
+                  styles.hardText,
+                  {fontSize: 12, color: '#000', fontWeight: '700'},
+                ]}>
+                Update Now?
+              </Text>
+            </Text>
+          </View>
         </View>
       </ScrollView>
     </View>
