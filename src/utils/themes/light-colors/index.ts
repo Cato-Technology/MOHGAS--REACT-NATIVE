@@ -12,5 +12,15 @@ const lightColors = {
   danger: '#FF0000',
   lightGrey: '#8493AE',
   modalBackground: '#fff',
+
+  // new colors
+  primaryBlue: '#3F60A0 ',
+  lightBlue: '#3F60A0 ',
+  primaryGreen: '#00AA13 ',
+  lightGreen: '#F1FAF2',
+  textColor: '#3F60A0',
+  subTitles: '#70767F',
+  errorColor: '#FF3131',
+  waringColor: '#E4C43D',
 };
 export default lightColors;

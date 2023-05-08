@@ -202,7 +202,7 @@ export default function ConnectVendor({navigation}) {
                 marginTop: 50,
               }}>
               <GradientButton
-                // onPress={() => handleSubmit()}
+                onPress={() => navigation.navigate(SCREENS.CONFIRM_PAYMENT)}
                 // disabled={!isValid || loader || !checked}
                 title="Countinue to Checkout"
               />

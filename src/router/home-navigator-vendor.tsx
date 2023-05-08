@@ -9,13 +9,13 @@ import SCREENS from '../utils/constants';
 import OrderHistory from '../screens/customer/order-history';
 import DrawerNavigator from './drawer-navigator';
 import Accessories from '../screens/customer/accessories';
-import AddDeliveryAddress from '../screens/customer/accessories/add-delivery-address';
+import AddDeliveryAddress from '../screens/customer/topup/add-delivery-address';
 import ViewProduct from '../screens/customer/accessories/view-product';
 import CheckOut from '../screens/customer/accessories/checkout';
 import TrackOrder from '../screens/customer/accessories/track-order';
-import PinLocation from '../screens/customer/accessories/pinlocation';
-import ConnectVendor from '../screens/customer/accessories/connect-vendor';
-import OrderSummary from '../screens/customer/accessories/order-summary';
+import PinLocation from '../screens/customer/topup/pinlocation';
+import ConnectVendor from '../screens/customer/topup/connect-vendor';
+import OrderSummary from '../screens/customer/topup/order-summary';
 import SwapCylinder from '../screens/customer/accessories/swap-cylinder';
 import VendorDashBoard from '../screens/vendor/dashboard';
 import OrderHistoryVendor from '../screens/vendor/order-history';
@@ -48,6 +48,7 @@ const HomeNavigatorVendor = () => {
       <Stack.Screen name={SCREENS.ADD_PRODUCT} component={AddProduct} />
       <Stack.Screen name={SCREENS.PRODUCTS} component={Products} />
       <Stack.Screen name={SCREENS.UPDATE_PRICE} component={UpdatePrice} />
+
       <Stack.Screen
         name={SCREENS.UPDATE_ACCOUNT_VENDOR}
         component={UpdateVendorAccount}

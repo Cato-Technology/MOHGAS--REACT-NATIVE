@@ -14,3 +14,6 @@ export {default as CheckOutCard} from './checkout-card';
 export {default as EditProfileModal} from './edit-profile-image';
 export {default as BranchCard} from './branch-card';
 export {default as ProductCard} from './product-card';
+export {default as SupportCard} from './support-card';
+export {default as SupportDropCard} from './support-drop-card';
+export {default as PaymentCheckBox} from './payment-checkbox';

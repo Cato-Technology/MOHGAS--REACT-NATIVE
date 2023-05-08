@@ -127,7 +127,7 @@ export default function AddDeliveryAddress({navigation, route}) {
           bottom: 10,
         }}>
         <GradientButton
-          // onPress={() => handleSubmit()}
+          onPress={() => navigation.navigate(SCREENS.PIN_LOCATION)}
           // disabled={!isValid || loader || !checked}
           title="Countinue"
         />

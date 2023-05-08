@@ -77,7 +77,7 @@ const BottomTabNavigator = () => {
       })}>
       <Tab.Screen
         name={'Home'}
-        component={HomeNavigatorVendor}
+        component={HomeNavigator}
         options={{
           tabBarIcon: ({focused}) => (
             <Icon name="home" size={30} color={focused ? '#4ca757' : 'gray'} />

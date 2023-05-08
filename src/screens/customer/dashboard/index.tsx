@@ -131,21 +131,18 @@ export default function DashBoard({navigation, props}) {
                 paddingVertical: 30,
                 paddingHorizontal: 30,
               }}>
-              <View style={{alignItems: 'center'}}>
+              <TouchableOpacity
+                style={{alignItems: 'center'}}
+                onPress={() =>
+                  navigation.navigate(SCREENS.ADD_DELIVERY_ADDRESS, {
+                    render: 'refill',
+                  })
+                }>
                 <View style={styles.circleView}>
-                  <Icon3
-                    name="arrow-up"
-                    size={25}
-                    color="#fff"
-                    onPress={() =>
-                      navigation.navigate(SCREENS.ADD_DELIVERY_ADDRESS, {
-                        render: 'refill',
-                      })
-                    }
-                  />
+                  <Icon3 name="arrow-up" size={25} color="#fff" />
                 </View>
                 <Text style={styles.centerViewText}>Top Up</Text>
-              </View>
+              </TouchableOpacity>
               <View style={{alignItems: 'center'}}>
                 <View style={styles.circleView}>
                   <Icon3
@@ -159,23 +156,22 @@ export default function DashBoard({navigation, props}) {
                 </View>
                 <Text style={styles.centerViewText}>Swap</Text>
               </View>
-              <View style={{alignItems: 'center'}}>
+              <TouchableOpacity
+                style={{alignItems: 'center'}}
+                onPress={() => navigation.navigate(SCREENS.ACCESSORIES)}>
                 <View style={styles.circleView}>
-                  <Icon2
-                    name="line-scan"
-                    size={25}
-                    color="#fff"
-                    onPress={() => navigation.navigate(SCREENS.ACCESSORIES)}
-                  />
+                  <Icon2 name="line-scan" size={25} color="#fff" />
                 </View>
                 <Text style={styles.centerViewText}>Accessories</Text>
-              </View>
-              <View style={{alignItems: 'center'}}>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{alignItems: 'center'}}
+                onPress={() => navigation.navigate(SCREENS.CUSTOMER_SUPPORT)}>
                 <View style={styles.circleView}>
                   <Icon5 name="support-agent" size={25} color="#fff" />
                 </View>
                 <Text style={styles.centerViewText}>Support</Text>
-              </View>
+              </TouchableOpacity>
             </View>
           </View>
         </View>

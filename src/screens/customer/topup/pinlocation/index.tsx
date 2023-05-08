@@ -215,9 +215,7 @@ export default function PinLocation({navigation}) {
           bottom: 10,
         }}>
         <GradientButton
-          // onPress={() => handleSubmit()}
-          // disabled={!isValid || loader || !checked}
-
+          onPress={() => navigation.navigate(SCREENS.CONNECT_VENDOR)}
           title="Countinue"
         />
       </View>

@@ -206,6 +206,7 @@ export default function OrderSummary({navigation}) {
                   <Text style={styles.btnTextStyle}>Cancel Order</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
+                  onPress={() => navigation.navigate(SCREENS.ORDER_SUMMARY)}
                   style={[styles.btnStyle, {backgroundColor: '#469830'}]}>
                   <Text style={styles.btnTextStyle}>Continue to payment</Text>
                 </TouchableOpacity>
