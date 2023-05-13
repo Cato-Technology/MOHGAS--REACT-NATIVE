@@ -19,10 +19,10 @@ export const makeStyles = (colors: any) =>
       height: 300,
       position: 'absolute',
 
-      top: -100,
+      top: -200,
       borderBottomRightRadius: 300,
       borderBottomLeftRadius: 300,
-      backgroundColor: '#f3faf5',
+      backgroundColor: '#f1f9f0',
       justifyContent: 'center',
       alignItems: 'center',
     },
@@ -107,24 +107,6 @@ export const makeStyles = (colors: any) =>
       alignItems: 'center',
       borderRadius: 50,
     },
-    cardContainer: {
-      backgroundColor: '#51ac3e',
-      width: '93%',
-      height: 180,
-      marginTop: 20,
-      borderRadius: 10,
-      justifyContent: 'center',
-      paddingHorizontal: 20,
-    },
-    gradientView: {
-      width: 165,
-      height: 165,
-      borderRadius: 90,
-      position: 'absolute',
-      right: 20,
-      top: 7,
-      zIndex: -3,
-    },
     centerViewText: {
       fontSize: 12,
       //  fontFamily: fonts.mulishRegular,
@@ -165,19 +147,74 @@ export const makeStyles = (colors: any) =>
       paddingLeft: 15,
       marginRight: 0,
     },
-    lightText: {
-      color: '#fff',
+    tagText: {
+      color: '#000000',
       fontSize: 11,
-      fontWeight: '300',
-      textAlign: 'left',
-      lineHeight: 15,
+      backgroundColor: '#efefef',
+      paddingHorizontal: 10,
+      paddingVertical: 3,
+      borderRadius: 3,
+      overflow: 'hidden',
+      marginRight: 15,
     },
-    hardText: {
-      color: '#fff',
-      fontWeight: 'bold',
-      fontSize: 12,
-      textAlign: 'left',
-      lineHeight: 15,
+    imageView2: {
+      height: heightPercentageToDP(10),
+      width: widthPercentageToDP(25),
+      // backgroundColor: colors.fieldGrey,
+      marginLeft: widthPercentageToDP(2),
+      marginTop: heightPercentageToDP(2),
+      borderRadius: 8,
+      alignItems: 'flex-end',
+    },
+    deleteIcon: {
+      marginTop: heightPercentageToDP(0.5),
+      marginHorizontal: widthPercentageToDP(2),
+    },
+    pdfWithBin: {
+      position: 'absolute',
+      right: heightPercentageToDP(2),
+      zIndex: 10,
+      top: heightPercentageToDP(3.5),
+    },
+    imageView: {
+      height: heightPercentageToDP(10),
+      width: widthPercentageToDP(25),
+      // backgroundColor: colors.fieldGrey,
+      marginLeft: widthPercentageToDP(2),
+      marginTop: heightPercentageToDP(2),
+      borderRadius: 8,
+      alignItems: 'center',
+
+      justifyContent: 'center',
+      backgroundColor: '#efefef',
+    },
+
+    addPage: {
+      color: colors.heading,
+    },
+    uploadView: {
+      flexDirection: 'row',
+      marginHorizontal: widthPercentageToDP(10),
+      marginTop: heightPercentageToDP(5),
+    },
+    uploadText: {
+      color: colors.heading,
+      marginHorizontal: widthPercentageToDP(3),
+      fontSize: 18,
+    },
+    text: {
+      color: colors.heading,
+      marginHorizontal: widthPercentageToDP(3),
+      fontSize: 17,
+    },
+    infoView: {
+      flexDirection: 'row',
+      marginTop: heightPercentageToDP(5),
+      marginHorizontal: widthPercentageToDP(10),
+    },
+    numberText: {
+      color: colors.heading,
+      fontSize: 18,
     },
   });
 export default makeStyles;

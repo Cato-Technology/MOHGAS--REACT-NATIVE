@@ -11,6 +11,7 @@ const API_URLS = {
 
   //order history contants
   ORDER_HISTORY: '/Api/user_order_history',
+  RECENT_HISTORY: '/Api/userDashboard',
 };
 
 export {API_URLS};

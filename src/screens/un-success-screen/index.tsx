@@ -40,8 +40,8 @@ import {authService} from '../../services';
 import ErrorModal from '../../components/error-modal';
 import Logo from '../../assets/images/logo.png';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {SuccessImage} from '../../assets/images/svgs';
-export default function SuccessScreen({navigation, route}) {
+import {UnSuccessImage} from '../../assets/images/svgs';
+export default function UnSuccessScreen({navigation, route}) {
   const {colors} = useTheme();
   const styles = makeStyles(colors);
   const auth = React.useContext(AuthContext);
@@ -90,30 +90,7 @@ export default function SuccessScreen({navigation, route}) {
         )}
 
         <View style={styles.icon} />
-        {render == 'UpdatePrice' && (
-          <View
-            style={{
-              marginTop: '65%',
-              paddingHorizontal: 30,
-              alignItems: 'center',
-            }}>
-            <SuccessImage width={50} height={50} />
-            <Text style={[styles.heading, {fontSize: RFValue(16)}]}>
-              {item.title}
-            </Text>
-            <Text style={styles.detailText}>{item.secondTitle}</Text>
-            <Text style={styles.detailText}>{item.oldPrice}</Text>
-            <Text style={styles.detailText}>{item.newPrice}</Text>
 
-            <View style={{marginTop: '15%'}}>
-              <GradientButton
-                onPress={() => navigation.navigate(SCREENS.DASHBOARD)}
-                disabled={false}
-                title={'Back to Dashboard'}
-              />
-            </View>
-          </View>
-        )}
         {render == 'topup' && (
           <View
             style={{
@@ -121,7 +98,7 @@ export default function SuccessScreen({navigation, route}) {
               paddingHorizontal: 30,
               alignItems: 'center',
             }}>
-            <SuccessImage width={50} height={50} />
+            <UnSuccessImage width={50} height={50} />
             <Text style={[styles.heading, {fontSize: RFValue(16)}]}>
               {item.title}
             </Text>
@@ -131,57 +108,13 @@ export default function SuccessScreen({navigation, route}) {
 
             <View style={{}}>
               <GradientButton
+                btnColor={'#eb473d'}
                 onPress={() => navigation.navigate(SCREENS.TRACK_ORDER)}
                 disabled={false}
                 title={'Track Order'}
               />
               <GradientButton
-                onPress={() => navigation.navigate(SCREENS.DASHBOARD)}
-                disabled={false}
-                title={'Back to Dashboard'}
-              />
-            </View>
-          </View>
-        )}
-        {render == 'MohgasWallet' && (
-          <View
-            style={{
-              marginTop: '65%',
-              paddingHorizontal: 30,
-              alignItems: 'center',
-            }}>
-            <SuccessImage width={50} height={50} />
-            <Text style={[styles.heading, {fontSize: RFValue(16)}]}>
-              {item?.title}
-            </Text>
-
-            <Text style={styles.detailText}>{item?.desc}</Text>
-
-            <View style={{marginTop: '15%'}}>
-              <GradientButton
-                onPress={() => navigation.navigate(SCREENS.DASHBOARD)}
-                disabled={false}
-                title={'Back to Dashboard'}
-              />
-            </View>
-          </View>
-        )}
-        {render == 'MohgasWalletTranSucess' && (
-          <View
-            style={{
-              marginTop: '65%',
-              paddingHorizontal: 30,
-              alignItems: 'center',
-            }}>
-            <SuccessImage width={50} height={50} />
-            <Text style={[styles.heading, {fontSize: RFValue(16)}]}>
-              {item?.title}
-            </Text>
-
-            <Text style={styles.detailText}>{item?.desc}</Text>
-
-            <View style={{marginTop: '15%'}}>
-              <GradientButton
+                btnColor={'#eb473d'}
                 onPress={() => navigation.navigate(SCREENS.DASHBOARD)}
                 disabled={false}
                 title={'Back to Dashboard'}

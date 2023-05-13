@@ -2,7 +2,7 @@ import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Login from '../screens/auth/login';
 import SCREENS from '../utils/constants';
-import BottomTabNavigator from './bottom-tab-navigator';
+import BottomTabNavigator from './customer-navigator/bottom-tab-navigator';
 import OnBoard from '../screens/on-board';
 import SignUpCustomer from '../screens/auth/signup';
 import ForgetPassword from '../screens/auth/forget-password';

@@ -1,13 +1,17 @@
 import React, {useState} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
-import BottomTabNavigator from './bottom-tab-navigator';
+import BottomTabNavigator from './customer-navigator/bottom-tab-navigator';
 
 import SCREENS from '../utils/constants';
-import DrawerNavigator from './drawer-navigator';
-import DrawerNavigatorVendor from './drawer-navigator-vendor';
+import DrawerNavigator from './customer-navigator/drawer-navigator';
+import DrawerNavigatorVendor from './vendor-navigator/drawer-navigator-vendor';
 import SuccessScreen from '../screens/success-screen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import UnSuccessScreen from '../screens/un-success-screen';
+import MohgasWallet from '../screens/customer/mogas-wallet';
+import FundWallet from '../screens/customer/mogas-wallet/fund-wallet';
+import CreateBvn from '../screens/customer/mogas-wallet/create-bvn';
 
 const Stack = createNativeStackNavigator();
 
@@ -49,8 +53,15 @@ const AppNavigator = () => {
           component={DrawerNavigatorVendor}
         />
       )}
-
       <Stack.Screen name={SCREENS.SUCCESS_SCREEN} component={SuccessScreen} />
+
+      <Stack.Screen
+        name={SCREENS.UN_SUCCESS_SCREEN}
+        component={UnSuccessScreen}
+      />
+      <Stack.Screen name={SCREENS.MOHGAS_WALLET} component={MohgasWallet} />
+      <Stack.Screen name={SCREENS.FUND_WALLET} component={FundWallet} />
+      <Stack.Screen name={SCREENS.CREATE_BVN} component={CreateBvn} />
     </Stack.Navigator>
   );
 };

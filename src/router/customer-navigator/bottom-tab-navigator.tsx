@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
-import SCREENS from '../utils/constants';
+import SCREENS from '../../utils/constants';
 
 import {StyleSheet, Text, View} from 'react-native';
 
@@ -12,14 +12,19 @@ import {
 } from 'react-native-responsive-screen';
 import {TabRouter, useTheme} from '@react-navigation/native';
 import HomeNavigator from './home-navigator';
-import Chat from '../screens/customer/chat';
-import Mail from '../screens/customer/mail';
-import Profile from '../screens/customer/profile';
+import Chat from '../../screens/customer/chat';
+
+import Profile from '../../screens/customer/profile';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import Icon2 from 'react-native-vector-icons/Entypo';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import Icon3 from 'react-native-vector-icons/Ionicons';
+import Icon4 from 'react-native-vector-icons/MaterialIcons';
 import ProfileNavigator from './profile-navigator';
-import HomeNavigatorVendor from './home-navigator-vendor';
+import HomeNavigatorVendor from '../vendor-navigator/home-navigator-vendor';
+import Support from '../../screens/customer/support';
+import Orders from '../../screens/customer/orders';
+import SupportNavigator from './support-navigator';
+import OrdersNavigator from './orders-navigator';
 
 const Tab = createBottomTabNavigator();
 
@@ -94,20 +99,49 @@ const BottomTabNavigator = () => {
         }}
       /> */}
       <Tab.Screen
-        name={SCREENS.CHAT}
-        component={Chat}
+        name={SCREENS.SUPPORT_NAVIGATOR}
+        component={SupportNavigator}
         options={{
+          tabBarLabel: ({focused, color, size}) => (
+            <Text
+              style={{
+                color: focused ? '#4ca757' : 'gray',
+                fontSize: 9,
+                marginBottom: 5,
+              }}>
+              SUPPORT
+            </Text>
+          ),
+          tabBarLabelStyle: {color: 'gray', paddingBottom: 4},
           tabBarIcon: ({focused}) => (
-            <Icon2 name="chat" size={26} color={focused ? '#4ca757' : 'gray'} />
+            <Icon4
+              name="support-agent"
+              size={30}
+              color={focused ? '#4ca757' : 'gray'}
+            />
           ),
         }}
       />
       <Tab.Screen
-        name={SCREENS.MAIL}
-        component={Mail}
+        name={SCREENS.ORDERS_NAVIGATOR_CUSTOMER}
+        component={OrdersNavigator}
         options={{
+          tabBarLabel: ({focused, color, size}) => (
+            <Text
+              style={{
+                color: focused ? '#4ca757' : 'gray',
+                fontSize: 9,
+                marginBottom: 5,
+              }}>
+              Orders
+            </Text>
+          ),
           tabBarIcon: ({focused}) => (
-            <Icon name="bell" size={24} color={focused ? '#4ca757' : 'gray'} />
+            <AntDesign
+              name="copy1"
+              size={24}
+              color={focused ? '#4ca757' : 'gray'}
+            />
           ),
         }}
       />
@@ -115,8 +149,16 @@ const BottomTabNavigator = () => {
         name={SCREENS.PROFILE_NAVIGATOR}
         component={ProfileNavigator}
         options={{
-          tabBarLabel: 'Profile',
-          tabBarLabelStyle: {color: 'gray', paddingBottom: 4},
+          tabBarLabel: ({focused, color, size}) => (
+            <Text
+              style={{
+                color: focused ? '#4ca757' : 'gray',
+                fontSize: 9,
+                marginBottom: 5,
+              }}>
+              PROFILE
+            </Text>
+          ),
           tabBarIcon: ({focused}) => (
             <Icon3
               name="person"

@@ -8,7 +8,6 @@ import {
 export const makeStyles = (colors: any) =>
   StyleSheet.create({
     main: {
-      width: '40%',
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',

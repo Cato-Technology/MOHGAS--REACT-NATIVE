@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
-import SCREENS from '../utils/constants';
+import SCREENS from '../../utils/constants';
 
 import {StyleSheet, Text, View} from 'react-native';
 
@@ -11,18 +11,18 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import {TabRouter, useTheme} from '@react-navigation/native';
-import HomeNavigator from './home-navigator';
-import Chat from '../screens/customer/chat';
-import Mail from '../screens/customer/mail';
-import Profile from '../screens/customer/profile';
+import HomeNavigator from '../customer-navigator/home-navigator';
+import Chat from '../../screens/customer/chat';
+
+import Profile from '../../screens/customer/profile';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon2 from 'react-native-vector-icons/Entypo';
 import Icon3 from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
-import ProfileNavigator from './profile-navigator';
+import ProfileNavigator from '../customer-navigator/profile-navigator';
 import HomeNavigatorVendor from './home-navigator-vendor';
-import Support from '../screens/vendor/support';
+import Support from '../../screens/vendor/support';
 import ProfileNavigatorVendor from './profile-navigator-vendor';
 
 const Tab = createBottomTabNavigator();
@@ -115,7 +115,7 @@ const BottomTabNavigatorVendor = () => {
           ),
         }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name={SCREENS.MAIL}
         component={Mail}
         options={{
@@ -123,7 +123,7 @@ const BottomTabNavigatorVendor = () => {
             <Icon name="bell" size={20} color={focused ? '#455F9B' : 'gray'} />
           ),
         }}
-      />
+      /> */}
       <Tab.Screen
         name={SCREENS.PROFILE_NAVIGATOR_VENDOR}
         component={ProfileNavigatorVendor}

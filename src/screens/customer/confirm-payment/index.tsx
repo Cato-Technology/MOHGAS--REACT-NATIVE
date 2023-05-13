@@ -65,6 +65,11 @@ import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import ImagePicker from 'react-native-image-crop-picker';
 import {Checkbox} from 'react-native-paper';
 let cameraIs = false;
+let sucessData = {
+  title: 'Thanks for your order',
+  secondTitle:
+    'Your order has been received. Our delivery patnner will get in  touch with you soon. thanks again for choosing us.',
+};
 let cbData = [
   {
     id: 1,
@@ -209,7 +214,12 @@ export default function ConfirmPayment({navigation}) {
               zIndex: -1,
             }}>
             <GradientButton
-              // onPress={() => handleSubmit()}
+              onPress={() =>
+                navigation.navigate(SCREENS.SUCCESS_SCREEN, {
+                  item: sucessData,
+                  render: 'topup',
+                })
+              }
               // disabled={!isValid || loader || !checked}
               title="Pay Now"
             />

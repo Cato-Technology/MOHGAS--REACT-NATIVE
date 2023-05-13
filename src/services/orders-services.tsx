@@ -25,7 +25,26 @@ function orderHistory(data) {
       });
   });
 }
+function orderRecentHistory(data) {
+  return new Promise((resolve, reject) => {
+    client
+      .post(API_URLS.RECENT_HISTORY, data)
+      .then(async response => {
+        try {
+          resolve(response);
+        } catch (e) {
+          console.log('oh', e);
+          reject(e);
+        }
+      })
+      .catch(async err => {
+        console.log('err', err);
+        reject(err);
+      });
+  });
+}
 
 export const orderServices = {
   orderHistory,
+  orderRecentHistory,
 };

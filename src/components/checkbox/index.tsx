@@ -13,18 +13,24 @@ type Props = {
   style?: any;
   checkSizeHeight?: number;
   checkSizeWidth?: number;
+  borderColor?: string;
+  checkColor?: string;
 };
 
 const CheckBox = (props: Props) => {
   return (
     <TouchableOpacity
       onPress={() => props.setChecked(!props.checked)}
-      style={[styles.checkbox, {borderColor: '#000000'}, props.style]}>
+      style={[
+        styles.checkbox,
+        {borderColor: props.borderColor ? props.borderColor : '#000000'},
+        props.style,
+      ]}>
       {props.checked && (
         <Check
-          height={props.checkSizeHeight ? props.checkSizeHeight : 12}
-          width={props.checkSizeWidth ? props.checkSizeWidth : 12}
-          fill={colors.text}
+          height={props.checkSizeHeight ? props.checkSizeHeight : 10}
+          width={props.checkSizeWidth ? props.checkSizeWidth : 10}
+          fill={props.checkColor ? props.checkColor : 'red'}
         />
       )}
     </TouchableOpacity>

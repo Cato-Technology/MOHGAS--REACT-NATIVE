@@ -7,6 +7,7 @@ import {heightPercentageToDP} from 'react-native-responsive-screen';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import makeStyles from './styles';
+import {capitalizeFirstLetter} from '../../utils/functions/general-functions';
 
 type Props = {
   onPressEdit?: any;
@@ -44,7 +45,20 @@ const BranchCard = ({
           <Text style={styles.middleText}>{title}</Text>
           <View style={{flexDirection: 'row'}}>
             <Text style={[styles.detailText, {width: '60%'}]}>{subTitle}</Text>
-            <Text style={styles.detailText}>{srNo}</Text>
+            <Text
+              style={[
+                styles.detailText,
+                {
+                  color:
+                    srNo == 'pending'
+                      ? '#ebae4f'
+                      : srNo == 'reject'
+                      ? 'red'
+                      : '#000',
+                },
+              ]}>
+              {capitalizeFirstLetter(srNo)}
+            </Text>
           </View>
         </View>
       </View>

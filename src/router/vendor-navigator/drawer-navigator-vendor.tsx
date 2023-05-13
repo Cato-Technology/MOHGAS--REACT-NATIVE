@@ -1,6 +1,6 @@
 import React from 'react';
 import {Text, View} from 'react-native';
-import SCREENS from '../utils/constants';
+import SCREENS from '../../utils/constants';
 import {
   createDrawerNavigator,
   DrawerContentScrollView,
@@ -9,19 +9,20 @@ import {
 } from '@react-navigation/drawer';
 //import EditProfile from '../cutstomer/screens/home/edit-profile';
 
-import BottomTabNavigator from './bottom-tab-navigator';
+import BottomTabNavigator from '../customer-navigator/bottom-tab-navigator';
 import Icon from 'react-native-vector-icons/Feather';
 import Icon2 from 'react-native-vector-icons/Ionicons';
 import Icon3 from 'react-native-vector-icons/Fontisto';
 import Icon4 from 'react-native-vector-icons/MaterialIcons';
 
 import {Avatar} from 'react-native-paper';
-import aImage from '../assets/avatar.jpg';
-import EditUsername from '../screens/customer/home/edit-username';
+import aImage from '../../assets/avatar.jpg';
+import EditUsername from '../../screens/customer/home/edit-username';
 
-import AuthContext from '../utils/auth-context';
-import EditEmail from '../screens/customer/home/edit-email';
-import ForgetPassword from '../screens/auth/forget-password';
+import AuthContext from '../../utils/auth-context';
+import EditEmail from '../../screens/customer/home/edit-email';
+import ForgetPassword from '../../screens/auth/forget-password';
+import BottomTabNavigatorVendor from './bottom-tab-navigator-vendor';
 const Drawer = createDrawerNavigator();
 
 const CustomDrawerContent = props => {
@@ -55,22 +56,23 @@ const CustomDrawerContent = props => {
           </View>
         </View>
       </View>
-      <DrawerItemList {...props} />
       <DrawerItem
-        label="Edit Profile"
+        label="Business Account"
         labelStyle={{color: '#000000'}}
-        style={{marginVertical: -4, borderRadius: 0}}
+        style={{borderRadius: 0}}
         onPress={() =>
-          props.navigation.navigate(SCREENS.PROFILE_NAVIGATOR, {
-            screen: SCREENS.EDIT_PROFILE,
+          props.navigation.navigate(SCREENS.PROFILE_NAVIGATOR_VENDOR, {
+            screen: SCREENS.VENDOR_EDIT_PROFILE,
           })
         }
         icon={() => <Icon name="edit" size={20} color="#000000" />}
       />
+      <DrawerItemList {...props} />
+
       <DrawerItem
         label="Logout"
         labelStyle={{color: '#000000'}}
-        style={{marginVertical: -4, borderRadius: 0}}
+        style={{marginVertical: -5, borderRadius: 0}}
         onPress={() => auth.authContext.signOut()}
         icon={() => <Icon4 name="logout" size={22} color="#000000" />}
       />
@@ -78,7 +80,7 @@ const CustomDrawerContent = props => {
   );
 };
 
-const DrawerNavigator = () => {
+const DrawerNavigatorVendor = () => {
   return (
     <Drawer.Navigator
       screenOptions={{
@@ -90,10 +92,13 @@ const DrawerNavigator = () => {
       }}
       drawerContent={props => <CustomDrawerContent {...props} />}>
       <Drawer.Screen
-        name={SCREENS.MAIN_NAVIGATOR}
-        component={BottomTabNavigator}
+        name={SCREENS.MAIN_NAVIGATOR_VENDOR}
+        component={BottomTabNavigatorVendor}
+        options={{
+          drawerLabel: () => null,
+          drawerItemStyle: {height: 0, marginBottom: -10, padding: 0},
+        }}
       />
-
       <Drawer.Screen
         name={SCREENS.EDIT_USERNAME}
         component={EditUsername}
@@ -135,4 +140,4 @@ const DrawerNavigator = () => {
     </Drawer.Navigator>
   );
 };
-export default DrawerNavigator;
+export default DrawerNavigatorVendor;

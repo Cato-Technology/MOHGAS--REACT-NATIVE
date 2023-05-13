@@ -12,7 +12,7 @@ export const makeStyles = (colors: any) =>
 
       paddingVertical: heightPercentageToDP(1),
       borderRadius: widthPercentageToDP(2),
-      width: '100%',
+      width: '95%',
       flexDirection: 'row',
       justifyContent: 'space-between',
     },

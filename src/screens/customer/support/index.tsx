@@ -200,7 +200,8 @@ export default function CustomerSupport({navigation}) {
                 width: '100%',
                 textAlign: 'center',
                 marginTop: 20,
-              }}>
+              }}
+              onPress={() => navigation.navigate(SCREENS.SEND_SUPPORT_ISSUE)}>
               Can't find the answer you are looking for?
             </Text>
 

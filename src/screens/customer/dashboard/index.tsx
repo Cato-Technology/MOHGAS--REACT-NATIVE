@@ -50,10 +50,21 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import AuthContext from '../../../utils/auth-context';
 import {useTheme} from '@react-navigation/native';
 import GradientButton from '../../../components/buttons/gradient-button';
+import {useDispatch, useSelector} from 'react-redux';
+import {OrderState} from '../../../redux/orders/OrderState';
+import {getReduxRecentOrderHistory} from '../../../redux/orders/orders-actions';
+import {capitalizeFirstLetter} from '../../../utils/functions/general-functions';
+import LinearGradient from 'react-native-linear-gradient';
 export default function DashBoard({navigation, props}) {
   const {colors} = useTheme();
   const styles = makeStyles(colors);
   const authContext = React.useContext(AuthContext);
+  const dispatch = useDispatch();
+  const recentHistory = useSelector(
+    (state: OrderState) => state.order.recentOrderHistory,
+  );
+  console.log('recentHistory', recentHistory);
+
   console.log('authContext==>', authContext);
   React.useEffect(() => {
     // Load the user data from storage when the app starts
@@ -69,9 +80,12 @@ export default function DashBoard({navigation, props}) {
     loadUserData();
   }, []);
 
-  const goToNewCard = () => {
-    navigation.navigate('card');
-  };
+  useEffect(() => {
+    //authContext?.userData?.user_id
+    let data = new FormData();
+    data.append('user_id', 33);
+    dispatch(getReduxRecentOrderHistory(data));
+  }, [dispatch]);
 
   return (
     <View style={styles.container}>
@@ -112,15 +126,29 @@ export default function DashBoard({navigation, props}) {
               source={{uri: authContext?.userData?.image}}
             />
           </View>
-          <View style={[styles.backContainer, styles.extraStyle]}>
-            <ScrollView horizontal={true}>
-              <View style={[styles.rightContainer, styles.extraContainer]}>
-                <Image source={card} style={styles.styleImage} />
+          <View style={styles.cardContainer}>
+            <LinearGradient
+              start={{x: 0, y: 0}}
+              end={{x: 1, y: 0}}
+              colors={['#50a93c', '#407226']}
+              style={styles.gradientView}
+            />
+            <View>
+              <Text style={{color: '#fff', fontWeight: 'bold'}}>
+                Mohgas Wallet
+              </Text>
+              <View style={{paddingVertical: 20}}>
+                <Text style={{color: '#fff'}}>Balance</Text>
+                <Text style={{color: '#fff'}}>N123.456.78</Text>
               </View>
-              <View style={[styles.rightContainer, styles.extraContainer]}>
-                <Image source={card} style={styles.styleImage} />
-              </View>
-            </ScrollView>
+              <Text style={{color: '#fff'}}>
+                ■ ■ ■ ■{'   '}■ ■ ■ ■{'   '}■ ■ ■ ■{'   '}1 2 3 4
+              </Text>
+              <Text style={{color: '#fff', marginTop: 10}}>
+                {' '}
+                {authContext?.userData?.full_name}
+              </Text>
+            </View>
           </View>
           <View style={{width: '100%', alignItems: 'center'}}>
             <View
@@ -150,7 +178,7 @@ export default function DashBoard({navigation, props}) {
                     size={25}
                     color="#fff"
                     style={{
-                      transform: [{rotate: '90deg'}],
+                      transform: [{rotate: '0deg'}],
                     }}
                   />
                 </View>
@@ -176,7 +204,7 @@ export default function DashBoard({navigation, props}) {
           </View>
         </View>
 
-        <View style={{paddingHorizontal: 20}}>
+        <View style={{paddingHorizontal: 20, paddingBottom: 30}}>
           <TouchableOpacity
             onPress={() => navigation.navigate(SCREENS.ORDER_HISTORY)}
             style={{
@@ -190,14 +218,29 @@ export default function DashBoard({navigation, props}) {
             </Text>
           </TouchableOpacity>
           <FlatList
-            data={[1, 2, 3, 4, 5, 6, 7]}
+            data={recentHistory?.slice(0, 3)}
             renderItem={({item, index}) => (
               <DetailCard
-                title={'Top Up - LPG 25kg'}
-                subTitle={'Today - 02.15 PM'}
-                price={'N12.34'}
-                srNo={'#MGS74TY'}
-                icon={<Icon3 name="arrow-up" size={25} color="#4ca757" />}
+                title={`${capitalizeFirstLetter(item.order_type)} - ${
+                  item.weight
+                }`}
+                subTitle={item.order_date}
+                price={item.price}
+                srNo={item.status}
+                icon={
+                  item.order_type == 'refill' ? (
+                    <Icon3 name="arrow-up" size={25} color="#4ca757" />
+                  ) : (
+                    <Icon3
+                      name="swap"
+                      size={22}
+                      color="#4ca757"
+                      style={{
+                        transform: [{rotate: '0deg'}],
+                      }}
+                    />
+                  )
+                }
                 onPressDelete={() => {
                   console.log('item', item._id);
                 }}
@@ -214,6 +257,48 @@ export default function DashBoard({navigation, props}) {
             )}
             keyExtractor={(item, index) => index.toString()}
           />
+
+          <View
+            style={{
+              backgroundColor: '#131a28',
+              height: 90,
+              borderRadius: 10,
+              paddingHorizontal: 20,
+
+              width: '100%',
+              justifyContent: 'center',
+              marginTop: 20,
+            }}>
+            <Text
+              style={{
+                position: 'absolute',
+                right: 10,
+                top: 7,
+                fontWeight: 'bold',
+                color: '#fff',
+              }}>
+              X
+            </Text>
+            <Text style={styles.hardText}>Open Mohgas Account</Text>
+            <Text style={styles.lightText}>
+              Open a virtual bank instantly with few clicks
+            </Text>
+            <Text
+              style={[
+                styles.lightText,
+                {
+                  fontSize: 9,
+                  textAlign: 'center',
+                  backgroundColor: '#393d48',
+                  width: 70,
+                  padding: 3,
+                  marginTop: 10,
+                },
+              ]}
+              onPress={() => navigation.navigate(SCREENS.MOHGAS_WALLET)}>
+              Learn More
+            </Text>
+          </View>
         </View>
       </ScrollView>
     </View>

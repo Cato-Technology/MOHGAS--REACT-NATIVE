@@ -13,6 +13,7 @@ type Props = {
   onPress?: any;
   title?: string;
   svg?: any;
+  btnColor?: any;
 };
 
 export default function GradientButton(props: Props) {
@@ -26,15 +27,19 @@ export default function GradientButton(props: Props) {
       onPress={props.onPress}
       disabled={props.disabled}
       style={{paddingVertical: 5}}>
-      <LinearGradient
-        start={{x: 0, y: 0}}
-        end={{x: 1, y: 0}}
-        colors={
-          props.disabled ? ['#808080', '#808080'] : ['#4ca757', '#4ca757']
-        }
-        style={styles.btnContainer}>
+      <View
+        style={[
+          styles.btnContainer,
+          {
+            backgroundColor: props.disabled
+              ? '#808080'
+              : props.btnColor
+              ? props.btnColor
+              : '#4ca757',
+          },
+        ]}>
         <Text style={styles.label}>{props.title}</Text>
-      </LinearGradient>
+      </View>
     </TouchableOpacity>
   );
 }

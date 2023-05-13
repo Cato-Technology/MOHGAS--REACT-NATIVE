@@ -2,7 +2,11 @@ import {View, Text, Button} from 'react-native';
 import React from 'react';
 import SCREENS from '../../../utils/constants';
 import {ScrollView} from 'react-native-gesture-handler';
-
+let sucessData = {
+  title: 'Order Not Sucessfull',
+  secondTitle:
+    "Opps! something isn't right and its not your fault. Retry or return to you dashboard. However we have noticed this.",
+};
 const Chat = ({navigation}) => {
   return (
     <ScrollView>
@@ -80,6 +84,15 @@ const Chat = ({navigation}) => {
         <Button
           title="Support send issue"
           onPress={() => navigation.navigate(SCREENS.SEND_SUPPORT_ISSUE)}
+        />
+        <Button
+          title="Unsucess"
+          onPress={() =>
+            navigation.navigate(SCREENS.UN_SUCCESS_SCREEN, {
+              item: sucessData,
+              render: 'topup',
+            })
+          }
         />
       </View>
     </ScrollView>

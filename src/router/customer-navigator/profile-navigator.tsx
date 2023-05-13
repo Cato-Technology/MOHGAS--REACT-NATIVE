@@ -1,10 +1,10 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
-import SCREENS from '../utils/constants';
+import SCREENS from '../../utils/constants';
 
-import Profile from '../screens/customer/profile';
-import EditProfile from '../screens/customer/home/edit-profile';
+import Profile from '../../screens/customer/profile';
+import EditProfile from '../../screens/customer/home/edit-profile';
 
 const Stack = createNativeStackNavigator();
 
@@ -15,7 +15,6 @@ const ProfileNavigator = () => {
       screenOptions={{
         headerShown: false,
       }}>
-      <Stack.Screen name={SCREENS.PROFILE} component={Profile} />
       <Stack.Screen name={SCREENS.EDIT_PROFILE} component={EditProfile} />
     </Stack.Navigator>
   );

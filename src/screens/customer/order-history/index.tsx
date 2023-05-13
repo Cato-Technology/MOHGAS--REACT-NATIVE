@@ -50,24 +50,27 @@ import {useTheme} from '@react-navigation/native';
 import GradientButton from '../../../components/buttons/gradient-button';
 import {useDispatch, useSelector} from 'react-redux';
 import {OrderState} from '../../../redux/orders/OrderState';
-import {getReduxOrderHistory} from '../../../redux/orders/orders-actions';
+import {
+  getReduxOrderHistory,
+  getReduxRecentOrderHistory,
+} from '../../../redux/orders/orders-actions';
 import {capitalizeFirstLetter} from '../../../utils/functions/general-functions';
-export default function DashBoard({navigation}) {
+export default function OrderHistory({navigation}) {
   const {colors} = useTheme();
   const styles = makeStyles(colors);
   const authContext = React.useContext(AuthContext);
   const dispatch = useDispatch();
   const orderHistory = useSelector(
-    (state: OrderState) => state.order.orderHistory,
+    (state: OrderState) => state.order.recentOrderHistory,
   );
   console.log('orderHistory', orderHistory);
-  console.log('authContext', authContext.userData.user_id);
+  console.log('authContext', authContext?.userData?.user_id);
 
   useEffect(() => {
     //authContext?.userData?.user_id
     let data = new FormData();
     data.append('user_id', 33);
-    dispatch(getReduxOrderHistory(data));
+    dispatch(getReduxRecentOrderHistory(data));
   }, [dispatch]);
 
   return (
@@ -117,11 +120,26 @@ export default function DashBoard({navigation}) {
               data={orderHistory}
               renderItem={({item, index}) => (
                 <DetailCard
-                  title={`${capitalizeFirstLetter(item.order_type)} - LPG 25kg`}
+                  title={`${capitalizeFirstLetter(item.order_type)} - ${
+                    item.weight
+                  }`}
                   subTitle={item.order_date}
-                  price={'N12.34'}
-                  srNo={capitalizeFirstLetter(item.status)}
-                  icon={<Icon3 name="arrow-up" size={25} color="#4ca757" />}
+                  price={item.price}
+                  srNo={item.status}
+                  icon={
+                    item.order_type == 'refill' ? (
+                      <Icon3 name="arrow-up" size={25} color="#4ca757" />
+                    ) : (
+                      <Icon3
+                        name="swap"
+                        size={22}
+                        color="#4ca757"
+                        style={{
+                          transform: [{rotate: '0deg'}],
+                        }}
+                      />
+                    )
+                  }
                   onPressDelete={() => {
                     console.log('item', item._id);
                   }}

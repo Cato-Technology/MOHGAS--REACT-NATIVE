@@ -21,3 +21,4 @@ export {default as BioSupport} from './bio-support';
 
 //Images
 export {default as SuccessImage} from './success-image';
+export {default as UnSuccessImage} from './un-success-image';

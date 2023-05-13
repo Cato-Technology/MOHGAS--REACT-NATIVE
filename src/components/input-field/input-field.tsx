@@ -8,9 +8,9 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 type Props = {
   margin?: any;
-  svg: any;
-  placeholder: string;
-  value: string;
+  svg?: any;
+  placeholder?: string;
+  value?: string;
   secureTextEntry?: boolean;
   onChange: any;
   onBlur?: any;
