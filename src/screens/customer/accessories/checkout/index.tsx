@@ -165,7 +165,7 @@ export default function CheckOut({navigation}) {
                 zIndex: -1,
               }}>
               <GradientButton
-                // onPress={() => handleSubmit()}
+                onPress={() => navigation.navigate(SCREENS.TRACK_ORDER)}
                 // disabled={!isValid || loader || !checked}
                 title="Checkout"
               />

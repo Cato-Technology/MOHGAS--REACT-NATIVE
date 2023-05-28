@@ -90,6 +90,7 @@ const EditProfile = () => {
       // compressImageMaxHeight: 113,
     })
       .then(image => {
+        console.log('resImage', image);
         let img = `data:${image.mime};base64,${image.data}`;
         setImage(img);
         setShowModal(false);
@@ -129,8 +130,10 @@ const EditProfile = () => {
             cameraIs = false;
           } else {
             //setImage(res.assets[0].base64);
+            console.log('resImage', res);
+
             let img = `data:${image[0].mime};base64,${image[0].base64}`;
-            setImage(img);
+            setImage(image[0].base64);
             setShowModal(false);
             cameraIs = false;
           }
@@ -140,13 +143,10 @@ const EditProfile = () => {
   };
   const handleUpdateUser = async values => {
     try {
-      setLoader(true);
+      // setLoader(true);
       let data = new FormData();
       data.append('user_id', authContext?.userData?.user_id);
-      if (image) {
-        data.append('image', image);
-      }
-
+      data.append('image', image);
       data.append('fullname', values.fullname);
       data.append('phone_no', values.phone_no);
       data.append('email', values.email);
@@ -154,6 +154,7 @@ const EditProfile = () => {
       data.append('lga', 'abc');
       data.append('state', values.state);
       data.append('city', values.city);
+
       console.log('data==>', data);
 
       const result = await profileService.updateProfile(data);

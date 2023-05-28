@@ -1,6 +1,6 @@
 import {useNavigation, useTheme} from '@react-navigation/native';
 import React, {useState} from 'react';
-import {Image, Pressable, Text, View} from 'react-native';
+import {Image, TouchableOpacity, Text, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {RFValue} from 'react-native-responsive-fontsize';
 import {heightPercentageToDP} from 'react-native-responsive-screen';
@@ -12,17 +12,18 @@ type Props = {
   title?: String;
   price?: String;
   image?: any;
+  onPress?: any;
 };
 
-const ProductView = ({title, image, price}: Props) => {
+const ProductView = ({title, image, price, onPress}: Props) => {
   const navigations = useNavigation();
   const {colors} = useTheme();
   const styles = makeStyles(colors);
   return (
-    <View
+    <TouchableOpacity
+      onPress={onPress}
       style={{
         alignItems: 'center',
-
         flex: 1 / 4,
         height: 110,
       }}>
@@ -31,7 +32,7 @@ const ProductView = ({title, image, price}: Props) => {
       <Text style={styles.middleText}>{title}</Text>
 
       <Text style={[styles.detailText]}>{price}</Text>
-    </View>
+    </TouchableOpacity>
   );
 };
 

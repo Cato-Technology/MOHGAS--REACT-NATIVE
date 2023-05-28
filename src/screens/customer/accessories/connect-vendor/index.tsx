@@ -19,7 +19,6 @@ import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon3 from 'react-native-vector-icons/Entypo';
 import Icon4 from 'react-native-vector-icons/FontAwesome5';
 import Icon5 from 'react-native-vector-icons/MaterialIcons';
-import card from '../../../../assets/card.png';
 import aImage from '../../../../assets/avatar.jpg';
 import {Avatar} from 'react-native-paper';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -53,7 +52,10 @@ import AuthContext from '../../../../utils/auth-context';
 import {useTheme} from '@react-navigation/native';
 import GradientButton from '../../../../components/buttons/gradient-button';
 import HeaderBottom from '../../../../components/header-bottom';
-export default function ViewProduct({navigation}) {
+import VendorCard from '../../../../components/vendor-card';
+import {mainServics} from '../../../../services';
+
+export default function ConnectVendorSwap({navigation, route}) {
   const {colors} = useTheme();
   const styles = makeStyles(colors);
   const auth = React.useContext(AuthContext);
@@ -63,9 +65,8 @@ export default function ViewProduct({navigation}) {
   const [loginError, setLoginError] = useState(false);
   const [checked, setChecked] = useState(false);
 
-  const goToNewCard = () => {
-    navigation.navigate('card');
-  };
+  console.log('route', route?.params?.data);
+  let data = route?.params?.data;
 
   return (
     <View style={styles.container}>
@@ -79,69 +80,86 @@ export default function ViewProduct({navigation}) {
         <View
           style={{
             width: '100%',
-
+            paddingHorizontal: 10,
             alignItems: 'center',
           }}>
           <View style={styles.icon} />
           <Header
-            title={'Market Place'}
+            title={'Refill'}
             back={true}
             rightIcon={
               <AntDesign name="setting" size={25} color={colors.text} />
             }
           />
           <View style={{width: '100%', paddingHorizontal: 20}}>
-            <View style={{height: 8}} />
-
-            <Image
-              style={{height: 200, width: '100%'}}
-              source={aImage}
-              resizeMode={'cover'}
+            <HeaderBottom
+              title="New Order"
+              subTitle={'Request for Refill'}
+              contentStyle={{marginTop: 50}}
+              rightIcon={
+                <View
+                  style={{
+                    backgroundColor: '#2f65a2',
+                    height: 30,
+                    borderRadius: 5,
+                  }}>
+                  <Icon5 name="sort" size={30} color="#fff" />
+                </View>
+              }
             />
-            <View style={{height: 8}} />
-            <Text style={{color: 'gray', fontSize: 16}}>Gas Cylinder</Text>
-            <Text style={{color: '#000000', fontSize: 16}}>N 8.00</Text>
-            <View style={{height: 8}} />
-            <Text style={{color: '#000000', fontSize: 12}}>
-              <AntDesign name="star" size={12} color={'#debf5a'} />
-              3.8{'   '}|{'   '}
-              23 Solid{'   '}|{'   '}5 Reviews
+            <InputWithLabel
+              label="Delivery Address"
+              labelStyle={{
+                //   fontFamily: fonts.mulishSemiBold,
+                color: colors.yellowHeading,
+                fontSize: 15,
+              }}
+              // onChange={handleChange('email')}
+              value={'100 Main Street fake, City, Country'}
+              // error={touched.email ? errors.email : ''}
+              // onBlur={() => setFieldTouched('email')}
+            />
+            <Text style={{width: '100%', textAlign: 'right', color: '#ecb241'}}>
+              Change
             </Text>
-            <View style={{height: 8}} />
-            <Text style={{color: 'gray', fontSize: 13}}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            </Text>
-            <View style={{height: 8}} />
-            <Text style={{color: '#000000', fontWeight: 'bold', fontSize: 16}}>
-              Size
-            </Text>
-            <View style={{flexDirection: 'row', marginTop: 10}}>
-              <Text style={styles.tagText}>6KG</Text>
-              <Text style={styles.tagText}>12KG</Text>
-              <Text
-                style={[
-                  styles.tagText,
-                  {backgroundColor: '#4ca757', color: '#fff'},
-                ]}>
-                25KG
-              </Text>
-              <Text style={styles.tagText}>50KG</Text>
-            </View>
-            <View
-              style={{
-                paddingHorizontal: widthPercentageToDP(3),
-                paddingVertical: heightPercentageToDP(2),
-                zIndex: -1,
-                marginTop: 50,
-              }}>
-              <GradientButton
-                onPress={() => navigation.navigate(SCREENS.CHECKOUT)}
-                // disabled={!isValid || loader || !checked}
-                title="Countinue to Checkout"
-              />
-            </View>
           </View>
+          <Text style={{width: '90%', color: '#000', fontSize: 16}}>
+            Select a Vendor
+          </Text>
+
+          <FlatList
+            data={data}
+            renderItem={({item}) => (
+              <View style={{paddingHorizontal: 20}}>
+                <VendorCard
+                  image={item.image}
+                  title={item?.user_name}
+                  orders={item?.orders}
+                  rating={item?.rating}
+                  price={item?.price}
+                  distance={parseFloat(item?.distance).toFixed(2) + 'KM'}
+                  time={item?.distance_time + 'mins'}
+                  pricePerKg={'Price Per Kg - ' + item?.price}
+                />
+              </View>
+            )}
+            keyExtractor={item => item.id}
+            showsHorizontalScrollIndicator={false}
+          />
+        </View>
+
+        <View
+          style={{
+            paddingHorizontal: widthPercentageToDP(10),
+            paddingVertical: heightPercentageToDP(2),
+            zIndex: -1,
+            marginTop: 50,
+          }}>
+          <GradientButton
+            onPress={() => navigation.navigate(SCREENS.ORDER_SUMMARY)}
+            // disabled={!isValid || loader || !checked}
+            title="Countinue to Checkout"
+          />
         </View>
       </ScrollView>
     </View>

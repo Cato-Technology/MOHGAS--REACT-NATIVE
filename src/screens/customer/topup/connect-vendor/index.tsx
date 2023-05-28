@@ -54,7 +54,7 @@ import GradientButton from '../../../../components/buttons/gradient-button';
 import HeaderBottom from '../../../../components/header-bottom';
 import VendorCard from '../../../../components/vendor-card';
 
-export default function ConnectVendor({navigation}) {
+export default function ConnectVendor({navigation, route}) {
   const {colors} = useTheme();
   const styles = makeStyles(colors);
   const auth = React.useContext(AuthContext);
@@ -64,10 +64,8 @@ export default function ConnectVendor({navigation}) {
   const [loginError, setLoginError] = useState(false);
   const [checked, setChecked] = useState(false);
 
-  const goToNewCard = () => {
-    navigation.navigate('card');
-  };
-
+  console.log('route', route.params.data);
+  let data = route?.params?.data;
   return (
     <View style={styles.container}>
       <ActivityIndicator visible={false} />
@@ -126,38 +124,26 @@ export default function ConnectVendor({navigation}) {
           <Text style={{width: '90%', color: '#000', fontSize: 16}}>
             Select a Vendor
           </Text>
-          <View style={{paddingHorizontal: 20}}>
-            <VendorCard
-              image={aImage}
-              title={'Ahmed Peter'}
-              orders={'403'}
-              rating={'4.3'}
-              price={'N300'}
-              distance={'8km'}
-              time={'23 mins'}
-              pricePerKg={'Price Per Kg - N950'}
-            />
-            <VendorCard
-              image={aImage}
-              title={'Ahmed Peter'}
-              orders={'403'}
-              rating={'4.3'}
-              price={'N300'}
-              distance={'8km'}
-              time={'23 mins'}
-              pricePerKg={'Price Per Kg - N950'}
-            />
-            <VendorCard
-              image={aImage}
-              title={'Ahmed Peter'}
-              orders={'403'}
-              rating={'4.3'}
-              price={'N300'}
-              distance={'8km'}
-              time={'23 mins'}
-              pricePerKg={'Price Per Kg - N950'}
-            />
-          </View>
+
+          <FlatList
+            data={data}
+            renderItem={({item}) => (
+              <View style={{paddingHorizontal: 20}}>
+                <VendorCard
+                  image={item.image}
+                  title={item?.user_name}
+                  orders={item?.orders}
+                  rating={item?.rating}
+                  price={item?.price}
+                  distance={parseFloat(item?.distance).toFixed(2) + 'KM'}
+                  time={item?.distance_time + 'mins'}
+                  pricePerKg={'Price Per Kg - ' + item?.price}
+                />
+              </View>
+            )}
+            keyExtractor={item => item.id}
+            showsHorizontalScrollIndicator={false}
+          />
         </View>
         <View
           style={{

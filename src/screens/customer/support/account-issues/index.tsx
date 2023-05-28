@@ -62,12 +62,27 @@ import VendorCard from '../../../../components/vendor-card';
 import LabResultModal from '../../../../components/lab-results-modal';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import ImagePicker from 'react-native-image-crop-picker';
+import {useDispatch, useSelector} from 'react-redux';
+import {getSupportAccountRelatedIssues} from '../../../../redux/global/actions';
 let cameraIs = false;
 export default function AccountIssues({navigation}) {
   const {colors} = useTheme();
   const styles = makeStyles(colors);
+  const dispatch = useDispatch();
 
   const authContext = React.useContext(AuthContext);
+  console.log('authContext', authContext);
+
+  const data = useSelector(
+    (state: State) => state?.global?.accountRealtedIssues,
+  );
+  useEffect(() => {
+    //authContext?.userData?.user_id
+    let data = new FormData();
+    data.append('user_id', 33);
+    dispatch(getSupportAccountRelatedIssues(data));
+  }, [dispatch]);
+  console.log('data', data);
 
   return (
     <View style={styles.container}>
@@ -120,14 +135,12 @@ export default function AccountIssues({navigation}) {
             </Text>
 
             <FlatList
-              data={[1, 2, 3, 4, 5, 6]}
+              data={data}
               contentContainerStyle={{marginTop: 10}}
               renderItem={({item, index}) => (
                 <SupportDropCard
-                  title={'Account Issues' + ' ' + (index + 1)}
-                  description={
-                    'Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur adipisicing elit.'
-                  }
+                  title={item?.account_topic}
+                  description={item?.account_topic_description}
                 />
               )}
               ListEmptyComponent={() => (

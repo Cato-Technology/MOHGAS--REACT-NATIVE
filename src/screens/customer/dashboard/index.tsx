@@ -171,7 +171,10 @@ export default function DashBoard({navigation, props}) {
                 </View>
                 <Text style={styles.centerViewText}>Top Up</Text>
               </TouchableOpacity>
-              <View style={{alignItems: 'center'}}>
+
+              <TouchableOpacity
+                onPress={() => navigation.navigate(SCREENS.SWAP_CYLINDER)}
+                style={{alignItems: 'center'}}>
                 <View style={styles.circleView}>
                   <Icon3
                     name="swap"
@@ -183,7 +186,7 @@ export default function DashBoard({navigation, props}) {
                   />
                 </View>
                 <Text style={styles.centerViewText}>Swap</Text>
-              </View>
+              </TouchableOpacity>
               <TouchableOpacity
                 style={{alignItems: 'center'}}
                 onPress={() => navigation.navigate(SCREENS.ACCESSORIES)}>

@@ -56,6 +56,9 @@ import VendorCard from '../../../../components/vendor-card';
 import LabResultModal from '../../../../components/lab-results-modal';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import ImagePicker from 'react-native-image-crop-picker';
+import {showMessage} from 'react-native-flash-message';
+import {mainServics} from '../../../../services';
+import Geolocation from '@react-native-community/geolocation';
 let cameraIs = false;
 export default function SwapCylinder({navigation}) {
   const {colors} = useTheme();
@@ -71,6 +74,11 @@ export default function SwapCylinder({navigation}) {
   const [isVisiable, setIsVisible] = React.useState(false);
   const [splices, setSplices] = useState();
   const [refresh, setRefreh] = useState(false);
+
+  const [myDirection, setMyDirection] = useState({
+    latitude: 0.0,
+    longitude: 0.0,
+  });
   const [radioButtons, setRadioButtons] = useState<RadioButtonProps[]>([
     {
       id: '1', // acts as primary key, should be unique and non-empty string
@@ -86,7 +94,13 @@ export default function SwapCylinder({navigation}) {
       borderColor: '#4ca757',
     },
   ]);
-
+  let sizeCylinders = [
+    {id: 1, size: 6},
+    {id: 2, size: 12},
+    {id: 3, size: 25},
+    {id: 4, size: 50},
+  ];
+  const [sizeSelected, setSizeSelected] = useState(sizeCylinders[0]);
   function onPressRadioButton(radioButtonsArray: RadioButtonProps[]) {
     setRadioButtons(radioButtonsArray);
   }
@@ -238,6 +252,172 @@ export default function SwapCylinder({navigation}) {
     }
   };
 
+  useEffect(() => {
+    const requestLocationPermission = async () => {
+      if (Platform.OS === 'ios') {
+        getOneTimeLocation();
+      } else {
+        try {
+          const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+          );
+          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+            getOneTimeLocation();
+          } else {
+            console.log('permission Denied');
+          }
+        } catch (err) {
+          console.warn(err);
+        }
+      }
+    };
+    setTimeout(() => {
+      requestLocationPermission();
+    }, 1000);
+  }, [navigation]);
+
+  const getOneTimeLocation = () => {
+    console.log('Getting Location ... ');
+    Geolocation.getCurrentPosition(
+      //Will give you the current location
+      position => {
+        console.log('currentLongitude', position);
+        const currentLongitude = JSON.stringify(position.coords.longitude);
+        const currentLatitude = JSON.stringify(position.coords.latitude);
+
+        setMyDirection({
+          latitude: Number(position.coords.latitude),
+          longitude: Number(position.coords.longitude),
+        });
+
+        // console.log('currentLatitude ', currentLatitude)
+        // console.log('currentLongitude ', currentLongitude)
+        // let tempCoords = {
+        //     latitude: Number(position.coords.latitude),
+        //     longitude: Number(position.coords.longitude)
+        // }
+        // if (MapRef.current && MapRef.current.animateCamera) {
+        //     MapRef.current.animateCamera({ center: tempCoords, pitch: 2, heading: 20, altitude: 200, zoom: 5 }, 1000)
+        // }
+      },
+      error => {
+        console.log('error ', error);
+      },
+      {
+        enableHighAccuracy: false,
+        timeout: 30000,
+        maximumAge: 1000,
+      },
+    );
+  };
+  console.log('list', list);
+
+  const handleSubmitted = async () => {
+    console.log('myDir', myDirection);
+    // console.log('list', list[0]?.base64);
+    let rdId = '';
+    radioButtons.map(ele => {
+      console.log('ele', ele);
+      if (ele?.selected) {
+        rdId = ele.id;
+      }
+    });
+    console.log('rdId', rdId);
+    try {
+      let data = new FormData();
+
+      data.append('latitude', myDirection.latitude);
+      data.append('longitude', myDirection.longitude);
+      data.append('user_id', 33);
+      data.append(
+        'address',
+        '39 Khayaban-e-Momin, Phase V Defence V Defence Housing Authority, Karachi, Karachi City, Sindh 75500, Pakistan',
+      );
+
+      // data.append('latitude', 24.817556456461972);
+      // data.append('longitude', 67.0560846850276);
+      data.append('size_of_cylinder', sizeSelected.size);
+      data.append('swap_type', rdId);
+      data.append('cylinder_img_1', {
+        uri: list[0]?.uri,
+        type: list[0]?.filetype,
+        name: list[0]?.filename,
+      });
+      data.append('cylinder_img_2', {
+        uri: list[1]?.uri,
+        type: list[1]?.filetype,
+        name: list[1]?.filename,
+      });
+      data.append('cylinder_img_3', {
+        uri: list[2]?.uri,
+        type: list[2]?.filetype,
+        name: list[2]?.filename,
+      });
+      data.append('cylinder_img_4', {
+        uri: list[3]?.uri,
+        type: list[3]?.filetype,
+        name: list[3]?.filename,
+      });
+
+      // data.append('cylinder_img_1', list[0]?.base64 ? list[0]?.base64 : '');
+      // data.append('cylinder_img_2', list[1]?.base64 ? list[1]?.base64 : '');
+      // data.append('cylinder_img_3', list[2]?.base64 ? list[2]?.base64 : '');
+      // data.append('cylinder_img_4', list[3]?.base64 ? list[3]?.base64 : '');
+
+      const resData = await mainServics.swapCylinder(data);
+      console.log('resData', resData);
+      if (resData?.message === 'Swap Cylinder Added') {
+        fetchData();
+      } else {
+        showMessage({
+          message: JSON.stringify(resData),
+          type: 'danger',
+          icon: 'danger',
+        });
+      }
+    } catch (e) {
+      showMessage({
+        message: JSON.stringify(e),
+        type: 'danger',
+        icon: 'danger',
+      });
+      console.log('e', e);
+    }
+  };
+  const fetchData = async () => {
+    try {
+      let data = new FormData();
+
+      // data.append('latitude', myDirection.latitude);
+      // data.append('longitude', myDirection.longitude);
+      data.append('latitude', 24.817556456461972);
+      data.append('longitude', 67.0560846850276);
+      data.append('userid', 33);
+      data.append('size_of_cylinder', sizeSelected.size);
+      console.log('data', data);
+
+      const resData = await mainServics.nearByGasAgencyAsPerRequiredSize(data);
+      console.log('resDataFetch', resData);
+      if (resData?.message === 'Near By Gas Agencies Found') {
+        navigation.navigate(SCREENS.CONNECT_VENDOR_SWAP, {
+          data: resData?.responsedata,
+        });
+      } else if (resData?.message === 'No Agencies Available Near By You') {
+        showMessage({
+          message: resData?.message,
+          type: 'warning',
+          icon: 'warning',
+        });
+      }
+    } catch (e) {
+      showMessage({
+        message: JSON.stringify(e),
+        type: 'danger',
+        icon: 'danger',
+      });
+      console.log('e', e);
+    }
+  };
   return (
     <View style={styles.container}>
       <ActivityIndicator visible={false} />
@@ -296,11 +476,7 @@ export default function SwapCylinder({navigation}) {
                 style={{color: '#000000', fontWeight: 'bold', fontSize: 16}}>
                 Swap Type
               </Text>
-              <RadioGroup
-                radioButtons={radioButtons}
-                onPress={onPressRadioButton}
-                layout={'row'}
-              />
+              <RadioGroup radioButtons={radioButtons} layout={'row'} />
             </View>
           </View>
         </View>
@@ -319,16 +495,19 @@ export default function SwapCylinder({navigation}) {
               Select size of your cylinder
             </Text>
             <View style={{flexDirection: 'row', marginTop: 10}}>
-              <Text style={styles.tagText}>6KG</Text>
-              <Text style={styles.tagText}>12KG</Text>
-              <Text
-                style={[
-                  styles.tagText,
-                  {backgroundColor: '#4ca757', color: '#fff'},
-                ]}>
-                25KG
-              </Text>
-              <Text style={styles.tagText}>50KG</Text>
+              {sizeCylinders.map(ele => (
+                <Text
+                  style={[
+                    styles.tagText,
+                    ele.id == sizeSelected.id && {
+                      backgroundColor: '#4ca757',
+                      color: '#fff',
+                    },
+                  ]}
+                  onPress={() => setSizeSelected(ele)}>
+                  {ele.size}KG
+                </Text>
+              ))}
             </View>
             <View style={{marginTop: 25}}>
               <Text
@@ -341,7 +520,6 @@ export default function SwapCylinder({navigation}) {
               </Text>
 
               <View>
-                {console.log('lis', list)}
                 <FlatList
                   data={[...list, {id: 'add-new'}]}
                   horizontal={true}
@@ -400,7 +578,7 @@ export default function SwapCylinder({navigation}) {
                 marginTop: 50,
               }}>
               <GradientButton
-                // onPress={() => handleSubmit()}
+                onPress={() => handleSubmitted()}
                 // disabled={!isValid || loader || !checked}
                 title="Countinue"
               />

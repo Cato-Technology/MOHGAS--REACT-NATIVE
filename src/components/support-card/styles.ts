@@ -11,6 +11,7 @@ export const makeStyles = (colors: any) =>
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
+      minHeight: 70,
     },
 
     entityText: {

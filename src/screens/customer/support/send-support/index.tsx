@@ -56,6 +56,8 @@ import VendorCard from '../../../../components/vendor-card';
 import LabResultModal from '../../../../components/lab-results-modal';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import ImagePicker from 'react-native-image-crop-picker';
+import {showMessage} from 'react-native-flash-message';
+import {mainServics} from '../../../../services';
 let cameraIs = false;
 export default function SendSupport({navigation}) {
   const {colors} = useTheme();
@@ -68,9 +70,12 @@ export default function SendSupport({navigation}) {
   const [modalData, setModalData] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [image, setImage] = useState('');
-  const [isVisiable, setIsVisible] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
   const [splices, setSplices] = useState();
   const [refresh, setRefreh] = useState(false);
+  const [subject, setSubject] = useState('');
+  const [message, setMessage] = useState('');
+
   const [radioButtons, setRadioButtons] = useState<RadioButtonProps[]>([
     {
       id: '1', // acts as primary key, should be unique and non-empty string
@@ -92,10 +97,10 @@ export default function SendSupport({navigation}) {
   }
   const imagePickerFromGallery = async () => {
     try {
-      setIsVisible(true);
+      //setIsVisible(true);
       let options = {
         mediaType: 'photo',
-        selectionLimit: 40,
+        selectionLimit: 3,
         includeBase64: true,
         maxWidth: 500,
         maxHeight: 500,
@@ -105,11 +110,11 @@ export default function SendSupport({navigation}) {
         console.log('res==>', res);
 
         if (res.didCancel) {
-          setIsVisible(false);
+          //  setIsVisible(false);
         } else if (res.errorMessage) {
-          setIsVisible(false);
+          //  setIsVisible(false);
         } else {
-          setIsVisible(false);
+          //  setIsVisible(false);
           let data = [...list];
           res?.assets?.forEach(asset => {
             console.log('asset', asset);
@@ -225,22 +230,99 @@ export default function SendSupport({navigation}) {
   const imagePickerFromCamera = async () => {
     /* eslint-disable @typescript-eslint/no-unused-vars */
     try {
-      setIsVisible(true);
-
       if (Platform.OS === 'android') {
         permissionAndroid();
       } else {
         permissionIos();
       }
     } catch (err) {
-      setIsVisible(false);
       console.warn(err);
     }
   };
 
+  const handleSubmit = async () => {
+    try {
+      setIsLoading(true);
+      let data = new FormData();
+      data.append('user_id', authContext?.userData?.user_id);
+      data.append('subject', subject);
+      data.append('message', message);
+      if (list.length == 1) {
+        data.append('screenshot_1', {
+          uri: list[0]?.uri,
+          type: list[0]?.filetype,
+          name: list[0]?.filename,
+        });
+      }
+      if (list.length == 2) {
+        data.append('screenshot_1', {
+          uri: list[0]?.uri,
+          type: list[0]?.filetype,
+          name: list[0]?.filename,
+        });
+        data.append('screenshot_2', {
+          uri: list[1]?.uri,
+          type: list[1]?.filetype,
+          name: list[1]?.filename,
+        });
+      }
+      if (list.length == 3) {
+        data.append('screenshot_1', {
+          uri: list[0]?.uri,
+          type: list[0]?.filetype,
+          name: list[0]?.filename,
+        });
+        data.append('screenshot_2', {
+          uri: list[1]?.uri,
+          type: list[1]?.filetype,
+          name: list[1]?.filename,
+        });
+        data.append('screenshot_3', {
+          uri: list[2]?.uri,
+          type: list[2]?.filetype,
+          name: list[2]?.filename,
+        });
+      }
+      console.log('formData', data);
+      {
+        console.log('lis', list);
+      }
+
+      const resData = await mainServics.sendSupport(data);
+      console.log('resData', resData);
+      if (resData?.message == 'Support Message Sent') {
+        showMessage({
+          message: resData?.message,
+          type: 'success',
+          icon: 'success',
+        });
+        setIsLoading(false);
+        navigation.goBack();
+      } else {
+        console.log('gda');
+
+        setIsLoading(false);
+        showMessage({
+          message: JSON.stringify(resData),
+          type: 'danger',
+          icon: 'danger',
+        });
+      }
+    } catch (e) {
+      console.log('e', e);
+
+      setIsLoading(false);
+      showMessage({
+        message: JSON.stringify(e),
+        type: 'danger',
+        icon: 'danger',
+      });
+      console.log('e', e);
+    }
+  };
   return (
     <View style={styles.container}>
-      <ActivityIndicator visible={false} />
+      <ActivityIndicator visible={isLoading} />
       {/* <ErrorModal
         onPress={() => setLoginError(!loginError)} 
         visible={loginError}
@@ -275,7 +357,7 @@ export default function SendSupport({navigation}) {
                 color: colors.yellowHeading,
                 fontSize: 15,
               }}
-              // onChange={handleChange('email')}
+              onChange={txt => setSubject(txt)}
               placeholder={'eg. Account Issue'}
               // error={touched.email ? errors.email : ''}
               // onBlur={() => setFieldTouched('email')}
@@ -289,7 +371,7 @@ export default function SendSupport({navigation}) {
                 fontSize: 15,
               }}
               containerStyles={{height: 60}}
-              // onChange={handleChange('email')}
+              onChange={txt => setMessage(txt)}
               placeholder={'eg. Transcation is not processed'}
               // error={touched.email ? errors.email : ''}
               // onBlur={() => setFieldTouched('email')}
@@ -310,11 +392,11 @@ export default function SendSupport({navigation}) {
               </Text>
 
               <View>
-                {console.log('lis', list)}
                 <FlatList
                   data={[...list, {id: 'add-new'}]}
                   horizontal={true}
                   showsVerticalScrollIndicator={false}
+                  showsHorizontalScrollIndicator={false}
                   extraData={refresh}
                   keyExtractor={item => item.id}
                   renderItem={({item, index}) => {
@@ -322,6 +404,7 @@ export default function SendSupport({navigation}) {
                       return (
                         <Pressable
                           style={styles.imageView}
+                          disabled={list.length > 2 ? true : false}
                           onPress={() => setShowModal(true)}>
                           <Feather color={'#fff'} name="plus" size={35} />
                         </Pressable>
@@ -369,8 +452,8 @@ export default function SendSupport({navigation}) {
                 marginTop: 50,
               }}>
               <GradientButton
-                // onPress={() => handleSubmit()}
-                // disabled={!isValid || loader || !checked}
+                onPress={() => handleSubmit()}
+                disabled={!subject || !message ? true : false}
                 title="Send Message"
               />
             </View>

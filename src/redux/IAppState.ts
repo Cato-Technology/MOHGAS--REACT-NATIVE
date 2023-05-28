@@ -1,7 +1,9 @@
+import {GlobalState} from './global/GlobalState';
 import {OrderState} from './orders/OrderState';
-import {UserState} from './user/UserState';
+//import {UserState} from './user/UserState';
 
 export interface IAppState {
   order: OrderState;
-  user: UserState;
+  // user: UserState;
+  global: GlobalState;
 }

@@ -39,7 +39,7 @@ const VendorCard = ({
           flexDirection: 'row',
           alignItems: 'center',
         }}>
-        <Avatar.Image size={45} source={image} />
+        <Avatar.Image size={45} source={{uri: image}} />
         <Badge style={{right: 12, backgroundColor: 'green'}} size={16} />
         <View style={{marginLeft: 10}}>
           <Text style={styles.middleText}>{title}</Text>

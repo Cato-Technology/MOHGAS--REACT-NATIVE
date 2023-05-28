@@ -14,6 +14,7 @@ import {
   SafeAreaView,
   ImageBackground,
   PermissionsAndroid,
+  Dimensions,
 } from 'react-native';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -64,6 +65,8 @@ import LabResultModal from '../../../components/lab-results-modal';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import ImagePicker from 'react-native-image-crop-picker';
 import {Checkbox} from 'react-native-paper';
+import {showMessage} from 'react-native-flash-message';
+import {mainServics} from '../../../services';
 let cameraIs = false;
 let sucessData = {
   title: 'Thanks for your order',
@@ -102,8 +105,12 @@ export default function ConfirmPayment({navigation}) {
 
   const authContext = React.useContext(AuthContext);
   const [isFlipped, setIsFlipped] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [cardId, setCardId] = useState();
 
   const hanldeCb = txt => {
+    console.log('txt', txt);
+    setCardId(txt);
     setIsFlipped(!isFlipped);
 
     cbData.map((ele, index) => {
@@ -115,9 +122,50 @@ export default function ConfirmPayment({navigation}) {
       }
     });
   };
+  const handleSubmitted = async () => {
+    try {
+      setIsLoading(true);
+      let data = new FormData();
+      data.append('cart_id', 130);
+      // data.append('latitude', myDirection.latitude);
+      // data.append('longitude', myDirection.longitude);
+      data.append('payment_type', cardId == 2 ? 'cod' : 'stripe');
+
+      const resData = await mainServics.checkOut(data);
+      console.log('resData', resData);
+      if (resData?.message === 'Payment Success') {
+        setIsLoading(false);
+        showMessage({
+          message: resData?.message,
+          type: 'warning',
+          icon: 'warning',
+        });
+        navigation.navigate(SCREENS.SUCCESS_SCREEN, {
+          item: sucessData,
+          render: 'topup',
+        });
+      } else {
+        setIsLoading(false);
+        showMessage({
+          message: JSON.stringify(resData),
+          type: 'danger',
+          icon: 'danger',
+        });
+      }
+    } catch (e) {
+      setIsLoading(false);
+      showMessage({
+        message: JSON.stringify(e),
+        type: 'danger',
+        icon: 'danger',
+      });
+      console.log('e', e);
+    }
+    //  navigation.navigate(SCREENS.CONNECT_VENDOR);
+  };
   return (
     <View style={styles.container}>
-      <ActivityIndicator visible={false} />
+      <ActivityIndicator visible={isLoading} />
       {/* <ErrorModal
         onPress={() => setLoginError(!loginError)} 
         visible={loginError}
@@ -127,18 +175,30 @@ export default function ConfirmPayment({navigation}) {
         <View
           style={{
             width: '100%',
-            paddingHorizontal: 10,
+
             alignItems: 'center',
+            flex: 1,
           }}>
           <View style={styles.icon} />
-          <Header
-            title={'Payment'}
-            back={true}
-            rightIcon={
-              <AntDesign name="setting" size={25} color={colors.text} />
-            }
-          />
-          <View style={{width: '100%', paddingHorizontal: 10}}>
+          <View
+            style={{
+              width: '100%',
+              paddingHorizontal: 10,
+              marginTop: Dimensions.get('window').height * 0.06,
+            }}>
+            <Header
+              title={'Payment'}
+              back={true}
+              rightIcon={
+                <AntDesign name="setting" size={25} color={colors.text} />
+              }
+            />
+          </View>
+          <View
+            style={{
+              width: '100%',
+              paddingHorizontal: 10,
+            }}>
             <HeaderBottom
               title="Confirm you payment"
               // subTitle={'How can we help?'}
@@ -214,13 +274,8 @@ export default function ConfirmPayment({navigation}) {
               zIndex: -1,
             }}>
             <GradientButton
-              onPress={() =>
-                navigation.navigate(SCREENS.SUCCESS_SCREEN, {
-                  item: sucessData,
-                  render: 'topup',
-                })
-              }
-              // disabled={!isValid || loader || !checked}
+              onPress={() => handleSubmitted()}
+              disabled={!cardId}
               title="Pay Now"
             />
           </View>

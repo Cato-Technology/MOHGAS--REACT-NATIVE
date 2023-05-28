@@ -62,12 +62,23 @@ import VendorCard from '../../../components/vendor-card';
 import LabResultModal from '../../../components/lab-results-modal';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import ImagePicker from 'react-native-image-crop-picker';
+import {useDispatch, useSelector} from 'react-redux';
+import {getSupportData} from '../../../redux/global/actions';
+import {State} from '../../../redux/global/GlobalState';
 let cameraIs = false;
 export default function CustomerSupport({navigation}) {
   const {colors} = useTheme();
   const styles = makeStyles(colors);
-
+  const dispatch = useDispatch();
   const authContext = React.useContext(AuthContext);
+  const data = useSelector((state: State) => state?.global?.supportData);
+  useEffect(() => {
+    //authContext?.userData?.user_id
+    let data = new FormData();
+    data.append('user_id', 33);
+    dispatch(getSupportData(data));
+  }, [dispatch]);
+  console.log('data', data);
 
   return (
     <View style={styles.container}>
@@ -119,7 +130,7 @@ export default function CustomerSupport({navigation}) {
               Help Topics
             </Text>
 
-            <View
+            {/* <View
               style={{
                 flexDirection: 'row',
                 width: '95%',
@@ -191,8 +202,40 @@ export default function CustomerSupport({navigation}) {
                   ' Lorem ipsum dolor sit amet consectetur adipisicing elit.'
                 }
               />
-            </View>
-
+            </View> */}
+            <FlatList
+              data={data}
+              numColumns={2}
+              scrollEnabled={false}
+              contentContainerStyle={{
+                width: '95%',
+                justifyContent: 'space-between',
+              }}
+              renderItem={({item, index}) => (
+                <View
+                  style={{
+                    marginLeft: 10,
+                    marginTop: 20,
+                  }}>
+                  <SupportCard
+                    icon={
+                      <Ionicons name="person" size={25} color={'#3478c3'} />
+                    }
+                    title={item?.supprt_topic_name}
+                    onPress={() => {
+                      if (item?.id == 1) {
+                        navigation.navigate(SCREENS.ACCOUNT_ISSUES);
+                      }
+                    }}
+                    description={item?.support_topic_description}
+                  />
+                </View>
+              )}
+              ListEmptyComponent={() => (
+                <Text style={styles.noDataText}>No Data</Text>
+              )}
+              keyExtractor={(item, index) => item.id.toString()}
+            />
             <Text
               style={{
                 color: '#000000',

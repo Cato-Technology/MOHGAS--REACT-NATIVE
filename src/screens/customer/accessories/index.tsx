@@ -12,6 +12,7 @@ import {
   KeyboardAvoidingView,
   FlatList,
   SafeAreaView,
+  PermissionsAndroid,
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -54,18 +55,116 @@ import AuthContext from '../../../utils/auth-context';
 import {useTheme} from '@react-navigation/native';
 import GradientButton from '../../../components/buttons/gradient-button';
 import HeaderBottom from '../../../components/header-bottom';
+import Geolocation from '@react-native-community/geolocation';
+import {mainServics} from '../../../services';
+import {showMessage} from 'react-native-flash-message';
 export default function Accessories({navigation}) {
   const {colors} = useTheme();
   const styles = makeStyles(colors);
   const auth = React.useContext(AuthContext);
   const authContext = React.useContext(AuthContext);
-  const [userName, setUserName] = useState('');
-  const [password, setPassword] = useState('');
-  const [loginError, setLoginError] = useState(false);
-  const [checked, setChecked] = useState(false);
+  const [accessories, setAccessories] = useState();
+  const [myDirection, setMyDirection] = useState({
+    latitudeDelta: 0.0922,
+    longitudeDelta: 0.0421,
+  });
+  useEffect(() => {
+    const requestLocationPermission = async () => {
+      if (Platform.OS === 'ios') {
+        getOneTimeLocation();
+      } else {
+        try {
+          const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+          );
+          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+            getOneTimeLocation();
+          } else {
+            console.log('permission Denied');
+          }
+        } catch (err) {
+          console.warn(err);
+        }
+      }
+    };
+    setTimeout(() => {
+      requestLocationPermission();
+    }, 1000);
+  }, [navigation]);
 
-  const goToNewCard = () => {
-    navigation.navigate('card');
+  const getOneTimeLocation = () => {
+    console.log('Getting Location ... ');
+    Geolocation.getCurrentPosition(
+      //Will give you the current location
+      position => {
+        console.log('currentLongitude', position);
+
+        setMyDirection({
+          latitude: Number(position.coords.latitude),
+          longitude: Number(position.coords.longitude),
+        });
+
+        // console.log('currentLatitude ', currentLatitude)
+        // console.log('currentLongitude ', currentLongitude)
+        // let tempCoords = {
+        //     latitude: Number(position.coords.latitude),
+        //     longitude: Number(position.coords.longitude)
+        // }
+        // if (MapRef.current && MapRef.current.animateCamera) {
+        //     MapRef.current.animateCamera({ center: tempCoords, pitch: 2, heading: 20, altitude: 200, zoom: 5 }, 1000)
+        // }
+      },
+      error => {
+        console.log('error ', error);
+      },
+      {
+        enableHighAccuracy: false,
+        timeout: 30000,
+        maximumAge: 1000,
+      },
+    );
+  };
+  console.log('myDir', myDirection);
+  useEffect(() => {
+    getAcceories();
+  }, []);
+  const getAcceories = async () => {
+    try {
+      let data = new FormData();
+      data.append('user_id', 33);
+      // data.append('latitude', myDirection.latitude);
+      // data.append('longitude', myDirection.longitude);
+      data.append('latitude', 24.817556456461972);
+      data.append('longitude', 67.0560846850276);
+      data.append('size_of_cylinder', 25.0);
+      const resData = await mainServics.getAccessoriesAsPerNearestAgencies(
+        data,
+      );
+      console.log('resData', resData);
+      if (resData?.message === 'Near By Gas Agencies Found') {
+        setAccessories(resData.responsedata);
+      } else if (resData?.message === 'No Agencies Available Near By You') {
+        showMessage({
+          message: resData?.message,
+          type: 'warning',
+          icon: 'warning',
+        });
+      } else {
+        showMessage({
+          message: JSON.stringify(resData),
+          type: 'danger',
+          icon: 'danger',
+        });
+      }
+    } catch (e) {
+      showMessage({
+        message: JSON.stringify(e),
+        type: 'danger',
+        icon: 'danger',
+      });
+      console.log('e', e);
+    }
+    //  navigation.navigate(SCREENS.CONNECT_VENDOR);
   };
 
   return (
@@ -144,6 +243,7 @@ export default function Accessories({navigation}) {
                   title={'Name of Product'}
                   price={'N 8.00'}
                   image={aImage}
+                  onPress={() => navigation.navigate(SCREENS.VIEW_PRODUCTS)}
                 />
               )}
               ListEmptyComponent={() => (

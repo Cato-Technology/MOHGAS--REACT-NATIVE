@@ -12,6 +12,7 @@ import {
   KeyboardAvoidingView,
   FlatList,
   SafeAreaView,
+  PermissionsAndroid,
 } from 'react-native';
 
 import Icon5 from 'react-native-vector-icons/MaterialIcons';
@@ -37,7 +38,7 @@ import {
   widthPercentageToDP,
   heightPercentageToDP,
 } from 'react-native-responsive-screen';
-
+import Geolocation from '@react-native-community/geolocation';
 // import i18next from 'i18next';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 export const PASS_REGIX =
@@ -47,20 +48,21 @@ import AuthContext from '../../../../utils/auth-context';
 import {useTheme} from '@react-navigation/native';
 import GradientButton from '../../../../components/buttons/gradient-button';
 import HeaderBottom from '../../../../components/header-bottom';
+import {mainServics} from '../../../../services';
 export default function AddDeliveryAddress({navigation, route}) {
   const {colors} = useTheme();
   const styles = makeStyles(colors);
   const auth = React.useContext(AuthContext);
   const authContext = React.useContext(AuthContext);
-  const [userName, setUserName] = useState('');
-  const [password, setPassword] = useState('');
+  const [address, setAddress] = useState('');
+
   const [loginError, setLoginError] = useState(false);
   const [checked, setChecked] = useState(false);
   const render = route?.params?.render;
-  const goToNewCard = () => {
-    navigation.navigate('card');
-  };
 
+  const handleApi = async () => {
+    navigation.navigate(SCREENS.PIN_LOCATION);
+  };
   return (
     <View style={styles.container}>
       <ActivityIndicator visible={false} />
@@ -108,8 +110,8 @@ export default function AddDeliveryAddress({navigation, route}) {
               color: colors.yellowHeading,
               fontSize: 15,
             }}
-            // onChange={handleChange('email')}
-            value={'100 Main Street fake, City, Country'}
+            onChange={txt => setAddress(txt)}
+            placeholder={'100 Main Street fake, City, Country'}
             // error={touched.email ? errors.email : ''}
             // onBlur={() => setFieldTouched('email')}
           />
@@ -121,14 +123,16 @@ export default function AddDeliveryAddress({navigation, route}) {
 
       <View
         style={{
-          paddingVertical: heightPercentageToDP(2),
           paddingHorizontal: 30,
           position: 'absolute',
           bottom: 10,
         }}>
         <GradientButton
-          onPress={() => navigation.navigate(SCREENS.PIN_LOCATION)}
-          // disabled={!isValid || loader || !checked}
+          onPress={() => {
+            // getOneTimeLocation();
+            handleApi();
+          }}
+          //  disabled={!address}
           title="Countinue"
         />
       </View>
