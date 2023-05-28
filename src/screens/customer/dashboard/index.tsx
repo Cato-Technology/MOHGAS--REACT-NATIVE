@@ -209,7 +209,11 @@ export default function DashBoard({navigation, props}) {
 
         <View style={{paddingHorizontal: 20, paddingBottom: 30}}>
           <TouchableOpacity
-            onPress={() => navigation.navigate(SCREENS.ORDER_HISTORY)}
+            onPress={() =>
+              navigation.navigate(SCREENS.ORDERS_NAVIGATOR_CUSTOMER, {
+                screen: SCREENS.ORDER_HISTORY,
+              })
+            }
             style={{
               width: '100%',
               flexDirection: 'row',

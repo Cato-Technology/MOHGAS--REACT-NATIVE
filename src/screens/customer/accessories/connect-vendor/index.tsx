@@ -54,6 +54,7 @@ import GradientButton from '../../../../components/buttons/gradient-button';
 import HeaderBottom from '../../../../components/header-bottom';
 import VendorCard from '../../../../components/vendor-card';
 import {mainServics} from '../../../../services';
+import {showMessage} from 'react-native-flash-message';
 
 export default function ConnectVendorSwap({navigation, route}) {
   const {colors} = useTheme();
@@ -63,10 +64,64 @@ export default function ConnectVendorSwap({navigation, route}) {
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState(false);
-  const [checked, setChecked] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [itemVendor, setItemVendor] = useState();
 
   console.log('route', route?.params?.data);
   let data = route?.params?.data;
+  console.log('itemVendor', itemVendor);
+
+  const handleOrder = async () => {
+    // navigation.navigate(SCREENS.CONFIRM_PAYMENT)}
+    try {
+      setIsLoading(true);
+      let item = route?.params?.item;
+
+      console.log('data=>', item);
+      let fdata = new FormData();
+      fdata.append('user_id', item.user_id);
+      // fdata.append('latitude', myDirection.latitude);
+      // fdata.append('longitude', myDirection.longitude);
+      fdata.append('latitude', item.latitude);
+      fdata.append('longitude', item.longitude);
+      fdata.append('address', item.faddress);
+      fdata.append('city', item.city);
+      fdata.append('postal_code', item.postal);
+      fdata.append('state', item.state);
+      // fdata.append('size_of_cylinder', val);
+      fdata.append('order_type', 'swapGas');
+      fdata.append('agency_id', itemVendor?.id);
+      fdata.append('product_id', itemVendor?.product_id);
+      fdata.append('price', itemVendor?.price);
+
+      console.log('ffff=>', fdata);
+
+      const resData = await mainServics.gasOrder(fdata);
+      console.log('resData', resData);
+      if (resData?.message === 'Cart ID Recieved') {
+        setIsLoading(false);
+        navigation.navigate(SCREENS.ORDER_SUMMARY_SWAP, {
+          id: resData?.responsedata?.cart_id,
+          itemVendor: itemVendor,
+        });
+      } else {
+        showMessage({
+          message: JSON.stringify(resData),
+          type: 'danger',
+          icon: 'danger',
+        });
+        setIsLoading(false);
+      }
+    } catch (e) {
+      showMessage({
+        message: JSON.stringify(e),
+        type: 'danger',
+        icon: 'danger',
+      });
+      console.log('e', e);
+      setIsLoading(false);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -85,7 +140,7 @@ export default function ConnectVendorSwap({navigation, route}) {
           }}>
           <View style={styles.icon} />
           <Header
-            title={'Refill'}
+            title={'Swap'}
             back={true}
             rightIcon={
               <AntDesign name="setting" size={25} color={colors.text} />
@@ -93,8 +148,8 @@ export default function ConnectVendorSwap({navigation, route}) {
           />
           <View style={{width: '100%', paddingHorizontal: 20}}>
             <HeaderBottom
-              title="New Order"
-              subTitle={'Request for Refill'}
+              title="Swap Cylinder"
+              subTitle={'Request for Swap Cylinder'}
               contentStyle={{marginTop: 50}}
               rightIcon={
                 <View
@@ -132,6 +187,8 @@ export default function ConnectVendorSwap({navigation, route}) {
             renderItem={({item}) => (
               <View style={{paddingHorizontal: 20}}>
                 <VendorCard
+                  onPress={() => setItemVendor(item)}
+                  backgroundColor={itemVendor == item ? '#dee8d2' : '#f5f5f5'}
                   image={item.image}
                   title={item?.user_name}
                   orders={item?.orders}
@@ -156,8 +213,8 @@ export default function ConnectVendorSwap({navigation, route}) {
             marginTop: 50,
           }}>
           <GradientButton
-            onPress={() => navigation.navigate(SCREENS.ORDER_SUMMARY)}
-            // disabled={!isValid || loader || !checked}
+            onPress={() => handleOrder()}
+            disabled={!itemVendor}
             title="Countinue to Checkout"
           />
         </View>

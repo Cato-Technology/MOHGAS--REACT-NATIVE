@@ -53,22 +53,132 @@ import {useTheme} from '@react-navigation/native';
 import GradientButton from '../../../../components/buttons/gradient-button';
 import HeaderBottom from '../../../../components/header-bottom';
 import VendorCard from '../../../../components/vendor-card';
+import {showMessage} from 'react-native-flash-message';
+import {mainServics} from '../../../../services';
 
 export default function ConnectVendor({navigation, route}) {
   const {colors} = useTheme();
   const styles = makeStyles(colors);
-  const auth = React.useContext(AuthContext);
-  const authContext = React.useContext(AuthContext);
-  const [userName, setUserName] = useState('');
-  const [password, setPassword] = useState('');
-  const [loginError, setLoginError] = useState(false);
-  const [checked, setChecked] = useState(false);
 
-  console.log('route', route.params.data);
-  let data = route?.params?.data;
+  const [isLoading, setIsLoading] = useState(false);
+  const [weight, setWeight] = useState('');
+  const [weightInput, setWeightInput] = useState('');
+  const [data, setData] = useState();
+  const [itemVendor, setItemVendor] = useState();
+  console.log('route', route.params);
+
+  let weightData = [
+    {label: '6KG', value: 6},
+    {label: '12KG', value: 12},
+    {label: '50KG', value: 50},
+    {label: 'Set Quantity', value: 'other'},
+  ];
+  const handleSubmitted = async val => {
+    try {
+      setIsLoading(true);
+      let item = route?.params?.item;
+
+      console.log('data=>', item);
+      let fdata = new FormData();
+      fdata.append('user_id', item.user_id);
+      // fdata.append('latitude', myDirection.latitude);
+      // fdata.append('longitude', myDirection.longitude);
+      fdata.append('latitude', item.latitude);
+      fdata.append('longitude', item.longitude);
+      fdata.append('faddress', item.faddress);
+      fdata.append('city', item.city);
+      fdata.append('postal', item.postal);
+      fdata.append('state', item.state);
+      fdata.append('size_of_cylinder', val);
+      console.log('ffff=>', fdata);
+
+      const resData = await mainServics.nearByGasAgencyRefill(fdata);
+      console.log('resData', resData);
+      if (resData?.message === 'Near By Gas Agencies Found') {
+        setData(resData?.responsedata);
+        setIsLoading(false);
+      } else if (resData?.message === 'No Agencies Available Near By You') {
+        showMessage({
+          message: resData?.message,
+          type: 'warning',
+          icon: 'warning',
+        });
+        setIsLoading(false);
+      } else {
+        showMessage({
+          message: JSON.stringify(resData),
+          type: 'danger',
+          icon: 'danger',
+        });
+        setIsLoading(false);
+      }
+    } catch (e) {
+      showMessage({
+        message: JSON.stringify(e),
+        type: 'danger',
+        icon: 'danger',
+      });
+      console.log('e', e);
+      setIsLoading(false);
+    }
+    //  navigation.navigate(SCREENS.CONNECT_VENDOR);
+  };
+  console.log('vvv', itemVendor);
+
+  const handleOrder = async val => {
+    // navigation.navigate(SCREENS.CONFIRM_PAYMENT)}
+    try {
+      setIsLoading(true);
+      let item = route?.params?.item;
+
+      console.log('data=>', item);
+      let fdata = new FormData();
+      fdata.append('user_id', item.user_id);
+      // fdata.append('latitude', myDirection.latitude);
+      // fdata.append('longitude', myDirection.longitude);
+      fdata.append('latitude', item.latitude);
+      fdata.append('longitude', item.longitude);
+      fdata.append('address', item.faddress);
+      fdata.append('city', item.city);
+      fdata.append('postal_code', item.postal);
+      fdata.append('state', item.state);
+      fdata.append('size_of_cylinder', val);
+      fdata.append('order_type', 'refillGas');
+      fdata.append('agency_id', itemVendor?.id);
+      fdata.append('product_id', itemVendor?.product_id);
+      fdata.append('price', itemVendor?.price);
+
+      console.log('ffff=>', fdata);
+
+      const resData = await mainServics.gasOrder(fdata);
+      console.log('resData', resData);
+      if (resData?.message === 'Cart ID Recieved') {
+        setIsLoading(false);
+        navigation.navigate(SCREENS.CONFIRM_PAYMENT, {
+          id: resData?.responsedata?.cart_id,
+          price: itemVendor?.price,
+        });
+      } else {
+        showMessage({
+          message: JSON.stringify(resData),
+          type: 'danger',
+          icon: 'danger',
+        });
+        setIsLoading(false);
+      }
+    } catch (e) {
+      showMessage({
+        message: JSON.stringify(e),
+        type: 'danger',
+        icon: 'danger',
+      });
+      console.log('e', e);
+      setIsLoading(false);
+    }
+  };
   return (
     <View style={styles.container}>
-      <ActivityIndicator visible={false} />
+      <ActivityIndicator visible={isLoading} />
       {/* <ErrorModal
         onPress={() => setLoginError(!loginError)} 
         visible={loginError}
@@ -121,29 +231,36 @@ export default function ConnectVendor({navigation, route}) {
               Change
             </Text>
           </View>
-          <Text style={{width: '90%', color: '#000', fontSize: 16}}>
-            Select a Vendor
-          </Text>
-
-          <FlatList
-            data={data}
-            renderItem={({item}) => (
-              <View style={{paddingHorizontal: 20}}>
-                <VendorCard
-                  image={item.image}
-                  title={item?.user_name}
-                  orders={item?.orders}
-                  rating={item?.rating}
-                  price={item?.price}
-                  distance={parseFloat(item?.distance).toFixed(2) + 'KM'}
-                  time={item?.distance_time + 'mins'}
-                  pricePerKg={'Price Per Kg - ' + item?.price}
-                />
-              </View>
-            )}
-            keyExtractor={item => item.id}
-            showsHorizontalScrollIndicator={false}
-          />
+          {data && (
+            <>
+              <Text style={{width: '90%', color: '#000', fontSize: 16}}>
+                Select a Vendor
+              </Text>
+              <FlatList
+                data={data}
+                renderItem={({item}) => (
+                  <View style={{paddingHorizontal: 20}}>
+                    <VendorCard
+                      onPress={() => setItemVendor(item)}
+                      backgroundColor={
+                        itemVendor == item ? '#dee8d2' : '#f5f5f5'
+                      }
+                      image={item.image}
+                      title={item?.user_name}
+                      orders={item?.orders}
+                      rating={item?.rating}
+                      price={item?.price}
+                      distance={parseFloat(item?.distance).toFixed(2) + 'KM'}
+                      time={item?.distance_time + 'mins'}
+                      pricePerKg={'Price Per Kg - ' + item?.price}
+                    />
+                  </View>
+                )}
+                keyExtractor={item => item.id}
+                showsHorizontalScrollIndicator={false}
+              />
+            </>
+          )}
         </View>
         <View
           style={{
@@ -157,7 +274,7 @@ export default function ConnectVendor({navigation, route}) {
               Size of cylinder
             </Text>
             <View style={{flexDirection: 'row', marginTop: 10}}>
-              <Text style={styles.tagText}>6KG</Text>
+              {/* <Text style={styles.tagText}>6KG</Text>
               <Text style={styles.tagText}>12KG</Text>
               <Text
                 style={[
@@ -167,19 +284,45 @@ export default function ConnectVendor({navigation, route}) {
                 25KG
               </Text>
               <Text style={styles.tagText}>50KG</Text>
-              <Text style={styles.tagText}>Set Quantity</Text>
+              <Text style={styles.tagText}>Set Quantity</Text> */}
+              {weightData.map(ele => (
+                <Text
+                  style={[
+                    styles.tagText,
+                    {
+                      backgroundColor:
+                        weight == ele.value ? '#4ca757' : '#efefef',
+                      color: weight == ele.value ? '#fff' : '#000000',
+                    },
+                  ]}
+                  onPress={() => {
+                    setWeight(ele.value);
+                    if (ele.value != 'other') {
+                      handleSubmitted(ele.value);
+                    }
+                  }}>
+                  {ele.label}
+                </Text>
+              ))}
             </View>
-            <InputWithLabel
-              labelStyle={{
-                //   fontFamily: fonts.mulishSemiBold,
-                color: colors.yellowHeading,
-                fontSize: 15,
-              }}
-              // onChange={handleChange('email')}
-              placeholder={'0'}
-              // error={touched.email ? errors.email : ''}
-              // onBlur={() => setFieldTouched('email')}
-            />
+            {weight == 'other' && (
+              <InputWithLabel
+                labelStyle={{
+                  //   fontFamily: fonts.mulishSemiBold,
+                  color: colors.yellowHeading,
+                  fontSize: 15,
+                }}
+                maxLength={3}
+                keyboardType={'numeric'}
+                onChange={txt => {
+                  setWeightInput(txt);
+                  handleSubmitted(txt);
+                }}
+                placeholder={'0'}
+                // error={touched.email ? errors.email : ''}
+                // onBlur={() => setFieldTouched('email')}
+              />
+            )}
             <View
               style={{
                 paddingHorizontal: widthPercentageToDP(3),
@@ -188,8 +331,10 @@ export default function ConnectVendor({navigation, route}) {
                 marginTop: 50,
               }}>
               <GradientButton
-                onPress={() => navigation.navigate(SCREENS.CONFIRM_PAYMENT)}
-                // disabled={!isValid || loader || !checked}
+                onPress={() => {
+                  handleOrder();
+                }}
+                disabled={!weight || !itemVendor}
                 title="Countinue to Checkout"
               />
             </View>

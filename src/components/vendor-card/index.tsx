@@ -1,6 +1,6 @@
 import {useNavigation, useTheme} from '@react-navigation/native';
 import React, {useState} from 'react';
-import {Image, Pressable, Text, View} from 'react-native';
+import {Image, TouchableOpacity, Text, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {RFValue} from 'react-native-responsive-fontsize';
 import {heightPercentageToDP} from 'react-native-responsive-screen';
@@ -18,6 +18,8 @@ type Props = {
   distance?: String;
   time?: String;
   pricePerKg?: String;
+  onPress?: any;
+  backgroundColor?: string;
 };
 
 const VendorCard = ({
@@ -28,12 +30,16 @@ const VendorCard = ({
   distance,
   time,
   pricePerKg,
+  onPress,
+  backgroundColor,
 }: Props) => {
   const navigations = useNavigation();
   const {colors} = useTheme();
   const styles = makeStyles(colors);
   return (
-    <View style={styles.main}>
+    <TouchableOpacity
+      style={[styles.main, {backgroundColor: backgroundColor}]}
+      onPress={onPress}>
       <View
         style={{
           flexDirection: 'row',
@@ -64,7 +70,7 @@ const VendorCard = ({
         </Text>
         <Text style={styles.detailText}>{pricePerKg}</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

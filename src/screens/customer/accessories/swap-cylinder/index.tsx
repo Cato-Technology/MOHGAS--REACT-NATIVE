@@ -59,12 +59,13 @@ import ImagePicker from 'react-native-image-crop-picker';
 import {showMessage} from 'react-native-flash-message';
 import {mainServics} from '../../../../services';
 import Geolocation from '@react-native-community/geolocation';
+import {getAddress} from '../../../../utils/functions/get-address';
 let cameraIs = false;
 export default function SwapCylinder({navigation}) {
   const {colors} = useTheme();
   const styles = makeStyles(colors);
 
-  const authContext = React.useContext(AuthContext);
+  const auth = React.useContext(AuthContext);
   const [showModal, setShowModal] = React.useState(false);
   const [list, setList] = useState([]);
   const [showPicModal, setShowPicModal] = useState(false);
@@ -74,7 +75,11 @@ export default function SwapCylinder({navigation}) {
   const [isVisiable, setIsVisible] = React.useState(false);
   const [splices, setSplices] = useState();
   const [refresh, setRefreh] = useState(false);
-
+  const [userAddress, setUserAddress] = useState();
+  const [city, setCity] = useState();
+  const [postal, setPostal] = useState();
+  const [state, setState] = useState();
+  const [isLoading, setIsLoading] = useState(true);
   const [myDirection, setMyDirection] = useState({
     latitude: 0.0,
     longitude: 0.0,
@@ -280,7 +285,7 @@ export default function SwapCylinder({navigation}) {
     console.log('Getting Location ... ');
     Geolocation.getCurrentPosition(
       //Will give you the current location
-      position => {
+      async position => {
         console.log('currentLongitude', position);
         const currentLongitude = JSON.stringify(position.coords.longitude);
         const currentLatitude = JSON.stringify(position.coords.latitude);
@@ -289,7 +294,17 @@ export default function SwapCylinder({navigation}) {
           latitude: Number(position.coords.latitude),
           longitude: Number(position.coords.longitude),
         });
+        const addressString = await getAddress(
+          position.coords.latitude,
+          position.coords.longitude,
+        );
+        console.log('addressString', addressString);
 
+        setUserAddress(addressString?.address);
+        setCity(addressString?.city);
+        setPostal(addressString?.zipCode);
+        setState(addressString?.state);
+        setIsLoading(false);
         // console.log('currentLatitude ', currentLatitude)
         // console.log('currentLongitude ', currentLongitude)
         // let tempCoords = {
@@ -301,6 +316,7 @@ export default function SwapCylinder({navigation}) {
         // }
       },
       error => {
+        setIsLoading(false);
         console.log('error ', error);
       },
       {
@@ -313,6 +329,7 @@ export default function SwapCylinder({navigation}) {
   console.log('list', list);
 
   const handleSubmitted = async () => {
+    setIsLoading(true);
     console.log('myDir', myDirection);
     // console.log('list', list[0]?.base64);
     let rdId = '';
@@ -369,6 +386,7 @@ export default function SwapCylinder({navigation}) {
       if (resData?.message === 'Swap Cylinder Added') {
         fetchData();
       } else {
+        setIsLoading(false);
         showMessage({
           message: JSON.stringify(resData),
           type: 'danger',
@@ -376,6 +394,7 @@ export default function SwapCylinder({navigation}) {
         });
       }
     } catch (e) {
+      setIsLoading(false);
       showMessage({
         message: JSON.stringify(e),
         type: 'danger',
@@ -399,10 +418,24 @@ export default function SwapCylinder({navigation}) {
       const resData = await mainServics.nearByGasAgencyAsPerRequiredSize(data);
       console.log('resDataFetch', resData);
       if (resData?.message === 'Near By Gas Agencies Found') {
+        setIsLoading(false);
+        let item = {
+          user_id: auth?.userData?.user_id,
+          // latitude: myDirection.latitude,
+          // longitude: myDirection.longitude,
+          latitude: 24.817556456461972,
+          longitude: 67.0560846850276,
+          faddress: userAddress,
+          city: city,
+          postal: postal ? postal : '000000',
+          state: state,
+        };
         navigation.navigate(SCREENS.CONNECT_VENDOR_SWAP, {
           data: resData?.responsedata,
+          item: item,
         });
       } else if (resData?.message === 'No Agencies Available Near By You') {
+        setIsLoading(false);
         showMessage({
           message: resData?.message,
           type: 'warning',
@@ -410,6 +443,7 @@ export default function SwapCylinder({navigation}) {
         });
       }
     } catch (e) {
+      setIsLoading(false);
       showMessage({
         message: JSON.stringify(e),
         type: 'danger',
@@ -420,7 +454,7 @@ export default function SwapCylinder({navigation}) {
   };
   return (
     <View style={styles.container}>
-      <ActivityIndicator visible={false} />
+      <ActivityIndicator visible={isLoading} />
       {/* <ErrorModal
         onPress={() => setLoginError(!loginError)} 
         visible={loginError}
@@ -463,12 +497,15 @@ export default function SwapCylinder({navigation}) {
                 color: colors.yellowHeading,
                 fontSize: 15,
               }}
-              // onChange={handleChange('email')}
+              onChange={txt => setUserAddress(txt)}
               placeholder={'Set pickup address'}
+              value={userAddress}
               // error={touched.email ? errors.email : ''}
               // onBlur={() => setFieldTouched('email')}
             />
-            <Text style={{width: '100%', textAlign: 'right', color: '#ecb241'}}>
+            <Text
+              style={{width: '100%', textAlign: 'right', color: '#ecb241'}}
+              onPress={() => getOneTimeLocation()}>
               use current location
             </Text>
             <View style={{marginTop: 20}}>

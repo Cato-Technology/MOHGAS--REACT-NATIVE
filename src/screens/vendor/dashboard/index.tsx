@@ -51,6 +51,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import AuthContext from '../../../utils/auth-context';
 import {useTheme} from '@react-navigation/native';
 import GradientButton from '../../../components/buttons/gradient-button';
+import LinearGradient from 'react-native-linear-gradient';
 export default function VendorDashBoard({navigation, props}) {
   const {colors} = useTheme();
   const styles = makeStyles(colors);
@@ -113,15 +114,29 @@ export default function VendorDashBoard({navigation, props}) {
               source={{uri: authContext?.userData?.image}}
             />
           </View>
-          <View style={[styles.backContainer, styles.extraStyle]}>
-            <ScrollView horizontal={true}>
-              <View style={[styles.rightContainer, styles.extraContainer]}>
-                <Image source={card} style={styles.styleImage} />
+          <View style={styles.cardContainer}>
+            <LinearGradient
+              start={{x: 0, y: 0}}
+              end={{x: 1, y: 0}}
+              colors={['#526ba3', '#657aa5']}
+              style={styles.gradientView}
+            />
+            <View>
+              <Text style={{color: '#fff', fontWeight: 'bold'}}>
+                Mohgas Wallet
+              </Text>
+              <View style={{paddingVertical: 20}}>
+                <Text style={{color: '#fff'}}>Balance</Text>
+                <Text style={{color: '#fff'}}>N123.456.78</Text>
               </View>
-              <View style={[styles.rightContainer, styles.extraContainer]}>
-                <Image source={card} style={styles.styleImage} />
-              </View>
-            </ScrollView>
+              <Text style={{color: '#fff'}}>
+                ■ ■ ■ ■{'   '}■ ■ ■ ■{'   '}■ ■ ■ ■{'   '}1 2 3 4
+              </Text>
+              <Text style={{color: '#fff', marginTop: 10}}>
+                {' '}
+                {authContext?.userData?.full_name}
+              </Text>
+            </View>
           </View>
           <View style={{width: '100%', alignItems: 'center'}}>
             <View

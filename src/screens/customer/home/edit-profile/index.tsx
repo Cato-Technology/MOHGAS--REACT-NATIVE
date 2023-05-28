@@ -39,6 +39,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 import {profileService} from '../../../../services';
 import {showMessage} from 'react-native-flash-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import RNFetchBlob from 'rn-fetch-blob';
 let cameraIs = false;
 const EditProfile = () => {
   const navigation = useNavigation();
@@ -92,7 +93,7 @@ const EditProfile = () => {
       .then(image => {
         console.log('resImage', image);
         let img = `data:${image.mime};base64,${image.data}`;
-        setImage(img);
+        setImage(image);
         setShowModal(false);
         //   setProfile({...profile, dp: image.path});
         //   updateProfilePicture(image?.data);
@@ -141,10 +142,18 @@ const EditProfile = () => {
       }
     }
   };
+  console.log('image', image);
+
   const handleUpdateUser = async values => {
     try {
       // setLoader(true);
       let data = new FormData();
+
+      data.append('image', {
+        uri: 'file:///' + image?.path,
+        type: image?.mime,
+        name: 'image.jpg',
+      });
       data.append('user_id', authContext?.userData?.user_id);
       data.append('image', image);
       data.append('fullname', values.fullname);
@@ -160,14 +169,6 @@ const EditProfile = () => {
       const result = await profileService.updateProfile(data);
       console.log('result', result);
 
-      if (result?.status == '0') {
-        setLoader(false);
-        showMessage({
-          message: result?.message,
-          type: 'danger',
-          icon: 'warning',
-        });
-      }
       if (result?.message == 'Profile Updated Successfully') {
         try {
           let dataUpdate = new FormData();
@@ -205,10 +206,22 @@ const EditProfile = () => {
           setLoader(false);
           console.log('error', e);
         }
+      } else {
+        setLoader(false);
+        showMessage({
+          message: result?.message,
+          type: 'danger',
+          icon: 'warning',
+        });
       }
     } catch (e) {
       setLoader(false);
       console.log('error', e);
+      showMessage({
+        message: JSON.stringify(e),
+        type: 'danger',
+        icon: 'danger',
+      });
     }
   };
 
@@ -242,7 +255,7 @@ const EditProfile = () => {
                 source={
                   image
                     ? {
-                        uri: image,
+                        uri: image?.path,
                       }
                     : !authContext?.userData?.image
                     ? authContext?.userData?.gender == 'Female'

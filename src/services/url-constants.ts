@@ -26,6 +26,7 @@ const API_URLS = {
   getSupportHelpTopics: '/Api/getSupportHelpTopics',
   getSupportAccountRelatedIssues: '/Api/getSupportAccountRelatedIssues',
   support: '/Api/support',
+  gas_order: '/Api/gas_order',
 };
 
 export {API_URLS};

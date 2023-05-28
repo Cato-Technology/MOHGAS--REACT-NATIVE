@@ -16,6 +16,7 @@ import OrderSummary from '../../screens/customer/topup/order-summary';
 import SwapCylinder from '../../screens/customer/accessories/swap-cylinder';
 import ConfirmPayment from '../../screens/customer/confirm-payment';
 import ConnectVendorSwap from '../../screens/customer/accessories/connect-vendor';
+import OrderSummarySwap from '../../screens/customer/accessories/swap-cylinder/order-summary';
 
 const Stack = createNativeStackNavigator();
 
@@ -38,6 +39,10 @@ const HomeNavigator = () => {
       <Stack.Screen name={SCREENS.TRACK_ORDER} component={TrackOrder} />
       <Stack.Screen name={SCREENS.PIN_LOCATION} component={PinLocation} />
       <Stack.Screen name={SCREENS.ORDER_SUMMARY} component={OrderSummary} />
+      <Stack.Screen
+        name={SCREENS.ORDER_SUMMARY_SWAP}
+        component={OrderSummarySwap}
+      />
       <Stack.Screen name={SCREENS.CONNECT_VENDOR} component={ConnectVendor} />
       <Stack.Screen name={SCREENS.SWAP_CYLINDER} component={SwapCylinder} />
       <Stack.Screen

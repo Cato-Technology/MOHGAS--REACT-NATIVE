@@ -42,6 +42,7 @@ import Geolocation from '@react-native-community/geolocation';
 import {mainServics} from '../../../../services';
 import {showMessage} from 'react-native-flash-message';
 import {getAddress} from '../../../../utils/functions/get-address';
+import AuthContext from '../../../../utils/auth-context';
 const INITIAL_REGION = {
   latitude: 33.6844,
   longitude: 73.0479,
@@ -49,6 +50,7 @@ const INITIAL_REGION = {
   longitudeDelta: 0.0421,
 };
 export default function PinLocation({navigation}) {
+  const auth = React.useContext(AuthContext);
   const {colors} = useTheme();
   const styles = makeStyles(colors);
   const [modalVisible, setModalVisible] = useState(false);
@@ -57,6 +59,7 @@ export default function PinLocation({navigation}) {
   const [city, setCity] = useState();
   const [postal, setPostal] = useState();
   const [state, setState] = useState();
+  const [isLoading, setIsLoading] = useState(true);
   const [myLatitude, setMyLatitude] = useState(INITIAL_REGION.latitude);
   const [myLongitude, setMyLongitude] = useState(INITIAL_REGION.longitude);
   const [myDirection, setMyDirection] = useState({
@@ -65,6 +68,7 @@ export default function PinLocation({navigation}) {
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
   });
+
   useEffect(() => {
     const requestLocationPermission = async () => {
       if (Platform.OS === 'ios') {
@@ -115,17 +119,10 @@ export default function PinLocation({navigation}) {
         setCity(addressString?.city);
         setPostal(addressString?.zipCode);
         setState(addressString?.state);
-        // console.log('currentLatitude ', currentLatitude)
-        // console.log('currentLongitude ', currentLongitude)
-        // let tempCoords = {
-        //     latitude: Number(position.coords.latitude),
-        //     longitude: Number(position.coords.longitude)
-        // }
-        // if (MapRef.current && MapRef.current.animateCamera) {
-        //     MapRef.current.animateCamera({ center: tempCoords, pitch: 2, heading: 20, altitude: 200, zoom: 5 }, 1000)
-        // }
+        setIsLoading(false);
       },
       error => {
+        setIsLoading(false);
         console.log('error ', error);
       },
       {
@@ -135,55 +132,29 @@ export default function PinLocation({navigation}) {
       },
     );
   };
-  console.log('myDir', myDirection);
   const handleSubmitted = async () => {
-    try {
-      let data = new FormData();
-      data.append('user_id', 33);
-      // data.append('latitude', myDirection.latitude);
-      // data.append('longitude', myDirection.longitude);
-      data.append('latitude', 24.817556456461972);
-      data.append('longitude', 67.0560846850276);
-      data.append('faddress', userAddress);
-      data.append('city', city);
-      data.append('postal', postal ? postal : '000000');
-      data.append('state', state);
-      data.append('size_of_cylinder', 25.0);
-      console.log('data=>', data);
+    let item = {
+      user_id: auth?.userData?.user_id,
+      // latitude: myDirection.latitude,
+      // longitude: myDirection.longitude,
+      latitude: 24.817556456461972,
+      longitude: 67.0560846850276,
+      faddress: userAddress,
+      city: city,
+      postal: postal ? postal : '000000',
+      state: state,
+    };
 
-      const resData = await mainServics.nearByGasAgencyRefill(data);
-      console.log('resData', resData);
-      if (resData?.message === 'Near By Gas Agencies Found') {
-        navigation.navigate(SCREENS.CONNECT_VENDOR, {
-          data: resData?.responsedata,
-        });
-      } else if (resData?.message === 'No Agencies Available Near By You') {
-        showMessage({
-          message: resData?.message,
-          type: 'warning',
-          icon: 'warning',
-        });
-      } else {
-        showMessage({
-          message: JSON.stringify(resData),
-          type: 'danger',
-          icon: 'danger',
-        });
-      }
-    } catch (e) {
-      showMessage({
-        message: JSON.stringify(e),
-        type: 'danger',
-        icon: 'danger',
-      });
-      console.log('e', e);
-    }
+    navigation.navigate(SCREENS.CONNECT_VENDOR, {
+      item: item,
+    });
+
     //  navigation.navigate(SCREENS.CONNECT_VENDOR);
   };
 
   return (
     <View style={styles.container}>
-      <ActivityIndicator visible={false} />
+      <ActivityIndicator visible={isLoading} />
       <MapView
         initialRegion={{
           latitude: 37.78825,

@@ -25,6 +25,9 @@ const getSupportAccountRelatedIssues = (detail: any) => {
 const sendSupport = (detail: any) => {
   return client.post(API_URLS.support, detail);
 };
+const gasOrder = (detail: any) => {
+  return client.post(API_URLS.gas_order, detail);
+};
 
 export const mainServics = {
   nearByGasAgencyRefill,
@@ -35,4 +38,5 @@ export const mainServics = {
   getSupportHelpTopics,
   getSupportAccountRelatedIssues,
   sendSupport,
+  gasOrder,
 };

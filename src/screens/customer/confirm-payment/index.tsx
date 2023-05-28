@@ -99,7 +99,7 @@ let cbData = [
     checked: false,
   },
 ];
-export default function ConfirmPayment({navigation}) {
+export default function ConfirmPayment({navigation, route}) {
   const {colors} = useTheme();
   const styles = makeStyles(colors);
 
@@ -107,6 +107,7 @@ export default function ConfirmPayment({navigation}) {
   const [isFlipped, setIsFlipped] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [cardId, setCardId] = useState();
+  console.log('route', route?.params?.id);
 
   const hanldeCb = txt => {
     console.log('txt', txt);
@@ -126,10 +127,10 @@ export default function ConfirmPayment({navigation}) {
     try {
       setIsLoading(true);
       let data = new FormData();
-      data.append('cart_id', 130);
+      data.append('cart_id', route?.params?.id);
       // data.append('latitude', myDirection.latitude);
       // data.append('longitude', myDirection.longitude);
-      data.append('payment_type', cardId == 2 ? 'cod' : 'stripe');
+      data.append('payment_type', cardId == 3 ? 'cod' : 'stripe');
 
       const resData = await mainServics.checkOut(data);
       console.log('resData', resData);
@@ -175,7 +176,7 @@ export default function ConfirmPayment({navigation}) {
         <View
           style={{
             width: '100%',
-
+            paddingHorizontal: 12,
             alignItems: 'center',
             flex: 1,
           }}>
@@ -231,7 +232,7 @@ export default function ConfirmPayment({navigation}) {
                 fontSize: 16,
                 marginTop: 10,
               }}>
-              Ammount Due N5600.00
+              Ammount Due N{route?.params?.price}
             </Text>
             <Text
               style={{

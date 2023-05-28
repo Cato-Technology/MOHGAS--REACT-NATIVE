@@ -15,7 +15,6 @@ const ProfileNavigatorVendor = () => {
       screenOptions={{
         headerShown: false,
       }}>
-      <Stack.Screen name={SCREENS.PROFILE} component={Profile} />
       <Stack.Screen
         name={SCREENS.VENDOR_EDIT_PROFILE}
         component={VendorEditProfile}
