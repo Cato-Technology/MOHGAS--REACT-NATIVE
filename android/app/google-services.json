@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "540330238204",
+    "project_id": "mohgas-app",
+    "storage_bucket": "mohgas-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:540330238204:android:23f8ec77a2272fb3e63779",
+        "android_client_info": {
+          "package_name": "com.mohgas"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyChGyPYIxVN1q3Bgw8AC2FNffUyoEIW3BU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
