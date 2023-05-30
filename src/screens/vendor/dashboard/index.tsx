@@ -100,12 +100,15 @@ export default function VendorDashBoard({navigation, props}) {
               alignItems: 'center',
             }}>
             <View style={{marginTop: 20}}>
-              <Text style={{fontWeight: 'bold', fontSize: 15}}>Wellcome</Text>
-              <Text style={{fontWeight: 'bold', fontSize: 25}}>
+              <Text style={{fontFamily: 'Rubik-Bold', fontSize: 15}}>
+                Wellcome
+              </Text>
+              <Text style={{fontFamily: 'Rubik-Bold', fontSize: 25}}>
                 {authContext?.userData?.full_name}
               </Text>
 
-              <Text style={{fontWeight: 'bold', color: 'gray', fontSize: 10}}>
+              <Text
+                style={{fontFamily: 'Rubik-Bold', color: 'gray', fontSize: 10}}>
                 <Icon4 name="crown" size={10} color="gray" /> Premium Member
               </Text>
             </View>
@@ -122,7 +125,7 @@ export default function VendorDashBoard({navigation, props}) {
               style={styles.gradientView}
             />
             <View>
-              <Text style={{color: '#fff', fontWeight: 'bold'}}>
+              <Text style={{color: '#fff', fontFamily: 'Rubik-Bold'}}>
                 Mohgas Wallet
               </Text>
               <View style={{paddingVertical: 20}}>
@@ -195,7 +198,7 @@ export default function VendorDashBoard({navigation, props}) {
             <Text
               style={{
                 color: '#fff',
-                fontWeight: 'bold',
+                fontFamily: 'Rubik-Bold',
                 position: 'absolute',
                 right: 10,
                 top: 5,

@@ -136,7 +136,11 @@ export default function MohgasWallet({navigation, route}) {
                 />
                 <View>
                   <Text
-                    style={{color: '#fff', fontWeight: 'bold', fontSize: 9}}>
+                    style={{
+                      color: '#fff',
+                      fontFamily: 'Rubik-Bold',
+                      fontSize: 9,
+                    }}>
                     Mohgas Wallet
                   </Text>
                   <View style={{paddingVertical: 20}}>

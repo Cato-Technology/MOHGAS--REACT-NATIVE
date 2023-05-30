@@ -23,7 +23,7 @@ export default StyleSheet.create({
     color: colors.black,
     fontSize: 15,
     width: '60%',
-    //fontFamily: fonts.mulishRegular,
+    fontFamily: 'Rubik-Regular',
     paddingRight: 10,
   },
 });

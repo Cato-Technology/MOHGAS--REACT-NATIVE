@@ -127,7 +127,7 @@ export default function AccountIssues({navigation}) {
             <Text
               style={{
                 color: '#3f60a0',
-                fontWeight: 'bold',
+                fontFamily: 'Rubik-Bold',
                 fontSize: 16,
                 marginTop: 10,
               }}>

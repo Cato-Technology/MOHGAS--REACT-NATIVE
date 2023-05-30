@@ -237,7 +237,7 @@ export default function ConfirmPayment({navigation, route}) {
             <Text
               style={{
                 color: '#000000',
-                fontWeight: 'bold',
+                fontFamily: 'Rubik-Bold',
                 fontSize: 16,
                 marginTop: 10,
               }}>

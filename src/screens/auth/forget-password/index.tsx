@@ -121,7 +121,7 @@ export default function ForgetPassword({navigation}) {
                 style={{
                   color: '#000000',
                   fontSize: RFValue(14),
-                  fontWeight: 'bold',
+                  fontFamily: 'Rubik-Bold',
                 }}>
                 Forgot Password
               </Text>
@@ -159,7 +159,7 @@ export default function ForgetPassword({navigation}) {
                         {
                           textDecorationLine: pressed ? 'underline' : 'none',
                           color: '#4ca757',
-                          fontWeight: 'bold',
+                          fontFamily: 'Rubik-Bold',
                           fontSize: 15,
                           top: hp(0.32),
                           // fontFamily: fonts.mulishRegular,

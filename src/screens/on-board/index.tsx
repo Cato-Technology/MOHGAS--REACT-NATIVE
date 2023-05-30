@@ -24,7 +24,11 @@ const OnBoard = ({navigation}) => {
           marginTop: '75%',
         }}>
         <Text
-          style={{color: '#fff', fontWeight: 'bold', fontSize: RFValue(26)}}>
+          style={{
+            color: '#fff',
+            fontFamily: 'Rubik-Bold',
+            fontSize: RFValue(26),
+          }}>
           Everything{'\n'}You Need!
         </Text>
         <Text style={styles.descText}>
@@ -96,6 +100,6 @@ const styles = StyleSheet.create({
     fontSize: RFValue(16),
     textAlign: 'center',
     width: '92%',
-    fontWeight: 'bold',
+    fontFamily: 'Rubik-Bold',
   },
 });

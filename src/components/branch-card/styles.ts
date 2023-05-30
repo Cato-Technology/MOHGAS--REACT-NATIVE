@@ -25,7 +25,7 @@ export const makeStyles = (colors: any) =>
     middleText: {
       color: '#000000',
       marginTop: 2,
-      fontWeight: 'bold',
+      fontFamily: 'Rubik-Bold',
 
       //fontFamily: 'Poppins-SemiBold',
     },

@@ -22,7 +22,7 @@ export const makeStyles = (colors: any) =>
     middleText: {
       color: '#000',
       marginTop: 2,
-      fontWeight: 'bold',
+      fontFamily: 'Rubik-Bold',
       fontSize: 12,
 
       //fontFamily: 'Poppins-SemiBold',

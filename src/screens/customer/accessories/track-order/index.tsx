@@ -158,7 +158,11 @@ export default function TrackOrder({navigation}) {
                     <View style={{width: 220}}>
                       {number.position == 0 && (
                         <View>
-                          <Text style={{color: '#4ca757', fontWeight: 'bold'}}>
+                          <Text
+                            style={{
+                              color: '#4ca757',
+                              fontFamily: 'Rubik-Bold',
+                            }}>
                             Oder Picked by
                           </Text>
                           <Text>Desmond philip</Text>
@@ -167,7 +171,11 @@ export default function TrackOrder({navigation}) {
                       )}
                       {number.position == 1 && (
                         <View>
-                          <Text style={{color: '#4ca757', fontWeight: 'bold'}}>
+                          <Text
+                            style={{
+                              color: '#4ca757',
+                              fontFamily: 'Rubik-Bold',
+                            }}>
                             Order way to delivery
                           </Text>
                           <Text>Desmond philip</Text>
@@ -179,7 +187,11 @@ export default function TrackOrder({navigation}) {
                       )}
                       {number.position == 2 && (
                         <View>
-                          <Text style={{color: '#4ca757', fontWeight: 'bold'}}>
+                          <Text
+                            style={{
+                              color: '#4ca757',
+                              fontFamily: 'Rubik-Bold',
+                            }}>
                             Order delivered
                           </Text>
                           <Text>10 Main Street, kalabar, Nigeria</Text>
@@ -192,7 +204,11 @@ export default function TrackOrder({navigation}) {
                       )}
                       {number.position == 3 && (
                         <View>
-                          <Text style={{color: '#4ca757', fontWeight: 'bold'}}>
+                          <Text
+                            style={{
+                              color: '#4ca757',
+                              fontFamily: 'Rubik-Bold',
+                            }}>
                             Payment Confirmed
                           </Text>
                           <Text>10 Main Street, kalabar, Nigeria</Text>

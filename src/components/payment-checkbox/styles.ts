@@ -15,7 +15,7 @@ export const makeStyles = (colors: any) =>
       paddingVertical: 15,
     },
     rdbHeading: {
-      fontWeight: 'bold',
+      fontFamily: 'Rubik-Bold',
       fontSize: 15,
     },
     rdbSubHeading: {

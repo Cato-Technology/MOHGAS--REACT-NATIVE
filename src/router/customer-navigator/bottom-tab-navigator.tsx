@@ -37,7 +37,7 @@ const BottomTabNavigator = () => {
         headerShown: false,
         tabBarHideOnKeyboard: true,
         tabBarLabelStyle: {
-          //  fontFamily: fonts.mulishRegular,
+          fontFamily: 'Rubik-Regular',
 
           color: colors.tabTextColor,
         },

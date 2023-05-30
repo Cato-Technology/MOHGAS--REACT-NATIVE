@@ -157,7 +157,7 @@ export default function PersonalInformation({navigation}) {
                 style={{
                   color: '#000000',
                   fontSize: RFValue(14),
-                  fontWeight: 'bold',
+                  fontFamily: 'Rubik-Bold',
                 }}>
                 Create a new account
               </Text>
@@ -168,7 +168,7 @@ export default function PersonalInformation({navigation}) {
               style={{
                 color: '#4ca735',
                 fontSize: RFValue(14),
-                fontWeight: 'bold',
+                fontFamily: 'Rubik-Bold',
                 paddingHorizontal: 16,
               }}>
               Manger's Detail
@@ -285,7 +285,7 @@ export default function PersonalInformation({navigation}) {
                                 color: '#4ca757',
                                 fontSize: 15,
                                 top: hp(0.32),
-                                fontWeight: 'bold',
+                                fontFamily: 'Rubik-Bold',
                                 // fontFamily: fonts.mulishRegular,
                               },
                             ]}>
@@ -331,7 +331,7 @@ export default function PersonalInformation({navigation}) {
                                   ? 'underline'
                                   : 'none',
                                 color: '#4ca757',
-                                fontWeight: 'bold',
+                                fontFamily: 'Rubik-Bold',
                                 fontSize: 15,
                                 top: hp(0.32),
                                 // fontFamily: fonts.mulishRegular,

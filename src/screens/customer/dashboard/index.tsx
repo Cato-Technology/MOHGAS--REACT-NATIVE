@@ -112,12 +112,15 @@ export default function DashBoard({navigation, props}) {
               alignItems: 'center',
             }}>
             <View style={{marginTop: 20}}>
-              <Text style={{fontWeight: 'bold', fontSize: 15}}>Wellcome</Text>
-              <Text style={{fontWeight: 'bold', fontSize: 25}}>
+              <Text style={{fontFamily: 'Rubik-Bold', fontSize: 15}}>
+                Wellcome
+              </Text>
+              <Text style={{fontFamily: 'Rubik-Bold', fontSize: 25}}>
                 {authContext?.userData?.full_name}
               </Text>
 
-              <Text style={{fontWeight: 'bold', color: 'gray', fontSize: 10}}>
+              <Text
+                style={{fontFamily: 'Rubik-Bold', color: 'gray', fontSize: 10}}>
                 <Icon4 name="crown" size={10} color="gray" /> Premium Member
               </Text>
             </View>
@@ -134,14 +137,18 @@ export default function DashBoard({navigation, props}) {
               style={styles.gradientView}
             />
             <View>
-              <Text style={{color: '#fff', fontWeight: 'bold'}}>
+              <Text style={{color: '#fff', fontFamily: 'Rubik-Bold'}}>
                 Mohgas Wallet
               </Text>
               <View style={{paddingVertical: 20}}>
-                <Text style={{color: '#fff'}}>Balance</Text>
-                <Text style={{color: '#fff'}}>N123.456.78</Text>
+                <Text style={{color: '#fff', fontFamily: 'Rubik-Regular'}}>
+                  Balance
+                </Text>
+                <Text style={{color: '#fff', fontFamily: 'Rubik-Regular'}}>
+                  N123.456.78
+                </Text>
               </View>
-              <Text style={{color: '#fff'}}>
+              <Text style={{color: '#fff', fontFamily: 'Rubik-Regular'}}>
                 ■ ■ ■ ■{'   '}■ ■ ■ ■{'   '}■ ■ ■ ■{'   '}1 2 3 4
               </Text>
               <Text style={{color: '#fff', marginTop: 10}}>
@@ -219,8 +226,10 @@ export default function DashBoard({navigation, props}) {
               flexDirection: 'row',
               justifyContent: 'space-between',
             }}>
-            <Text>Recent Transcations</Text>
-            <Text style={{color: 'gray'}}>
+            <Text style={{fontFamily: 'Rubik-Regular'}}>
+              Recent Transcations
+            </Text>
+            <Text style={{color: 'gray', fontFamily: 'Rubik-Regular'}}>
               View All <Icon6 name="arrowright" size={10} color="gray" />{' '}
             </Text>
           </TouchableOpacity>
@@ -281,7 +290,7 @@ export default function DashBoard({navigation, props}) {
                 position: 'absolute',
                 right: 10,
                 top: 7,
-                fontWeight: 'bold',
+                fontFamily: 'Rubik-Bold',
                 color: '#fff',
               }}>
               X

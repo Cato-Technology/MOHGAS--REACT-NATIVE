@@ -113,7 +113,12 @@ export default function ViewProduct({navigation}) {
               eiusmod tempor incididunt ut labore et dolore magna aliqua.
             </Text>
             <View style={{height: 8}} />
-            <Text style={{color: '#000000', fontWeight: 'bold', fontSize: 16}}>
+            <Text
+              style={{
+                color: '#000000',
+                fontFamily: 'Rubik-Bold',
+                fontSize: 16,
+              }}>
               Size
             </Text>
             <View style={{flexDirection: 'row', marginTop: 10}}>

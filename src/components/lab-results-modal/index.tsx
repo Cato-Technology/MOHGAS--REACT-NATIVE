@@ -22,7 +22,7 @@ const LabResultModal = ({
           <View style={styles.modalView2}>
             <Text style={styles.modalText}>{title}</Text>
             <TouchableOpacity onPress={closeModal}>
-              <Text style={{fontWeight: 'bold', fontSize: 20}}>X</Text>
+              <Text style={{fontFamily: 'Rubik-Bold', fontSize: 20}}>X</Text>
             </TouchableOpacity>
           </View>
 

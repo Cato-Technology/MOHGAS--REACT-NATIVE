@@ -20,26 +20,25 @@ export const makeStyles = (colors: any) =>
     entityText: {
       color: '#000000',
       marginTop: 2,
-      //fontFamily: 'Poppins-SemiBold',
+      fontFamily: 'Rubik-Regular',
     },
     middleText: {
       color: '#000000',
       marginTop: 2,
 
-      //fontFamily: 'Poppins-SemiBold',
+      fontFamily: 'Rubik-Regular',
     },
     detailText: {
       color: 'gray',
       marginTop: 2,
       fontSize: 9,
-
-      //fontFamily: 'Poppins-Regular',
+      fontFamily: 'Rubik-Regular',
     },
     headingText: {
       color: '#000000',
       marginTop: 12,
 
-      //fontFamily: 'Poppins-Bold',
+      fontFamily: 'Rubik-Regular',
     },
     circleView: {
       backgroundColor: '#e0eff8',

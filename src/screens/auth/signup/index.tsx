@@ -157,7 +157,7 @@ export default function SignUpCustomer({navigation}) {
                 style={{
                   color: '#000000',
                   fontSize: RFValue(14),
-                  fontWeight: 'bold',
+                  fontFamily: 'Rubik-Bold',
                 }}>
                 Create a new account
               </Text>
@@ -331,7 +331,7 @@ export default function SignUpCustomer({navigation}) {
                                 color: '#4ca757',
                                 fontSize: 15,
                                 top: hp(0.32),
-                                fontWeight: 'bold',
+                                fontFamily: 'Rubik-Bold',
                                 // fontFamily: fonts.mulishRegular,
                               },
                             ]}>
@@ -374,7 +374,7 @@ export default function SignUpCustomer({navigation}) {
                                   ? 'underline'
                                   : 'none',
                                 color: '#4ca757',
-                                fontWeight: 'bold',
+                                fontFamily: 'Rubik-Bold',
                                 fontSize: 15,
                                 top: hp(0.32),
                                 // fontFamily: fonts.mulishRegular,

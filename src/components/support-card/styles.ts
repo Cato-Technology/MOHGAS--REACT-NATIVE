@@ -17,29 +17,29 @@ export const makeStyles = (colors: any) =>
     entityText: {
       color: '#000000',
       marginTop: 2,
-      //fontFamily: 'Poppins-SemiBold',
+      fontFamily: 'Rubik-Regular',
     },
     middleText: {
       color: '#3478c3',
       marginTop: 2,
-      fontWeight: 'bold',
+
       fontSize: 12,
 
-      //fontFamily: 'Poppins-SemiBold',
+      fontFamily: 'Rubik-Bold',
     },
     detailText: {
       color: '#000',
       marginTop: 2,
       fontSize: 12,
-      width: 100,
+      width: 120,
 
-      //fontFamily: 'Poppins-Regular',
+      fontFamily: 'Rubik-Regular',
     },
     headingText: {
       color: '#000000',
       marginTop: 12,
 
-      //fontFamily: 'Poppins-Bold',
+      fontFamily: 'Rubik-Regular',
     },
     circleView: {
       backgroundColor: '#e0eff8',

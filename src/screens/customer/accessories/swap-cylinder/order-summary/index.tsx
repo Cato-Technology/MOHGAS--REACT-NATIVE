@@ -189,7 +189,7 @@ export default function OrderSummarySwap({navigation, route}) {
               <Text
                 style={{
                   fontSize: 16,
-                  fontWeight: 'bold',
+                  fontFamily: 'Rubik-Bold',
                   width: '100%',
                   textAlign: 'center',
                 }}>

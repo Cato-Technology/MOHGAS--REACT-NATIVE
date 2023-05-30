@@ -387,7 +387,11 @@ export default function SendSupport({navigation}) {
           <View style={{width: '100%', paddingHorizontal: 20}}>
             <View style={{marginTop: 25}}>
               <Text
-                style={{color: '#000000', fontWeight: 'bold', fontSize: 16}}>
+                style={{
+                  color: '#000000',
+                  fontFamily: 'Rubik-Bold',
+                  fontSize: 16,
+                }}>
                 Upload Screenshots
               </Text>
 

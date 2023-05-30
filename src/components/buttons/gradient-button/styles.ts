@@ -19,8 +19,7 @@ export const makeStyles = (colors: any) =>
       textAlign: 'center',
       fontSize: RFValue(14),
       color: '#fff',
-      fontWeight: 'bold',
-      //fontFamily: 'Poppins-SemiBold',
+      fontFamily: 'Rubik-Bold',
     },
   });
 export default makeStyles;

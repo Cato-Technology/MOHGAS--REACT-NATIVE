@@ -53,7 +53,7 @@ export default function (props: Props) {
           backgroundColor: colors.white,
           onBackgroundTextColor: colors.black,
           fontSize: 15,
-          //fontFamily: fonts.mulishRegular,
+          fontFamily: 'Rubik-Regular',
         }}
         containerButtonStyle={styles.pickerButtonStyle}
         onSelect={Country => onSelect(Country)}

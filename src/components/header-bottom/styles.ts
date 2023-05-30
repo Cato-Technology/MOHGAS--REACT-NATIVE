@@ -23,14 +23,14 @@ export const makeStyles = (colors: any) =>
     },
     title: {
       fontSize: RFValue(20),
-      fontWeight: 'bold',
+      fontFamily: 'Rubik-Bold',
       color: colors.text,
 
       //  fontFamily: 'Poppins-Bold',
     },
     subTitle: {
       fontSize: RFValue(9),
-      fontWeight: 'bold',
+      fontFamily: 'Rubik-Bold',
       color: colors.yellowHeading,
       width: '100%',
     },

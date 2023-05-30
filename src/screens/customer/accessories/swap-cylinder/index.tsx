@@ -510,7 +510,11 @@ export default function SwapCylinder({navigation}) {
             </Text>
             <View style={{marginTop: 20}}>
               <Text
-                style={{color: '#000000', fontWeight: 'bold', fontSize: 16}}>
+                style={{
+                  color: '#000000',
+                  fontFamily: 'Rubik-Bold',
+                  fontSize: 16,
+                }}>
                 Swap Type
               </Text>
               <RadioGroup radioButtons={radioButtons} layout={'row'} />
@@ -525,7 +529,12 @@ export default function SwapCylinder({navigation}) {
           }}>
           <View style={{width: '100%', paddingHorizontal: 20}}>
             <View style={{height: 20}} />
-            <Text style={{color: '#000000', fontWeight: 'bold', fontSize: 16}}>
+            <Text
+              style={{
+                color: '#000000',
+                fontFamily: 'Rubik-Bold',
+                fontSize: 16,
+              }}>
               Size of cylinder
             </Text>
             <Text style={{color: '#000000', fontSize: 16, paddingVertical: 5}}>
@@ -548,7 +557,11 @@ export default function SwapCylinder({navigation}) {
             </View>
             <View style={{marginTop: 25}}>
               <Text
-                style={{color: '#000000', fontWeight: 'bold', fontSize: 16}}>
+                style={{
+                  color: '#000000',
+                  fontFamily: 'Rubik-Bold',
+                  fontSize: 16,
+                }}>
                 Upload
               </Text>
               <Text

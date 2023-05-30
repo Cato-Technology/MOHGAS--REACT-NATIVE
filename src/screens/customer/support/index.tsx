@@ -123,7 +123,7 @@ export default function CustomerSupport({navigation}) {
             <Text
               style={{
                 color: '#000000',
-                fontWeight: 'bold',
+                fontFamily: 'Rubik-Bold',
                 fontSize: 16,
                 marginTop: 10,
               }}>
@@ -208,8 +208,7 @@ export default function CustomerSupport({navigation}) {
               numColumns={2}
               scrollEnabled={false}
               contentContainerStyle={{
-                width: '95%',
-                justifyContent: 'space-between',
+                width: '100%',
               }}
               renderItem={({item, index}) => (
                 <View
@@ -243,6 +242,7 @@ export default function CustomerSupport({navigation}) {
                 width: '100%',
                 textAlign: 'center',
                 marginTop: 20,
+                fontFamily: 'Rubik-Regular',
               }}
               onPress={() => navigation.navigate(SCREENS.SEND_SUPPORT_ISSUE)}>
               Can't find the answer you are looking for?

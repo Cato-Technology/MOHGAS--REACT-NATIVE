@@ -131,7 +131,7 @@ export default function VendorRequest({navigation, props}) {
               <Text
                 style={{
                   color: '#fff',
-                  fontWeight: 'bold',
+                  fontFamily: 'Rubik-Bold',
                   position: 'absolute',
                   right: 10,
                   top: 5,
@@ -181,7 +181,7 @@ export default function VendorRequest({navigation, props}) {
               // error={touched.email ? errors.email : ''}
               // onBlur={() => setFieldTouched('email')}
             />
-            <Text style={[styles.centerText, {fontWeight: 'bold'}]}>
+            <Text style={[styles.centerText, {fontFamily: 'Rubik-Bold'}]}>
               Account to credit
             </Text>
             <Text

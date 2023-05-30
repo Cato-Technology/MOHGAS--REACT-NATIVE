@@ -155,7 +155,7 @@ export default function SignUpVendor({navigation}) {
                 style={{
                   color: '#000000',
                   fontSize: RFValue(14),
-                  fontWeight: 'bold',
+                  fontFamily: 'Rubik-Bold',
                 }}>
                 Business Information
               </Text>
@@ -166,7 +166,7 @@ export default function SignUpVendor({navigation}) {
               style={{
                 color: '#4ca735',
                 fontSize: RFValue(14),
-                fontWeight: 'bold',
+                fontFamily: 'Rubik-Bold',
                 paddingHorizontal: 16,
               }}>
               Vendor Registration
@@ -317,7 +317,7 @@ export default function SignUpVendor({navigation}) {
                                   ? 'underline'
                                   : 'none',
                                 color: '#4ca757',
-                                fontWeight: 'bold',
+                                fontFamily: 'Rubik-Bold',
                                 fontSize: 15,
                                 top: hp(0.32),
                                 // fontFamily: fonts.mulishRegular,

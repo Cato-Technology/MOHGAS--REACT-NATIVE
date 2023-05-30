@@ -28,13 +28,13 @@ export const makeStyles = (colors: any) =>
       paddingHorizontal: widthPercentageToDP(4),
     },
     name: {
-      //fontFamily: colors.medium,
+      fontFamily: 'Rubik-Regular',
       fontSize: RFValue(17),
       color: colors.text,
       paddingRight: widthPercentageToDP(20),
     },
     editProfile: {
-      //fontFamily: fonts.mulishLight,
+      fontFamily: 'Rubik-Regular',
       fontSize: RFValue(15),
       color: colors.text,
       paddingLeft: widthPercentageToDP(2),

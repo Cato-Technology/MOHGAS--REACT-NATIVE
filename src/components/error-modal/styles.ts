@@ -23,7 +23,7 @@ export default StyleSheet.create({
     paddingBottom: 10,
   },
   text: {
-    //fontFamily: fonts.regular,
+    fontFamily: 'Rubik-Regular',
     fontSize: 15,
     textAlign: 'center',
     color: '#000000',

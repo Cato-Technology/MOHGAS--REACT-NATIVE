@@ -174,7 +174,7 @@ export default function OtpVerification({navigation, route}) {
                 style={{
                   color: '#000000',
                   fontSize: RFValue(14),
-                  fontWeight: 'bold',
+                  fontFamily: 'Rubik-Bold',
                 }}>
                 Forgot Password
               </Text>
@@ -316,7 +316,7 @@ export default function OtpVerification({navigation, route}) {
                                       ? 'underline'
                                       : 'none',
                                     color: '#4ca757',
-                                    fontWeight: 'bold',
+                                    fontFamily: 'Rubik-Bold',
                                     fontSize: 15,
                                     top: hp(0.32),
                                     textAlign: 'center',

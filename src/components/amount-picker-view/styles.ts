@@ -21,7 +21,7 @@ export const makeStyles = (colors: any) =>
     oddBtnText: {
       color: '#000',
       fontSize: RFValue(16),
-      fontWeight: 'bold',
+      fontFamily: 'Rubik-Bold',
     },
 
     oddView: {

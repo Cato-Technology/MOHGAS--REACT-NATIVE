@@ -146,7 +146,7 @@ export default function FundWallet({navigation}) {
                 <Text
                   style={{
                     color: '#000000',
-                    fontWeight: 'bold',
+                    fontFamily: 'Rubik-Bold',
                     fontSize: 16,
                     marginTop: 15,
                   }}>

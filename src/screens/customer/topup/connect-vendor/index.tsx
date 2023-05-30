@@ -270,7 +270,12 @@ export default function ConnectVendor({navigation, route}) {
           }}>
           <View style={{width: '100%', paddingHorizontal: 20}}>
             <View style={{height: 20}} />
-            <Text style={{color: '#000000', fontWeight: 'bold', fontSize: 16}}>
+            <Text
+              style={{
+                color: '#000000',
+                fontFamily: 'Rubik-Bold',
+                fontSize: 16,
+              }}>
               Size of cylinder
             </Text>
             <View style={{flexDirection: 'row', marginTop: 10}}>

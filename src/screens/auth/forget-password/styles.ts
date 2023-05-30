@@ -37,7 +37,7 @@ export const makeStyles = (colors: any) =>
       alignItems: 'center',
     },
     heading: {
-      //fontFamily: fonts.bold,
+      fontFamily: 'Rubik-Regular',
       fontSize: 24,
       alignSelf: 'center',
       color: colors.text,
@@ -45,18 +45,18 @@ export const makeStyles = (colors: any) =>
     },
     inputLablel: {
       marginHorizontal: 20,
-      //fontFamily: fonts.mulishBold,
+      fontFamily: 'Rubik-Regular',
       color: colors.white,
       fontSize: 15,
     },
     forgotPassword: {
-      //fontFamily: fonts.mulishRegular,
+      fontFamily: 'Rubik-Regular',
       color: colors.blue,
       fontSize: RFValue(13),
     },
     orTxt: {
       marginHorizontal: 20,
-      //fontFamily: fonts.mulishRegular,
+      fontFamily: 'Rubik-Regular',
       fontSize: RFValue(15),
       color: colors.black,
     },
@@ -78,13 +78,13 @@ export const makeStyles = (colors: any) =>
     },
     noAccountTxt: {
       marginTop: 10,
-      //fontFamily: fonts.mulishRegular,
+      fontFamily: 'Rubik-Regular',
       fontSize: 16,
       flexDirection: 'row',
       alignItems: 'baseline',
     },
     errorMessage: {
-      //fontFamily: fonts.regular,
+      fontFamily: 'Rubik-Regular',
       fontSize: 12,
       color: colors.danger,
       marginLeft: 30,
@@ -100,14 +100,14 @@ export const makeStyles = (colors: any) =>
     tcTextStyle: {
       marginTop: -2,
       fontSize: 15,
-      //  fontFamily: fonts.mulishRegular,
+      fontFamily: 'Rubik-Regular',
       color: '#000000',
       textAlign: 'center',
     },
     centerText: {
       width: '100%',
       fontSize: 18,
-      //  fontFamily: fonts.mulishRegular,
+      fontFamily: 'Rubik-Regular',
       color: '#000000',
       textAlign: 'center',
       marginTop: 20,
@@ -122,7 +122,7 @@ export const makeStyles = (colors: any) =>
     },
     centerViewText: {
       fontSize: 12,
-      //  fontFamily: fonts.mulishRegular,
+      fontFamily: 'Rubik-Regular',
       color: '#000000',
       paddingVertical: 10,
     },

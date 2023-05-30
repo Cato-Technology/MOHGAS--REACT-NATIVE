@@ -14,6 +14,6 @@ export default StyleSheet.create({
     height: 45,
     borderRadius: 5,
 
-    //fontFamily: fonts.mulishRegular,
+    fontFamily: 'Rubik-Regular',
   },
 });

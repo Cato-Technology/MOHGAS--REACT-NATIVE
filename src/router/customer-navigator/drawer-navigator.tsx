@@ -46,7 +46,7 @@ const CustomDrawerContent = props => {
           }}>
           <Avatar.Image size={45} source={aImage} />
           <View style={{marginLeft: 10}}>
-            <Text style={{fontWeight: 'bold', fontSize: 22}}>
+            <Text style={{fontFamily: 'Rubik-Bold', fontSize: 22}}>
               {auth?.userData?.full_name}
             </Text>
             <Text style={{fontSize: 12, textAlign: 'left'}}>
