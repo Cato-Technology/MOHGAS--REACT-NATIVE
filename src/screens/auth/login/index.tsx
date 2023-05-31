@@ -71,7 +71,7 @@ export default function Login({navigation}) {
         setLoginError(true);
       }
       if (result?.message == 'Login Success') {
-        await AsyncStorage.setItem('token', result?.message);
+        await AsyncStorage.setItem('token', result?.response?.token);
         try {
           const jsonValue = JSON.stringify(result?.response);
           await AsyncStorage.setItem('userData', jsonValue);

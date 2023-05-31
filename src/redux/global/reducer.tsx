@@ -1,4 +1,4 @@
-import {ACCOUNT_REALTED_ISSUES, SUPPORT} from './constants';
+import {ACCOUNT_REALTED_ISSUES, BRANCHES, PRODUCTS, SUPPORT} from './constants';
 import {GlobalState} from './GlobalState';
 
 const INITIAL_STATE = new GlobalState();
@@ -15,6 +15,18 @@ export default function (state = INITIAL_STATE, action: any) {
       return {
         ...state,
         accountRealtedIssues: action.payload,
+      };
+    }
+    case BRANCHES: {
+      return {
+        ...state,
+        branches: action.payload,
+      };
+    }
+    case PRODUCTS: {
+      return {
+        ...state,
+        vendorProducts: action.payload,
       };
     }
 

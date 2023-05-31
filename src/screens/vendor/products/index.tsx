@@ -51,22 +51,24 @@ import {OrderState} from '../../../redux/orders/OrderState';
 import {getReduxOrderHistory} from '../../../redux/orders/orders-actions';
 import {capitalizeFirstLetter} from '../../../utils/functions/general-functions';
 import HeaderBottom from '../../../components/header-bottom';
+import {GlobalState} from '../../../redux/global/GlobalState';
+import {getVendorProductR} from '../../../redux/global/actions';
 export default function Products({navigation}) {
   const {colors} = useTheme();
   const styles = makeStyles(colors);
   const authContext = React.useContext(AuthContext);
   const dispatch = useDispatch();
-  const orderHistory = useSelector(
-    (state: OrderState) => state?.order?.orderHistory,
+  const productData = useSelector(
+    (state: GlobalState) => state?.global?.vendorProducts,
   );
-  console.log('orderHistory', orderHistory);
+  console.log('productData', productData);
   console.log('authContext', authContext?.userData?.user_id);
 
   useEffect(() => {
     //authContext?.userData?.user_id
     let data = new FormData();
     data.append('user_id', 33);
-    dispatch(getReduxOrderHistory(data));
+    dispatch(getVendorProductR(data));
   }, [dispatch]);
 
   return (
@@ -110,16 +112,20 @@ export default function Products({navigation}) {
             />
 
             <FlatList
-              data={orderHistory}
+              data={productData}
               renderItem={({item, index}) => (
                 <ProductCard
                   srNo={index + 1}
-                  title={capitalizeFirstLetter('empty clyinder')}
-                  category={'Category - Selected Category'}
-                  size={'Size/Length -25kg'}
+                  title={capitalizeFirstLetter(item?.accessories_name)}
+                  category={`Category - Selected ${item?.category_name}`}
+                  size={'Size/Length -25kg HC'}
                   style={{backgroundColor: '#eaf5fc'}}
-                  price={'N12.34'}
-                  firstLetter={'H'}
+                  price={'N' + item?.price}
+                  firstLetter={
+                    item?.accessories_name
+                      ? capitalizeFirstLetter(item?.accessories_name?.charAt(0))
+                      : '-'
+                  }
                   onPressDelete={() => {
                     console.log('item?', item?._id);
                   }}

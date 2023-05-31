@@ -1,6 +1,19 @@
 import client from './client';
 import {API_URLS} from './url-constants';
+import {API_URLS_VENDOR} from './url-constants-vendor';
 
+//Vendor Services
+const addBranch = (detail: any) => {
+  return client.post(API_URLS_VENDOR.BRANCH, detail);
+};
+
+const getBranches = (detail: any) => {
+  return client.get(API_URLS_VENDOR.BRANCH, detail);
+};
+const getVendorProducts = (detail: any) => {
+  return client.get(API_URLS_VENDOR.VENDOR_PRODUCTS, detail);
+};
+//User Services
 const nearByGasAgencyRefill = (detail: any) => {
   return client.post(API_URLS.NEAR_BY_GAS_REFILL, detail);
 };
@@ -30,6 +43,9 @@ const gasOrder = (detail: any) => {
 };
 
 export const mainServics = {
+  addBranch,
+  getBranches,
+  getVendorProducts,
   nearByGasAgencyRefill,
   swapCylinder,
   nearByGasAgencyAsPerRequiredSize,

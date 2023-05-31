@@ -49,11 +49,12 @@ import {useTheme} from '@react-navigation/native';
 import GradientButton from '../../../components/buttons/gradient-button';
 import HeaderBottom from '../../../components/header-bottom';
 import {NAME} from '../../../utils/regix';
+import {mainServics} from '../../../services';
+import {showMessage} from 'react-native-flash-message';
 export default function AddBranch({navigation, route}) {
   const {colors} = useTheme();
   const styles = makeStyles(colors);
   const auth = React.useContext(AuthContext);
-  const authContext = React.useContext(AuthContext);
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState(false);
@@ -63,11 +64,14 @@ export default function AddBranch({navigation, route}) {
   const signUpSchema = useMemo(
     () =>
       Yup.object({
-        fullname: Yup.string()
-          // .required('First Name is Required')
+        branch_name: Yup.string()
+          .required('First Name is Required')
           .matches(NAME, 'Name should only contain latin letters')
-          .required('Full name is Required'),
-
+          .required('Branch name is Required'),
+        branch_email: Yup.string()
+          .email('Please provide correct branch email')
+          .required('Branch email is required'),
+        address: Yup.string().required('Address is Required'),
         password: Yup.string().required('Password is Required'),
         confirmPassword: Yup.string().test(
           'passwords-match',
@@ -76,58 +80,55 @@ export default function AddBranch({navigation, route}) {
             return this.parent.password === value;
           },
         ),
-        referal_code: Yup.string().required('Refferal Code is Required'),
-        email: Yup.string()
-          .email('Please provide correct email')
-          .required('Email is required'),
-        // .required('Email is required'),
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   );
+  console.log('auth', auth?.userData?.user_id);
 
-  const handleLogin = async values => {
+  const handleSubmitted = async values => {
+    console.log('values', values);
+
     setLoader(true);
     try {
-      console.log('values', values);
-      console.log('selectCountryCode', selectCountryCode);
-
-      console.log('Phno', phoneNumber);
-
       let data = new FormData();
-      data.append('fullname', values.fullname);
-      data.append('email', values.email);
-      data.append('userType', 'User');
-      data.append('state', 'state');
-      data.append('lga', 'lga');
-      data.append('city', 'city');
-      data.append('street', 'street');
-      data.append('phone_num', selectCountryCode + phoneNumber);
-      data.append('referal_code', values.referal_code);
-      data.append('password', values.password);
-
-      const result = await authService.signUp(data);
-      if (result.message == 'Successfully Registered') {
-        alert('Registered');
-        navigation.navigate(SCREENS.LOGIN);
-        setLoader(false);
-      } else {
+      data.append('branch_name', values?.branch_name);
+      data.append('branch_email', values?.branch_email);
+      data.append('branch_user_id', auth?.userData?.user_id);
+      data.append('address', values?.address);
+      data.append('password', values?.password);
+      const result = await mainServics.addBranch(data);
+      console.log('result', result);
+      if (result.status) {
         showMessage({
           message: JSON.stringify(result.message),
           type: 'danger',
           icon: 'warning',
+        });
+        navigation.goBack();
+        setLoader(false);
+      } else {
+        showMessage({
+          message: 'Branch Added!',
+          type: 'success',
+          icon: 'success',
         });
         setLoader(false);
       }
     } catch (e) {
       setLoader(false);
       console.log('error', e);
+      showMessage({
+        message: JSON.stringify(e),
+        type: 'danger',
+        icon: 'warning',
+      });
     }
   };
 
   return (
     <View style={styles.container}>
-      <ActivityIndicator visible={false} />
+      <ActivityIndicator visible={loader} />
       {/* <ErrorModal
         onPress={() => setLoginError(!loginError)} 
         visible={loginError}
@@ -150,7 +151,7 @@ export default function AddBranch({navigation, route}) {
                 <AntDesign name="setting" size={25} color={colors.text} />
               }
             />
-            <View style={{width: '100%', paddingHorizontal: 20}}>
+            <View style={{width: '100%', paddingHorizontal: 10}}>
               <HeaderBottom
                 title={'New Branch'}
                 subTitle={'Create and mange store branches'}
@@ -166,16 +167,16 @@ export default function AddBranch({navigation, route}) {
                   </View>
                 }
               />
-              <View style={{marginTop: 40}}>
+              <View>
                 <Formik
                   initialValues={{
-                    fullname: '',
-                    email: '',
+                    branch_name: '',
+                    branch_email: '',
+                    address: '',
                     password: '',
                     confirmPassword: '',
-                    referal_code: '',
                   }}
-                  onSubmit={values => handleLogin(values)}
+                  onSubmit={values => handleSubmitted(values)}
                   validationSchema={signUpSchema}>
                   {({
                     handleSubmit,
@@ -189,7 +190,6 @@ export default function AddBranch({navigation, route}) {
                     setFieldTouched,
                   }) => (
                     <>
-                      {console.log('errors', errors)}
                       <View>
                         <InputWithLabel
                           label="Name of Branch"
@@ -200,12 +200,12 @@ export default function AddBranch({navigation, route}) {
                           }}
                           placeholder={'Eg. Pol Gas'}
                           containerStyles={{paddingHorizontal: 20}}
-                          onChange={handleChange('fullname')}
-                          value={values.fullname}
-                          error={touched.fullname ? errors.fullname : ''}
-                          onBlur={() => setFieldTouched('fullname')}
+                          onChange={handleChange('branch_name')}
+                          value={values.branch_name}
+                          error={touched.branch_name ? errors.branch_name : ''}
+                          onBlur={() => setFieldTouched('branch_name')}
                         />
-                        <InputWithLabel
+                        {/* <InputWithLabel
                           label="Store Manger"
                           labelStyle={{
                             // fontFamily: fonts.mulishSemiBold,
@@ -218,8 +218,8 @@ export default function AddBranch({navigation, route}) {
                           value={values.fullname}
                           error={touched.fullname ? errors.fullname : ''}
                           onBlur={() => setFieldTouched('fullname')}
-                        />
-                        <InputWithLabel
+                        /> */}
+                        {/* <InputWithLabel
                           label="Branch Phone"
                           labelStyle={{
                             // fontFamily: fonts.mulishSemiBold,
@@ -232,7 +232,7 @@ export default function AddBranch({navigation, route}) {
                           value={values.fullname}
                           error={touched.fullname ? errors.fullname : ''}
                           onBlur={() => setFieldTouched('fullname')}
-                        />
+                        /> */}
                         <InputWithLabel
                           label={'Email Branch'}
                           placeholder={'Eg. abc@abc.com'}
@@ -242,12 +242,13 @@ export default function AddBranch({navigation, route}) {
                             color: colors.yellowHeading,
                             fontSize: 15,
                           }}
-                          onChange={handleChange('email')}
-                          value={values.email}
-                          error={touched.email ? errors.email : ''}
-                          onBlur={() => setFieldTouched('email')}
+                          onChange={handleChange('branch_email')}
+                          value={values.branch_email}
+                          error={
+                            touched.branch_email ? errors.branch_email : ''
+                          }
+                          onBlur={() => setFieldTouched('branch_email')}
                         />
-                        <View style={{height: 20}} />
 
                         <InputWithLabel
                           label="Branch Address"
@@ -258,12 +259,10 @@ export default function AddBranch({navigation, route}) {
                             color: colors.yellowHeading,
                             fontSize: 15,
                           }}
-                          onChange={handleChange('referal_code')}
-                          value={values.referal_code}
-                          error={
-                            touched.referal_code ? errors.referal_code : ''
-                          }
-                          onBlur={() => setFieldTouched('referal_code')}
+                          onChange={handleChange('address')}
+                          value={values.address}
+                          error={touched.address ? errors.address : ''}
+                          onBlur={() => setFieldTouched('address')}
                         />
                         <InputWithLabel
                           label={'Password'}
@@ -311,7 +310,7 @@ export default function AddBranch({navigation, route}) {
                         }}>
                         <GradientButton
                           onPress={() => handleSubmit()}
-                          disabled={!isValid || loader || !checked}
+                          disabled={!isValid || loader}
                           title="Create Branch"
                         />
                       </View>

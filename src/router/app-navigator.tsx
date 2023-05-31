@@ -45,7 +45,7 @@ const AppNavigator = () => {
       screenOptions={{
         headerShown: false,
       }}>
-      {data?.type == 'user' ? (
+      {data?.type == 'user1s' ? (
         <Stack.Screen name="AppDrawerStack" component={DrawerNavigator} />
       ) : (
         <Stack.Screen

@@ -12,6 +12,7 @@ import {
   KeyboardAvoidingView,
   FlatList,
   SafeAreaView,
+  RefreshControl,
 } from 'react-native';
 
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -48,27 +49,37 @@ import {useTheme} from '@react-navigation/native';
 import GradientButton from '../../../components/buttons/gradient-button';
 import {useDispatch, useSelector} from 'react-redux';
 import {OrderState} from '../../../redux/orders/OrderState';
-import {getReduxOrderHistory} from '../../../redux/orders/orders-actions';
+
 import {capitalizeFirstLetter} from '../../../utils/functions/general-functions';
 import HeaderBottom from '../../../components/header-bottom';
+import {getBranchesR} from '../../../redux/global/actions';
+import {GlobalState} from '../../../redux/global/GlobalState';
+import moment from 'moment';
 export default function Branches({navigation}) {
   const {colors} = useTheme();
   const styles = makeStyles(colors);
   const authContext = React.useContext(AuthContext);
   const dispatch = useDispatch();
-  const orderHistory = useSelector(
-    (state: OrderState) => state?.order?.orderHistory,
-  );
-  console.log('orderHistory', orderHistory);
+  const [refreshing, setRefreshing] = React.useState(false);
+  const branches = useSelector((state: GlobalState) => state?.global?.branches);
+  console.log('branches', branches);
   console.log('authContext', authContext?.userData?.user_id);
 
   useEffect(() => {
     //authContext?.userData?.user_id
     let data = new FormData();
     data.append('user_id', 33);
-    dispatch(getReduxOrderHistory(data));
+    dispatch(getBranchesR(data));
   }, [dispatch]);
-
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    let data = new FormData();
+    data.append('user_id', 33);
+    dispatch(getBranchesR(data));
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
   return (
     <View style={styles.container}>
       <ActivityIndicator visible={false} />
@@ -77,7 +88,11 @@ export default function Branches({navigation}) {
         visible={loginError}
       /> */}
 
-      <ScrollView keyboardShouldPersistTaps={'handled'}>
+      <ScrollView
+        keyboardShouldPersistTaps={'handled'}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
         <View
           style={{
             width: '100%',
@@ -89,7 +104,12 @@ export default function Branches({navigation}) {
             title={'All Branches'}
             back={true}
             rightIcon={
-              <AntDesign name="setting" size={25} color={colors.text} />
+              <AntDesign
+                name="pluscircle"
+                size={30}
+                color={colors.text}
+                onPress={() => navigation.navigate(SCREENS.ADD_BRANCH)}
+              />
             }
           />
           <View style={{width: '100%', paddingHorizontal: 20}}>
@@ -110,19 +130,26 @@ export default function Branches({navigation}) {
             />
 
             <FlatList
-              data={orderHistory}
+              data={branches}
               renderItem={({item, index}) => (
                 <BranchCard
                   srNo={index + 1}
-                  title={capitalizeFirstLetter('holy gas - Lugbe')}
-                  subTitle={item?.order_date}
-                  storeManager={'Store Manager - Daniel Okenwa'}
-                  address={'123 Main Street Gwarinpa'}
-                  lastSeen={'Last seen: Sept, 30, 2021'}
-                  status={'Active'}
+                  title={capitalizeFirstLetter(item?.branch_name)}
+                  storeManager={'Store Manager - Daniel Okenwa HC'}
+                  address={'123 Main Street Gwarinpa HC'}
+                  lastSeen={`Last seen: ${
+                    item?.modifieddate
+                      ? moment(item?.modifieddate).format('MMMM,DD,YYYY')
+                      : '-'
+                  }`}
+                  status={item?.branch_status}
                   style={{backgroundColor: '#eaf5fc'}}
-                  price={'N12.34'}
-                  firstLetter={'H'}
+                  price={'N12.34 HC'}
+                  firstLetter={
+                    item?.branch_name
+                      ? capitalizeFirstLetter(item?.branch_name?.charAt(0))
+                      : '-'
+                  }
                   onPressDelete={() => {
                     console.log('item?', item?._id);
                   }}
