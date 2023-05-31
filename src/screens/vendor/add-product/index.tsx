@@ -56,6 +56,8 @@ import VendorCard from '../../../components/vendor-card';
 import LabResultModal from '../../../components/lab-results-modal';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {Dropdown} from 'react-native-element-dropdown';
+import {mainServics} from '../../../services';
+import {showMessage} from 'react-native-flash-message';
 const data = [
   {label: 'Item 1', value: '1'},
   {label: 'Item 2', value: '2'},
@@ -77,10 +79,14 @@ export default function AddProduct({navigation}) {
   const [showPicModal, setShowPicModal] = useState(false);
   const [modalData, setModalData] = useState([]);
   const [value, setValue] = useState(null);
-  const [image, setImage] = useState('');
   const [isVisiable, setIsVisible] = React.useState(false);
+  const [loader, setLoader] = React.useState(false);
   const [splices, setSplices] = useState();
   const [refresh, setRefreh] = useState(false);
+  const [error, setError] = useState({});
+  const [name, setName] = useState('');
+  const [price, setPrice] = useState('');
+  const [description, setDescription] = useState('');
 
   const imagePickerFromGallery = async () => {
     try {
@@ -230,9 +236,57 @@ export default function AddProduct({navigation}) {
     }
   };
 
+  const handleSubmit = async () => {
+    try {
+      setLoader(true);
+      let data = new FormData();
+      if (Platform.OS == 'android') {
+        list?.map(ele => {
+          console.log('ele', ele);
+          data.append('accessories_image[]', {
+            uri: ele?.uri,
+            type: ele?.filetype,
+            name: ele?.filename,
+          });
+        });
+      }
+
+      data.append('category_id', authContext?.userData?.user_id);
+      data.append('accessories_name', name);
+      data.append('price', price);
+      data.append('description', description);
+      console.log('data', data);
+      const result = await mainServics.addVendorProducts(data);
+      console.log('result', result);
+      if (result.status) {
+        showMessage({
+          message: 'Product Added!',
+          type: 'success',
+          icon: 'success',
+        });
+        navigation.goBack();
+        setLoader(false);
+      } else {
+        showMessage({
+          message: result.message,
+          type: 'warning',
+          icon: 'warning',
+        });
+        setLoader(false);
+      }
+    } catch (e) {
+      setLoader(false);
+      console.log('error', e);
+      showMessage({
+        message: JSON.stringify(e),
+        type: 'danger',
+        icon: 'warning',
+      });
+    }
+  };
   return (
     <View style={styles.container}>
-      <ActivityIndicator visible={false} />
+      <ActivityIndicator visible={loader} />
       {/* <ErrorModal
         onPress={() => setLoginError(!loginError)} 
         visible={loginError}
@@ -269,29 +323,50 @@ export default function AddProduct({navigation}) {
                 </View>
               }
             />
-            <InputWithLabel
-              labelStyle={{
-                //   fontFamily: fonts.mulishSemiBold,
-                color: colors.yellowHeading,
-                fontSize: 15,
-              }}
-              // onChange={handleChange('email')}
-              placeholder={'Name of product'}
-              // error={touched.email ? errors.email : ''}
-              // onBlur={() => setFieldTouched('email')}
-            />
-            <InputWithLabel
-              labelStyle={{
-                //   fontFamily: fonts.mulishSemiBold,
-                color: colors.yellowHeading,
-                fontSize: 15,
-              }}
-              // onChange={handleChange('email')}
-              placeholder={'Cost'}
-              // error={touched.email ? errors.email : ''}
-              // onBlur={() => setFieldTouched('email')}
-            />
 
+            <InputWithLabel
+              labelStyle={{
+                //   fontFamily: fonts.mulishSemiBold,
+                color: colors.yellowHeading,
+                fontSize: 15,
+              }}
+              onChange={txt => setName(txt)}
+              placeholder={'Name of product'}
+              error={error.name ? error.name : ''}
+              onBlur={() => {
+                !name
+                  ? setError(prevState => ({
+                      ...prevState,
+                      name: 'Product Name is Required',
+                    }))
+                  : setError(prevState => ({
+                      ...prevState,
+                      name: '',
+                    }));
+              }}
+            />
+            <InputWithLabel
+              labelStyle={{
+                //   fontFamily: fonts.mulishSemiBold,
+                color: colors.yellowHeading,
+                fontSize: 15,
+              }}
+              onChange={txt => setPrice(txt)}
+              placeholder={'Cost'}
+              error={error.price ? error.price : ''}
+              onBlur={() => {
+                !price
+                  ? setError(prevState => ({
+                      ...prevState,
+                      price: 'Product Price is Required',
+                    }))
+                  : setError(prevState => ({
+                      ...prevState,
+                      price: '',
+                    }));
+              }}
+            />
+            {/* 
             <Dropdown
               style={styles.dropdown}
               placeholderStyle={styles.placeholderStyle}
@@ -317,7 +392,7 @@ export default function AddProduct({navigation}) {
               //     size={20}
               //   />
               // )}
-            />
+            /> */}
           </View>
         </View>
         <View
@@ -342,7 +417,6 @@ export default function AddProduct({navigation}) {
               </Text>
 
               <View>
-                {console.log('lis', list)}
                 <FlatList
                   data={[...list, {id: 'add-new'}]}
                   horizontal={true}
@@ -392,7 +466,28 @@ export default function AddProduct({navigation}) {
                 />
               </View>
             </View>
-
+            <InputWithLabel
+              labelStyle={{
+                //   fontFamily: fonts.mulishSemiBold,
+                color: colors.yellowHeading,
+                fontSize: 15,
+              }}
+              label="Description"
+              onChange={txt => setDescription(txt)}
+              placeholder={'eg. Contains abc '}
+              error={error.description ? error.description : ''}
+              onBlur={() => {
+                !description
+                  ? setError(prevState => ({
+                      ...prevState,
+                      description: 'Product Description is Required',
+                    }))
+                  : setError(prevState => ({
+                      ...prevState,
+                      description: '',
+                    }));
+              }}
+            />
             <View
               style={{
                 paddingHorizontal: widthPercentageToDP(3),
@@ -401,8 +496,8 @@ export default function AddProduct({navigation}) {
                 marginTop: 50,
               }}>
               <GradientButton
-                // onPress={() => handleSubmit()}
-                // disabled={!isValid || loader || !checked}
+                onPress={() => handleSubmit()}
+                disabled={!name || !price || !description || loader}
                 title="Create Product"
               />
             </View>

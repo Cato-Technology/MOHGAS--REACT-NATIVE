@@ -91,7 +91,12 @@ export default function Products({navigation}) {
             title={'Products'}
             back={true}
             rightIcon={
-              <AntDesign name="setting" size={25} color={colors.text} />
+              <AntDesign
+                name="pluscircle"
+                size={30}
+                color={colors.text}
+                onPress={() => navigation.navigate(SCREENS.ADD_PRODUCT)}
+              />
             }
           />
           <View style={{width: '100%', paddingHorizontal: 20}}>

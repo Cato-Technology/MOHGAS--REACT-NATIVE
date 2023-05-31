@@ -101,17 +101,17 @@ export default function AddBranch({navigation, route}) {
       console.log('result', result);
       if (result.status) {
         showMessage({
-          message: JSON.stringify(result.message),
-          type: 'danger',
-          icon: 'warning',
+          message: 'Branch Added!',
+          type: 'success',
+          icon: 'success',
         });
         navigation.goBack();
         setLoader(false);
       } else {
         showMessage({
-          message: 'Branch Added!',
-          type: 'success',
-          icon: 'success',
+          message: result.message,
+          type: 'warning',
+          icon: 'warning',
         });
         setLoader(false);
       }

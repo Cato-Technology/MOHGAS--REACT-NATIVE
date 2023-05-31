@@ -10,6 +10,9 @@ const addBranch = (detail: any) => {
 const getBranches = (detail: any) => {
   return client.get(API_URLS_VENDOR.BRANCH, detail);
 };
+const addVendorProducts = (detail: any) => {
+  return client.get(API_URLS_VENDOR.VENDOR_PRODUCTS, detail);
+};
 const getVendorProducts = (detail: any) => {
   return client.get(API_URLS_VENDOR.VENDOR_PRODUCTS, detail);
 };
@@ -45,6 +48,7 @@ const gasOrder = (detail: any) => {
 export const mainServics = {
   addBranch,
   getBranches,
+  addVendorProducts,
   getVendorProducts,
   nearByGasAgencyRefill,
   swapCylinder,
