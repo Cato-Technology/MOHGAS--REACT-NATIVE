@@ -1,5 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import React from 'react';
+import {Alert} from 'react-native';
+import AuthContext from '../utils/auth-context';
 //import Config from 'react-native-config';
 
 const request = axios.create({
@@ -29,7 +32,20 @@ const onError = function (error: any) {
     status: error?.response?.status || 'not status',
   });
 };
-
+request.interceptors.response.use(
+  function (response) {
+    // 200 type responses, this should be left as it is
+    return response;
+  },
+  function (error) {
+    console.log('ttt', error);
+    if (error.response.status == 401) {
+      AsyncStorage.clear();
+    }
+    // Handle your 401 error, maybe the UI changes and removing from local storage
+    return Promise.reject(error);
+  },
+);
 request.interceptors.response.use(onSuccess, onError);
 
 request.interceptors.request.use(

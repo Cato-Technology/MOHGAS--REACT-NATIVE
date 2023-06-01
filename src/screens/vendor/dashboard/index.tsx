@@ -100,7 +100,11 @@ export default function VendorDashBoard({navigation, props}) {
               alignItems: 'center',
             }}>
             <View style={{marginTop: 20}}>
-              <Text style={{fontFamily: 'Rubik-Bold', fontSize: 15}}>
+              <Text
+                style={{
+                  fontFamily: 'Rubik-Bold',
+                  fontSize: 15,
+                }}>
                 Wellcome
               </Text>
               <Text style={{fontFamily: 'Rubik-Bold', fontSize: 25}}>

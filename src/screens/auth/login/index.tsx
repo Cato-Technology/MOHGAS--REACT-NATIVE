@@ -79,8 +79,11 @@ export default function Login({navigation}) {
           console.error('Failed to save user data to storage');
         }
 
-        auth.authContext.signIn(result?.message);
-        setLoader(false);
+        if (result?.response?.token) {
+          auth.setUserData(result?.response);
+          auth.authContext.signIn(result?.response?.token);
+          setLoader(false);
+        }
       }
     } catch (e) {
       setLoader(false);
