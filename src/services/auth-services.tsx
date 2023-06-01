@@ -99,10 +99,13 @@ function verifyOtp(data: any) {
       });
   });
 }
-
+const registerVendor = (detail: any) => {
+  return client.post(API_URLS.REGISTER_VENDOR, detail);
+};
 export const authService = {
   login,
   signUp,
   forgotPassword,
   verifyOtp,
+  registerVendor,
 };

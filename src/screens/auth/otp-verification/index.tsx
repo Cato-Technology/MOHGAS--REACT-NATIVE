@@ -53,6 +53,8 @@ import {NAME} from '../../../utils/regix';
 import {showMessage} from 'react-native-flash-message';
 
 export default function OtpVerification({navigation, route}) {
+  console.log('route', route?.params?.item?.business_id);
+
   const {colors} = useTheme();
   const styles = makeStyles(colors);
   const auth = React.useContext(AuthContext);
@@ -63,13 +65,11 @@ export default function OtpVerification({navigation, route}) {
 
   const [loginError, setLoginError] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
-  const [checked, setChecked] = useState(false);
+
   const [loader, setLoader] = useState(false);
-  const [countryCode, setCountryCode] = useState('NG');
+
   const [phoneNumber, setPhoneNumber] = useState('');
   const [selectCountryCode, setSelectCountryCode] = useState('');
-  const [numberCondition, setNumberCondition] = useState({min: 8, max: 11});
-  console.log('route', route.params);
 
   const signUpSchema = useMemo(
     () =>
@@ -114,10 +114,6 @@ export default function OtpVerification({navigation, route}) {
     setLoader(true);
     try {
       console.log('values', values);
-      console.log('selectCountryCode', selectCountryCode);
-
-      console.log('Phno', phoneNumber);
-
       let data = new FormData();
       data.append('fullname', values.fullname);
       data.append('email', values.email);

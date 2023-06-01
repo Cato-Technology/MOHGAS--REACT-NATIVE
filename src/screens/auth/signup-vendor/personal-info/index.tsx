@@ -50,7 +50,9 @@ import Logo from '../../../../assets/images/logo.png';
 import {NAME} from '../../../../utils/regix';
 import {showMessage} from 'react-native-flash-message';
 
-export default function PersonalInformation({navigation}) {
+export default function PersonalInformation({navigation, route}) {
+  let tData = route?.params?.tData;
+
   const {colors} = useTheme();
   const styles = makeStyles(colors);
   const auth = React.useContext(AuthContext);
@@ -70,11 +72,11 @@ export default function PersonalInformation({navigation}) {
   const signUpSchema = useMemo(
     () =>
       Yup.object({
-        fullname: Yup.string()
+        full_name: Yup.string()
           // .required('First Name is Required')
           .matches(NAME, 'Name should only contain latin letters')
           .required('Full name is Required'),
-
+        referral_code: Yup.string(),
         password: Yup.string().required('Password is Required'),
         confirmPassword: Yup.string().test(
           'passwords-match',
@@ -83,40 +85,33 @@ export default function PersonalInformation({navigation}) {
             return this.parent.password === value;
           },
         ),
-        referal_code: Yup.string().required('Refferal Code is Required'),
-        email: Yup.string()
-          .email('Please provide correct email')
-          .required('Email is required'),
-        // .required('Email is required'),
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   );
 
   const handleLogin = async values => {
+    console.log('values', values);
+
     setLoader(true);
     try {
       console.log('values', values);
-      console.log('selectCountryCode', selectCountryCode);
-
-      console.log('Phno', phoneNumber);
-
       let data = new FormData();
-      data.append('fullname', values.fullname);
-      data.append('email', values.email);
-      data.append('userType', 'User');
-      data.append('state', 'state');
-      data.append('lga', 'lga');
-      data.append('city', 'city');
-      data.append('street', 'street');
-      data.append('phone_num', selectCountryCode + phoneNumber);
-      data.append('referal_code', values.referal_code);
-      data.append('password', values.password);
+      data.append('business_name', tData?.business_name);
+      data.append('business_email', tData?.business_email);
+      data.append('business_phone', tData?.business_phone);
+      data.append('business_address', tData?.business_address);
+      data.append('full_name', values?.full_name);
+      data.append('referral_code', values?.referral_code);
+      data.append('password', values?.password);
+      console.log('formData', data);
 
-      const result = await authService.signUp(data);
-      if (result.message == 'Successfully Registered') {
-        alert('Registered');
-        navigation.navigate(SCREENS.LOGIN);
+      const result = await authService.registerVendor(data);
+      console.log('result', result);
+
+      if (result.status) {
+        navigation.navigate(SCREENS.OTP_VERIFICATION, {item: result.data});
+        // navigation.navigate(SCREENS.LOGIN);
         setLoader(false);
       } else {
         showMessage({
@@ -175,11 +170,10 @@ export default function PersonalInformation({navigation}) {
             </Text>
             <Formik
               initialValues={{
-                fullname: '',
-                email: '',
+                full_name: '',
+                referral_code: '',
                 password: '',
                 confirmPassword: '',
-                referal_code: '',
               }}
               onSubmit={values => handleLogin(values)}
               validationSchema={signUpSchema}>
@@ -204,12 +198,12 @@ export default function PersonalInformation({navigation}) {
                         color: colors.yellowHeading,
                         fontSize: 15,
                       }}
-                      placeholder={'Eg. Amit'}
+                      placeholder={'Eg. Waqar'}
                       containerStyles={{paddingHorizontal: 20}}
-                      onChange={handleChange('fullname')}
-                      value={values.fullname}
-                      error={touched.fullname ? errors.fullname : ''}
-                      onBlur={() => setFieldTouched('fullname')}
+                      onChange={handleChange('full_name')}
+                      value={values.full_name}
+                      error={touched.full_name ? errors.full_name : ''}
+                      onBlur={() => setFieldTouched('full_name')}
                     />
 
                     <InputWithLabel
@@ -221,10 +215,10 @@ export default function PersonalInformation({navigation}) {
                         color: colors.yellowHeading,
                         fontSize: 15,
                       }}
-                      onChange={handleChange('referal_code')}
-                      value={values.referal_code}
-                      error={touched.referal_code ? errors.referal_code : ''}
-                      onBlur={() => setFieldTouched('referal_code')}
+                      onChange={handleChange('referral_code')}
+                      value={values.referral_code}
+                      error={touched.referral_code ? errors.referral_code : ''}
+                      onBlur={() => setFieldTouched('referral_code')}
                     />
                     <InputWithLabel
                       label={'Password'}
@@ -266,8 +260,7 @@ export default function PersonalInformation({navigation}) {
                     <CheckBox checked={checked} setChecked={setChecked} />
 
                     <Text style={styles.tcTextStyle}>
-                      <Text>I agree to the </Text>
-
+                      I agree to the
                       <Pressable
                         onPress={() =>
                           navigation.navigate(SCREENS.TERMS_AND_PRIVACY, {
@@ -284,7 +277,7 @@ export default function PersonalInformation({navigation}) {
                                   : 'none',
                                 color: '#4ca757',
                                 fontSize: 15,
-                                top: hp(0.32),
+
                                 fontFamily: 'Rubik-Bold',
                                 // fontFamily: fonts.mulishRegular,
                               },
@@ -303,10 +296,9 @@ export default function PersonalInformation({navigation}) {
                     }}>
                     <GradientButton
                       onPress={() => {
-                        // handleSubmit()
-                        navigation.navigate(SCREENS.OTP_VERIFICATION);
+                        handleSubmit();
                       }}
-                      // disabled={!isValid || loader || !checked}
+                      disabled={!isValid || loader || !checked}
                       title="Create Account"
                     />
                     <Text
@@ -314,8 +306,7 @@ export default function PersonalInformation({navigation}) {
                         styles.tcTextStyle,
                         {textAlign: 'center', marginTop: 10},
                       ]}>
-                      <Text>Already have an account? </Text>
-
+                      Already have an account?
                       <Pressable
                         onPress={() =>
                           navigation.navigate(SCREENS.LOGIN, {
