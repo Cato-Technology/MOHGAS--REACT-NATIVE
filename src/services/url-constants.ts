@@ -4,6 +4,7 @@ const API_URLS = {
   SIGNUP: '/Api/user_register',
   FORGOT_PASSWORD: '/Api/forget_password',
   VERIFY_OTP: '/Api/verify_otp',
+  REGISTER_VENDOR: '/backend/register/vendor',
 
   //Profile constants
   UPDATE_USER: '/Api/update_user',

@@ -64,29 +64,23 @@ export default function SignUpVendor({navigation}) {
   const [loader, setLoader] = useState(false);
   const [countryCode, setCountryCode] = useState('NG');
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [selectCountryCode, setSelectCountryCode] = useState('');
+  const [selectCountryCode, setSelectCountryCode] = useState('+234');
   const [numberCondition, setNumberCondition] = useState({min: 8, max: 11});
+  console.log('phoneNumber', phoneNumber);
 
   const signUpSchema = useMemo(
     () =>
       Yup.object({
-        fullname: Yup.string()
+        business_name: Yup.string()
           // .required('First Name is Required')
           .matches(NAME, 'Name should only contain latin letters')
           .required('Full name is Required'),
-
-        password: Yup.string().required('Password is Required'),
-        confirmPassword: Yup.string().test(
-          'passwords-match',
-          'Passwords must match',
-          function (value) {
-            return this.parent.password === value;
-          },
-        ),
-        referal_code: Yup.string().required('Refferal Code is Required'),
-        email: Yup.string()
+        business_email: Yup.string()
           .email('Please provide correct email')
           .required('Email is required'),
+
+        business_address: Yup.string().required('Address is Required'),
+
         // .required('Email is required'),
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -94,7 +88,15 @@ export default function SignUpVendor({navigation}) {
   );
 
   const handleNext = async values => {
-    navigation.navigate(SCREENS.SIGNUP_PERSONAL_VENDOR);
+    console.log('values', values);
+    console.log('pggg', selectCountryCode + phoneNumber);
+    let tData = {
+      ...values,
+      ...{business_phone: selectCountryCode + phoneNumber},
+    };
+    console.log('tData', tData);
+
+    navigation.navigate(SCREENS.SIGNUP_PERSONAL_VENDOR, {tData});
     // setLoader(true);
     // try {
     //   console.log('values', values);
@@ -173,11 +175,9 @@ export default function SignUpVendor({navigation}) {
             </Text>
             <Formik
               initialValues={{
-                fullname: '',
-                email: '',
-                password: '',
-                confirmPassword: '',
-                referal_code: '',
+                business_name: '',
+                business_email: '',
+                business_address: '',
               }}
               onSubmit={values => handleNext(values)}
               validationSchema={signUpSchema}>
@@ -204,10 +204,10 @@ export default function SignUpVendor({navigation}) {
                       }}
                       placeholder={'Eg. Holy Gas'}
                       containerStyles={{paddingHorizontal: 20}}
-                      onChange={handleChange('fullname')}
-                      value={values.fullname}
-                      error={touched.fullname ? errors.fullname : ''}
-                      onBlur={() => setFieldTouched('fullname')}
+                      onChange={handleChange('business_name')}
+                      value={values.business_name}
+                      error={touched.business_name ? errors.business_name : ''}
+                      onBlur={() => setFieldTouched('business_name')}
                     />
 
                     <InputWithLabel
@@ -219,10 +219,12 @@ export default function SignUpVendor({navigation}) {
                         color: colors.yellowHeading,
                         fontSize: 15,
                       }}
-                      onChange={handleChange('email')}
-                      value={values.email}
-                      error={touched.email ? errors.email : ''}
-                      onBlur={() => setFieldTouched('email')}
+                      onChange={handleChange('business_email')}
+                      value={values.business_email}
+                      error={
+                        touched.business_email ? errors.business_email : ''
+                      }
+                      onBlur={() => setFieldTouched('business_email')}
                     />
                     <View style={{height: 20}} />
                     <Text style={styles.inputLablel}>Phone</Text>
@@ -238,27 +240,27 @@ export default function SignUpVendor({navigation}) {
                       (selectCountryCode == 63 ? (
                         phoneNumber.charAt(0) == 0 ? (
                           <Text style={styles.errorMessage}>
-                            Phonenumber must not start with 0
+                            Phone Number must not start with 0
                           </Text>
                         ) : (
                           phoneNumber.length < numberCondition.min && (
                             <Text style={styles.errorMessage}>
-                              Must have
-                              {numberCondition.min}
+                              Must have {numberCondition.min}
+                              {'  '}
                               {numberCondition.max !== numberCondition.min &&
                                 -numberCondition.max}
-                              4-13 characters
+                              {'  '} characters
                             </Text>
                           )
                         )
                       ) : (
                         phoneNumber.length < numberCondition.min && (
                           <Text style={styles.errorMessage}>
-                            Must have
+                            Must have{'  '}
                             {numberCondition.min}
                             {numberCondition.max !== numberCondition.min &&
                               -numberCondition.max}
-                            4-13 characters
+                            {'  '} characters
                           </Text>
                         )
                       ))}
@@ -274,10 +276,12 @@ export default function SignUpVendor({navigation}) {
                         color: colors.yellowHeading,
                         fontSize: 15,
                       }}
-                      onChange={handleChange('referal_code')}
-                      value={values.referal_code}
-                      error={touched.referal_code ? errors.referal_code : ''}
-                      onBlur={() => setFieldTouched('referal_code')}
+                      onChange={handleChange('business_address')}
+                      value={values.business_address}
+                      error={
+                        touched.business_address ? errors.business_address : ''
+                      }
+                      onBlur={() => setFieldTouched('business_address')}
                     />
                   </View>
 
@@ -289,10 +293,13 @@ export default function SignUpVendor({navigation}) {
                     }}>
                     <GradientButton
                       onPress={() => {
-                        navigation.navigate(SCREENS.SIGNUP_PERSONAL_VENDOR);
                         handleSubmit();
                       }}
-                      //  disabled={!isValid || loader || !checked}
+                      disabled={
+                        phoneNumber.length < numberCondition.min ||
+                        loader ||
+                        !isValid
+                      }
                       title="Continue"
                     />
                     <Text

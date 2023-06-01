@@ -25,7 +25,7 @@ export const makeStyles = (colors: any) =>
       alignItems: 'center',
     },
     errorText: {
-      color: colors.text,
+      color: '#fff',
       //fontFamily: 'Poppins-Regular',
       fontSize: RFValue(11),
       paddingLeft: widthPercentageToDP(3),
