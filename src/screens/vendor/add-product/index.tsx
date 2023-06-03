@@ -86,6 +86,7 @@ export default function AddProduct({navigation}) {
   const [error, setError] = useState({});
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
+  const [size, setSize] = useState('');
   const [description, setDescription] = useState('');
 
   const imagePickerFromGallery = async () => {
@@ -255,6 +256,7 @@ export default function AddProduct({navigation}) {
       data.append('accessories_name', name);
       data.append('price', price);
       data.append('description', description);
+      data.append('size_of_product', size);
       console.log('data', data);
       const result = await mainServics.addVendorProducts(data);
       console.log('result', result);
@@ -363,6 +365,27 @@ export default function AddProduct({navigation}) {
                   : setError(prevState => ({
                       ...prevState,
                       price: '',
+                    }));
+              }}
+            />
+            <InputWithLabel
+              labelStyle={{
+                //   fontFamily: fonts.mulishSemiBold,
+                color: colors.yellowHeading,
+                fontSize: 15,
+              }}
+              onChange={txt => setSize(txt)}
+              placeholder={'Size/Length'}
+              error={error.size ? error.size : ''}
+              onBlur={() => {
+                !size
+                  ? setError(prevState => ({
+                      ...prevState,
+                      size: 'Product Size is Required',
+                    }))
+                  : setError(prevState => ({
+                      ...prevState,
+                      size: '',
                     }));
               }}
             />
@@ -497,7 +520,7 @@ export default function AddProduct({navigation}) {
               }}>
               <GradientButton
                 onPress={() => handleSubmit()}
-                disabled={!name || !price || !description || loader}
+                disabled={!name || !price || !description || !size || loader}
                 title="Create Product"
               />
             </View>

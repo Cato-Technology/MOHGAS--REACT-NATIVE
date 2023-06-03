@@ -42,7 +42,7 @@ import {
   widthPercentageToDP,
   heightPercentageToDP,
 } from 'react-native-responsive-screen';
-
+import qs from 'qs';
 // import i18next from 'i18next';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 export const PASS_REGIX =
@@ -56,6 +56,8 @@ import VendorCard from '../../../components/vendor-card';
 import LabResultModal from '../../../components/lab-results-modal';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {Dropdown} from 'react-native-element-dropdown';
+import {showMessage} from 'react-native-flash-message';
+import {mainServics} from '../../../services';
 const data = [
   {label: 'Item 1', value: '1'},
   {label: 'Item 2', value: '2'},
@@ -67,22 +69,77 @@ const data = [
   {label: 'Item 8', value: '8'},
 ];
 
-export default function UpdatePrice({navigation}) {
+export default function UpdatePrice({navigation, route}) {
+  let item = route?.params?.item;
   const {colors} = useTheme();
   const styles = makeStyles(colors);
+  console.log('item', item?.id);
 
   const authContext = React.useContext(AuthContext);
-
+  const [loader, setLoader] = React.useState(false);
   const [value, setValue] = useState(null);
-  let sucessData = {
-    title: 'Price Update Sucessfull',
-    secondTitle: 'Price has been update sucessfully',
-    oldPrice: 'Old Price - 6Kg -> N22,000',
-    newPrice: 'Old Price - 6Kg -> N22,000',
+  const [price, setPrice] = useState('');
+  const [confirmPrice, setConfirmPrice] = useState('');
+
+  const handleSubmit = async () => {
+    console.log('price', price);
+    console.log('confirmPrice', confirmPrice);
+    setLoader(true);
+    if (price !== confirmPrice) {
+      showMessage({
+        message: 'Price should be matched!',
+        type: 'warning',
+        icon: 'warning',
+      });
+    } else {
+      try {
+        // let detail = new FormData();
+        // detail.append('price', price);
+        let data = qs.stringify({
+          price: '35',
+        });
+        console.log('detail', data);
+        const result = await mainServics.upDateProdcutPrice(data, item?.id);
+        console.log('result', result);
+        if (result.status) {
+          showMessage({
+            message: 'Product Added!',
+            type: 'success',
+            icon: 'success',
+          });
+          let sucessData = {
+            title: 'Price Update Sucessfull',
+            secondTitle: 'Price has been update sucessfully',
+            oldPrice: `Old Price - 6Kg -> N${result?.data?.old_prirce}`,
+            newPrice: `New Price - 6Kg ->N${result?.data?.new_price}`,
+          };
+          navigation.navigate(SCREENS.SUCCESS_SCREEN, {
+            item: sucessData,
+            render: 'UpdatePrice',
+          });
+          setLoader(false);
+        } else {
+          showMessage({
+            message: result?.message,
+            type: 'warning',
+            icon: 'warning',
+          });
+          setLoader(false);
+        }
+      } catch (e) {
+        setLoader(false);
+        console.log('error==>', e);
+        showMessage({
+          message: JSON.stringify(e),
+          type: 'danger',
+          icon: 'warning',
+        });
+      }
+    }
   };
   return (
     <View style={styles.container}>
-      <ActivityIndicator visible={false} />
+      <ActivityIndicator visible={loader} />
       {/* <ErrorModal
         onPress={() => setLoginError(!loginError)} 
         visible={loginError}
@@ -97,7 +154,9 @@ export default function UpdatePrice({navigation}) {
           }}>
           <View style={styles.icon} />
           <Header
-            title={'Gas Price'}
+            title={
+              route?.params?.render == 'product' ? 'Product Price' : 'Gas Price'
+            }
             back={true}
             rightIcon={
               <AntDesign name="setting" size={25} color={colors.text} />
@@ -105,8 +164,16 @@ export default function UpdatePrice({navigation}) {
           />
           <View style={{width: '100%', paddingHorizontal: 20}}>
             <HeaderBottom
-              title="Update Gas Price"
-              subTitle={'Manage gas cost'}
+              title={
+                route?.params?.render == 'product'
+                  ? 'Update Product Price'
+                  : 'Update Gas Price'
+              }
+              subTitle={
+                route?.params?.render == 'product'
+                  ? 'Manage product cost'
+                  : 'Manage gas cost'
+              }
               contentStyle={{marginTop: 50}}
               rightIcon={
                 <View
@@ -119,44 +186,49 @@ export default function UpdatePrice({navigation}) {
                 </View>
               }
             />
-            <Dropdown
-              style={styles.dropdown}
-              placeholderStyle={styles.placeholderStyle}
-              selectedTextStyle={styles.selectedTextStyle}
-              inputSearchStyle={styles.inputSearchStyle}
-              iconStyle={styles.iconStyle}
-              data={data}
-              //search
-              maxHeight={300}
-              labelField="label"
-              valueField="value"
-              placeholder="Select Cylinder"
-              //searchPlaceholder="Search..."
-              value={value}
-              onChange={item => {
-                setValue(item.value);
-              }}
-              // renderLeftIcon={() => (
-              //   <AntDesign
-              //     style={styles.icon2}
-              //     color="black"
-              //     name="Safety"
-              //     size={20}
-              //   />
-              // )}
-            />
+            {route?.params?.render != 'product' && (
+              <>
+                <Dropdown
+                  style={styles.dropdown}
+                  placeholderStyle={styles.placeholderStyle}
+                  selectedTextStyle={styles.selectedTextStyle}
+                  inputSearchStyle={styles.inputSearchStyle}
+                  iconStyle={styles.iconStyle}
+                  data={data}
+                  //search
+                  maxHeight={300}
+                  labelField="label"
+                  valueField="value"
+                  placeholder="Select Cylinder"
+                  //searchPlaceholder="Search..."
+                  value={value}
+                  onChange={item => {
+                    setValue(item.value);
+                  }}
+                  // renderLeftIcon={() => (
+                  //   <AntDesign
+                  //     style={styles.icon2}
+                  //     color="black"
+                  //     name="Safety"
+                  //     size={20}
+                  //   />
+                  // )}
+                />
 
-            <InputWithLabel
-              labelStyle={{
-                //   fontFamily: fonts.mulishSemiBold,
-                color: colors.yellowHeading,
-                fontSize: 15,
-              }}
-              // onChange={hnandleChange('email')}
-              placeholder={'N0.00'}
-              // error={touched.email ? errors.email : ''}
-              // onBlur={() => setFieldTouched('email')}
-            />
+                <InputWithLabel
+                  labelStyle={{
+                    //   fontFamily: fonts.mulishSemiBold,
+                    color: colors.yellowHeading,
+                    fontSize: 15,
+                  }}
+                  // onChange={hnandleChange('email')}
+                  placeholder={'N0.00'}
+                  // error={touched.email ? errors.email : ''}
+                  // onBlur={() => setFieldTouched('email')}
+                />
+              </>
+            )}
+
             <Text style={{marginTop: 20, paddingHorizontal: 10, fontSize: 16}}>
               Set New Price
             </Text>
@@ -166,8 +238,9 @@ export default function UpdatePrice({navigation}) {
                 color: colors.yellowHeading,
                 fontSize: 15,
               }}
-              // onChange={handleChange('email')}
+              onChange={txt => setPrice(txt)}
               placeholder={'Price *'}
+              keyboardType={'numeric'}
               // error={touched.email ? errors.email : ''}
               // onBlur={() => setFieldTouched('email')}
             />
@@ -177,7 +250,8 @@ export default function UpdatePrice({navigation}) {
                 color: colors.yellowHeading,
                 fontSize: 15,
               }}
-              // onChange={handleChange('email')}
+              keyboardType={'numeric'}
+              onChange={txt => setConfirmPrice(txt)}
               placeholder={'Confirm New Price *'}
               // error={touched.email ? errors.email : ''}
               // onBlur={() => setFieldTouched('email')}
@@ -194,14 +268,9 @@ export default function UpdatePrice({navigation}) {
               marginTop: 50,
             }}>
             <GradientButton
-              onPress={() =>
-                navigation.navigate(SCREENS.SUCCESS_SCREEN, {
-                  item: sucessData,
-                  render: 'UpdatePrice',
-                })
-              }
-              // disabled={!isValid || loader || !checked}
-              title="Update Record"
+              onPress={() => handleSubmit()}
+              disabled={!price || loader || !confirmPrice}
+              title="Update Price"
             />
           </View>
         </View>

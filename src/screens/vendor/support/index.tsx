@@ -19,7 +19,7 @@ const Support = ({navigation}) => {
         />
         <Button
           title="View Product"
-          onPress={() => navigation.navigate(SCREENS.VIEW_PRODUCTS)}
+          onPress={() => navigation.navigate(SCREENS.VIEW_PRODUCTS_VENDOR)}
         />
         <Button
           title="Check out"

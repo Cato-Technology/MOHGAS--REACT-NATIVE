@@ -7,6 +7,7 @@ import {heightPercentageToDP} from 'react-native-responsive-screen';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import makeStyles from './styles';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 
 type Props = {
   onPressEdit?: any;
@@ -20,6 +21,7 @@ type Props = {
   firstLetter?: string;
   srNo?: Number;
   style?: any;
+  onPress?: any;
 };
 
 const ProductCard = ({
@@ -34,12 +36,13 @@ const ProductCard = ({
   firstLetter,
   srNo,
   style,
+  onPress,
 }: Props) => {
   const navigations = useNavigation();
   const {colors} = useTheme();
   const styles = makeStyles(colors);
   return (
-    <View style={styles.main}>
+    <TouchableOpacity style={styles.main} onPress={onPress}>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
         <Text style={{paddingRight: 13}}>{srNo}</Text>
         <View style={[styles.circleView, style]}>
@@ -60,7 +63,7 @@ const ProductCard = ({
           {price}
         </Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

@@ -16,6 +16,11 @@ const addVendorProducts = (detail: any) => {
 const getVendorProducts = (detail: any) => {
   return client.get(API_URLS_VENDOR.VENDOR_PRODUCTS, detail);
 };
+const upDateProdcutPrice = (data: any, id: string) => {
+  console.log('idsSS', id);
+  console.log('deee', data);
+  return client.put(API_URLS_VENDOR.VENDOR_PRODUCTS + '/' + id, data);
+};
 //User Services
 const nearByGasAgencyRefill = (detail: any) => {
   return client.post(API_URLS.NEAR_BY_GAS_REFILL, detail);
@@ -59,4 +64,5 @@ export const mainServics = {
   getSupportAccountRelatedIssues,
   sendSupport,
   gasOrder,
+  upDateProdcutPrice,
 };

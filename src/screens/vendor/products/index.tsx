@@ -123,13 +123,18 @@ export default function Products({navigation}) {
                   srNo={index + 1}
                   title={capitalizeFirstLetter(item?.accessories_name)}
                   category={`Category - Selected ${item?.category_name}`}
-                  size={'Size/Length -25kg HC'}
+                  size={`Size/Length - ${item?.size_of_product}`}
                   style={{backgroundColor: '#eaf5fc'}}
                   price={'N' + item?.price}
                   firstLetter={
                     item?.accessories_name
                       ? capitalizeFirstLetter(item?.accessories_name?.charAt(0))
                       : '-'
+                  }
+                  onPress={() =>
+                    navigation.navigate(SCREENS.VIEW_PRODUCTS_VENDOR, {
+                      item: item,
+                    })
                   }
                   onPressDelete={() => {
                     console.log('item?', item?._id);

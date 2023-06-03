@@ -72,6 +72,10 @@ export default function AddBranch({navigation, route}) {
           .email('Please provide correct branch email')
           .required('Branch email is required'),
         address: Yup.string().required('Address is Required'),
+        branch_store_manager_name: Yup.string().required(
+          'Branch Manger Name is Required',
+        ),
+        branch_phone: Yup.string().required('Branch Phone is Required'),
         password: Yup.string().required('Password is Required'),
         confirmPassword: Yup.string().test(
           'passwords-match',
@@ -96,6 +100,13 @@ export default function AddBranch({navigation, route}) {
       data.append('branch_email', values?.branch_email);
       data.append('branch_user_id', auth?.userData?.user_id);
       data.append('address', values?.address);
+
+      data.append('branch_phone', values?.branch_phone);
+      data.append(
+        'branch_store_manager_name',
+        values?.branch_store_manager_name,
+      );
+
       data.append('password', values?.password);
       const result = await mainServics.addBranch(data);
       console.log('result', result);
@@ -175,6 +186,8 @@ export default function AddBranch({navigation, route}) {
                     address: '',
                     password: '',
                     confirmPassword: '',
+                    branch_store_manager_name: '',
+                    branch_phone: '',
                   }}
                   onSubmit={values => handleSubmitted(values)}
                   validationSchema={signUpSchema}>
@@ -205,7 +218,7 @@ export default function AddBranch({navigation, route}) {
                           error={touched.branch_name ? errors.branch_name : ''}
                           onBlur={() => setFieldTouched('branch_name')}
                         />
-                        {/* <InputWithLabel
+                        <InputWithLabel
                           label="Store Manger"
                           labelStyle={{
                             // fontFamily: fonts.mulishSemiBold,
@@ -214,12 +227,18 @@ export default function AddBranch({navigation, route}) {
                           }}
                           placeholder={'Eg. Ali Khan'}
                           containerStyles={{paddingHorizontal: 20}}
-                          onChange={handleChange('fullname')}
-                          value={values.fullname}
-                          error={touched.fullname ? errors.fullname : ''}
-                          onBlur={() => setFieldTouched('fullname')}
-                        /> */}
-                        {/* <InputWithLabel
+                          onChange={handleChange('branch_store_manager_name')}
+                          value={values.branch_store_manager_name}
+                          error={
+                            touched.branch_store_manager_name
+                              ? errors.branch_store_manager_name
+                              : ''
+                          }
+                          onBlur={() =>
+                            setFieldTouched('branch_store_manager_name')
+                          }
+                        />
+                        <InputWithLabel
                           label="Branch Phone"
                           labelStyle={{
                             // fontFamily: fonts.mulishSemiBold,
@@ -228,11 +247,13 @@ export default function AddBranch({navigation, route}) {
                           }}
                           placeholder={'0343534534'}
                           containerStyles={{paddingHorizontal: 20}}
-                          onChange={handleChange('fullname')}
-                          value={values.fullname}
-                          error={touched.fullname ? errors.fullname : ''}
-                          onBlur={() => setFieldTouched('fullname')}
-                        /> */}
+                          onChange={handleChange('branch_phone')}
+                          value={values.branch_phone}
+                          error={
+                            touched.branch_phone ? errors.branch_phone : ''
+                          }
+                          onBlur={() => setFieldTouched('branch_phone')}
+                        />
                         <InputWithLabel
                           label={'Email Branch'}
                           placeholder={'Eg. abc@abc.com'}

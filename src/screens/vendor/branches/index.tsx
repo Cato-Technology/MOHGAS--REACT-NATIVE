@@ -135,8 +135,8 @@ export default function Branches({navigation}) {
                 <BranchCard
                   srNo={index + 1}
                   title={capitalizeFirstLetter(item?.branch_name)}
-                  storeManager={'Store Manager - Daniel Okenwa HC'}
-                  address={'123 Main Street Gwarinpa HC'}
+                  storeManager={`Store Manager - ${item?.branch_store_manager_name}`}
+                  address={item?.address}
                   lastSeen={`Last seen: ${
                     item?.modifieddate
                       ? moment(item?.modifieddate).format('MMMM,DD,YYYY')
@@ -144,7 +144,7 @@ export default function Branches({navigation}) {
                   }`}
                   status={item?.branch_status}
                   style={{backgroundColor: '#eaf5fc'}}
-                  price={'N12.34 HC'}
+                  price={`N${item?.wallet_balance}`}
                   firstLetter={
                     item?.branch_name
                       ? capitalizeFirstLetter(item?.branch_name?.charAt(0))
