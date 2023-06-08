@@ -48,3 +48,24 @@ export interface VendorProductResponse {
   category_name: string;
   images: string[];
 }
+
+export interface VendorBusinessProfileResponse {
+  business_id: number;
+  business_name: string;
+  business_phone: number;
+  business_email: string;
+  nin: number;
+  rc_bn_number: number;
+  branch_id: number;
+  branch_store_manager_id: number;
+  main_branch_store_manager_name: string;
+  main_branch_address: string;
+  regulatory_id: string;
+  address_proof: string;
+  cac_certificate: string;
+  license_permit: string;
+  regulatory_id_url: string;
+  address_proof_url: string;
+  cac_certificate_url: string;
+  license_permit_url: string;
+}

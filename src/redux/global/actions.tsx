@@ -3,9 +3,16 @@ import {HIDE_LOADER, SHOW_LOADER} from '../event/constants';
 import {
   BranchesResponse,
   SupportResponse,
+  VendorBusinessProfileResponse,
   VendorProductResponse,
 } from '../types';
-import {ACCOUNT_REALTED_ISSUES, BRANCHES, PRODUCTS, SUPPORT} from './constants';
+import {
+  ACCOUNT_REALTED_ISSUES,
+  BRANCHES,
+  BUSINESS_PROFILE,
+  PRODUCTS,
+  SUPPORT,
+} from './constants';
 import {mainServics} from '../../services';
 
 export const addGetSupportData = (data: SupportResponse) => ({
@@ -22,6 +29,12 @@ export const getAddBranches = (data: BranchesResponse) => ({
 });
 export const getAddVendorProductR = (data: VendorProductResponse) => ({
   type: PRODUCTS,
+  payload: data,
+});
+export const addVendorBusinessProfile = (
+  data: VendorBusinessProfileResponse,
+) => ({
+  type: BUSINESS_PROFILE,
   payload: data,
 });
 export const getSupportData =
@@ -86,6 +99,24 @@ export const getVendorProductR =
       .getVendorProducts(data)
       .then(async res => {
         await dispatch(getAddVendorProductR(res.data));
+        dispatch({
+          type: HIDE_LOADER,
+        });
+      })
+      .catch(err => {
+        console.log('err', err);
+      });
+  };
+
+export const getVendorBusinessProfileR =
+  () => async (dispatch: (arg0: {type: string; payload?: any}) => void) => {
+    dispatch({
+      type: SHOW_LOADER,
+    });
+    await mainServics
+      .getVendorBusinessProfile()
+      .then(async res => {
+        await dispatch(addVendorBusinessProfile(res.data));
         dispatch({
           type: HIDE_LOADER,
         });

@@ -1,4 +1,10 @@
-import {ACCOUNT_REALTED_ISSUES, BRANCHES, PRODUCTS, SUPPORT} from './constants';
+import {
+  ACCOUNT_REALTED_ISSUES,
+  BRANCHES,
+  BUSINESS_PROFILE,
+  PRODUCTS,
+  SUPPORT,
+} from './constants';
 import {GlobalState} from './GlobalState';
 
 const INITIAL_STATE = new GlobalState();
@@ -29,7 +35,12 @@ export default function (state = INITIAL_STATE, action: any) {
         vendorProducts: action.payload,
       };
     }
-
+    case BUSINESS_PROFILE: {
+      return {
+        ...state,
+        businessProfileData: action.payload,
+      };
+    }
     default:
       return state;
   }

@@ -1,4 +1,4 @@
-import React, {Component, useMemo, useState} from 'react';
+import React, {Component, useEffect, useMemo, useState} from 'react';
 import {
   Text,
   View,
@@ -38,41 +38,56 @@ import {
 } from 'react-native-responsive-screen';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import ImagePicker from 'react-native-image-crop-picker';
-import {profileService} from '../../../services';
+import {mainServics, profileService} from '../../../services';
 import {showMessage} from 'react-native-flash-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useDispatch, useSelector} from 'react-redux';
+import {GlobalState} from '../../../redux/global/GlobalState';
+import {getVendorBusinessProfileR} from '../../../redux/global/actions';
 let cameraIs = false;
 const VendorEditProfile = () => {
   const navigation = useNavigation();
   const {colors} = useTheme();
-
+  const dispatch = useDispatch();
+  const businessData = useSelector(
+    (state: GlobalState) => state?.global?.businessProfileData,
+  );
   const styles = makeStyles(colors);
-  const [EditprofileLoader, setProfileLoader] = React.useState(false);
-  const [autoLogoutCheck, setAutoLogoutCheck] = React.useState(false);
+  const [EditprofileLoader, setProfileLoader] = useState(false);
+  const [autoLogoutCheck, setAutoLogoutCheck] = useState(false);
   const authContext = React.useContext(AuthContext);
   const [checked, setChecked] = useState(false);
   const [loader, setLoader] = useState(false);
-  const [showModal, setShowModal] = React.useState(false);
-  const [edit, setEdit] = React.useState(false);
-  const [image, setImage] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [type, setType] = useState('');
+  const [image, setImage] = useState();
+  const [cacImage, setCacImage] = useState();
+  const [lpImage, setLpImage] = useState();
+  const [poaImage, setPoaImage] = useState();
+  const [raImage, setRaImage] = useState();
 
-  console.log('uuser', authContext);
+  console.log('authContext', authContext);
 
   const signUpSchema = useMemo(
     () =>
       Yup.object({
-        fullname: Yup.string()
+        business_name: Yup.string()
           // .required('First Name is Required')
-          .matches(NAME, 'Name should only contain latin letters')
-          .required('Full name is Required'),
-
-        phone_no: Yup.number().required('Phone number is Required'),
-        street_name: Yup.string().required('Street Address Required'),
-        state: Yup.string().required('State is Required'),
-        city: Yup.string().required('City is Required'),
-        email: Yup.string()
+          .matches(NAME, 'Business Name should only contain latin letters')
+          .required('Business Name is Required'),
+        main_branch_store_manager_name: Yup.string()
+          // .required('First Name is Required')
+          .matches(NAME, 'Store Manger Name should only contain latin letters')
+          .required('Store Manger Name is Required'),
+        rc_bn_number: Yup.number().required('RC/BN is Required'),
+        nin: Yup.number().required('Min Required'),
+        business_phone: Yup.number().required('Phone number is Required'),
+        business_email: Yup.string()
           .email('Please provide correct email')
           .required('Email is required'),
+
+        main_branch_address: Yup.string().required('Main Address is Required'),
+
         // .required('Email is required'),
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -92,11 +107,22 @@ const VendorEditProfile = () => {
       // compressImageMaxHeight: 113,
     })
       .then(image => {
-        let img = `data:${image.mime};base64,${image.data}`;
-        setImage(img);
-        setShowModal(false);
-        //   setProfile({...profile, dp: image.path});
-        //   updateProfilePicture(image?.data);
+        if (type == 'cac') {
+          setCacImage(image);
+          setShowModal(false);
+        } else if (type == 'lp') {
+          setLpImage(image);
+          setShowModal(false);
+        } else if (type == 'poa') {
+          setPoaImage(image);
+          setShowModal(false);
+        } else if (type == 'ra') {
+          setRaImage(image);
+          setShowModal(false);
+        } else {
+          setImage(image);
+          setShowModal(false);
+        }
       })
       .catch(error => {
         console.log(error);
@@ -140,76 +166,82 @@ const VendorEditProfile = () => {
       }
     }
   };
+
   const handleUpdateUser = async values => {
     try {
       setLoader(true);
       let data = new FormData();
-      data.append('user_id', authContext?.userData?.user_id);
-      if (image) {
-        data.append('image', image);
+      data.append('business_email', values.business_email);
+      data.append('business_name', values.business_name);
+      data.append('business_phone', values.business_phone);
+      data.append('main_branch_address', values.main_branch_address);
+      data.append(
+        'main_branch_store_manager_name',
+        values.main_branch_store_manager_name,
+      );
+      data.append('nin', values.nin);
+      data.append('rc_bn_number', values.rc_bn_number);
+      if (Platform.OS == 'ios') {
+        data.append('regulatory_id', {
+          uri: 'file:///' + image?.path,
+          type: image?.mime,
+          name: 'image.jpg',
+        });
+      } else {
+        raImage &&
+          data.append('regulatory_id', {
+            uri: raImage?.path,
+            type: raImage?.mime,
+            name: 'image.jpg',
+          });
+        poaImage &&
+          data.append('address_proof', {
+            uri: poaImage?.path,
+            type: poaImage?.mime,
+            name: 'image.jpg',
+          });
+        cacImage &&
+          data.append('cac_certificate', {
+            uri: cacImage?.path,
+            type: cacImage?.mime,
+            name: 'image.jpg',
+          });
+        lpImage &&
+          data.append('license_permit', {
+            uri: lpImage?.path,
+            type: lpImage?.mime,
+            name: 'image.jpg',
+          });
       }
+      console.log('formData', data);
 
-      data.append('fullname', values.fullname);
-      data.append('phone_no', values.phone_no);
-      data.append('email', values.email);
-      data.append('street_name', values.street_name);
-      data.append('lga', 'abc');
-      data.append('state', values.state);
-      data.append('city', values.city);
-      console.log('data==>', data);
-
-      const result = await profileService.updateProfile(data);
+      const result = await mainServics.updateVendorBusinessProfile(data);
       console.log('result', result);
-
-      if (result?.status == '0') {
-        setLoader(false);
+      if (result?.status) {
+        dispatch(getVendorBusinessProfileR());
         showMessage({
           message: result?.message,
-          type: 'danger',
+          type: 'success',
+          icon: 'success',
+        });
+        setLoader(false);
+        navigation.goBack();
+      } else {
+        setLoader(false);
+        showMessage({
+          message: 'Some Thing Happing Wrong',
+          type: 'warning',
           icon: 'warning',
         });
-      }
-      if (result?.message == 'Profile Updated Successfully') {
-        try {
-          let dataUpdate = new FormData();
-          dataUpdate.append('user_id', authContext?.userData?.user_id);
-          const resultUpdate = await profileService.getProfile(dataUpdate);
-          console.log('resultUpdate', resultUpdate);
-          if (resultUpdate?.message == 'User Details Received') {
-            const updatedUserData = {
-              ...authContext?.userData,
-              image: resultUpdate?.responsedata.image,
-              type: resultUpdate?.responsedata.type,
-              full_name: resultUpdate?.responsedata.full_name,
-              email: resultUpdate?.responsedata.email,
-              phone_no: resultUpdate?.responsedata.phone_no,
-              street_name: resultUpdate?.responsedata.street_name,
-              province: resultUpdate?.responsedata.province,
-              city: resultUpdate?.responsedata.city,
-              lga: resultUpdate?.responsedata.lga,
-              referal_code: resultUpdate?.responsedata.referal_code,
-            };
-            console.log('updatedUserData', updatedUserData);
-
-            try {
-              const jsonValue = JSON.stringify(updatedUserData);
-              await AsyncStorage.setItem('userData', jsonValue);
-            } catch (e) {
-              console.error('Failed to save user data to storage');
-            }
-
-            authContext.setUserData(updatedUserData);
-            setLoader(false);
-            navigation.goBack();
-          }
-        } catch (e) {
-          setLoader(false);
-          console.log('error', e);
-        }
       }
     } catch (e) {
       setLoader(false);
       console.log('error', e);
+      showMessage({
+        message: JSON.stringify(e),
+        type: 'success',
+        icon: 'success',
+      });
     }
   };
 
@@ -273,12 +305,26 @@ const VendorEditProfile = () => {
             <View style={{marginTop: 40}}>
               <Formik
                 initialValues={{
-                  fullname: authContext?.userData?.full_name,
-                  email: authContext?.userData?.email,
-                  phone_no: authContext?.userData?.phone_no,
-                  street_name: authContext?.userData?.street_name,
-                  state: authContext?.userData?.state,
-                  city: authContext?.userData?.city,
+                  business_name: businessData?.business_name
+                    ? businessData?.business_name
+                    : '',
+                  business_phone: businessData?.business_phone
+                    ? businessData?.business_phone
+                    : '',
+                  business_email: businessData?.business_email
+                    ? businessData?.business_email
+                    : '',
+                  main_branch_store_manager_name:
+                    businessData?.main_branch_store_manager_name
+                      ? businessData?.main_branch_store_manager_name
+                      : '',
+                  main_branch_address: businessData?.main_branch_address
+                    ? businessData?.main_branch_address
+                    : '',
+                  nin: businessData?.nin ? businessData?.nin : '',
+                  rc_bn_number: businessData?.rc_bn_number
+                    ? businessData?.rc_bn_number
+                    : '',
                 }}
                 onSubmit={values => handleUpdateUser(values)}
                 validationSchema={signUpSchema}>
@@ -294,7 +340,6 @@ const VendorEditProfile = () => {
                   setFieldTouched,
                 }) => (
                   <>
-                    {console.log('errors', errors)}
                     <View style={{alignItems: 'center'}}>
                       <InputWithLabel
                         label="Business Name"
@@ -306,10 +351,12 @@ const VendorEditProfile = () => {
                         styleInput={{fontSize: 11}}
                         placeholder={'Eg. Holi Gas and Accessories'}
                         //  containerStyles={{paddingHorizontal: 20}}
-                        onChange={handleChange('fullname')}
-                        value={values.fullname}
-                        error={touched.fullname ? errors.fullname : ''}
-                        onBlur={() => setFieldTouched('fullname')}
+                        onChange={handleChange('business_name')}
+                        value={values.business_name}
+                        error={
+                          touched.business_name ? errors.business_name : ''
+                        }
+                        onBlur={() => setFieldTouched('business_name')}
                       />
                       <View style={{height: 7}} />
                       <View
@@ -332,10 +379,18 @@ const VendorEditProfile = () => {
                             width: Dimensions.get('window').width * 0.44,
                             marginLeft: 8,
                           }}
-                          onChange={handleChange('fullname')}
-                          value={values.fullname}
-                          error={touched.fullname ? errors.fullname : ''}
-                          onBlur={() => setFieldTouched('fullname')}
+                          onChange={handleChange(
+                            'main_branch_store_manager_name',
+                          )}
+                          value={values.main_branch_store_manager_name}
+                          error={
+                            touched.main_branch_store_manager_name
+                              ? errors.main_branch_store_manager_name
+                              : ''
+                          }
+                          onBlur={() =>
+                            setFieldTouched('main_branch_store_manager_name')
+                          }
                         />
                         <InputWithLabel
                           label="RC/BN Number"
@@ -350,10 +405,12 @@ const VendorEditProfile = () => {
                             width: Dimensions.get('window').width * 0.44,
                             marginLeft: 10,
                           }}
-                          onChange={handleChange('fullname')}
-                          value={values.fullname}
-                          error={touched.fullname ? errors.fullname : ''}
-                          onBlur={() => setFieldTouched('fullname')}
+                          onChange={handleChange('rc_bn_number')}
+                          value={values.rc_bn_number}
+                          error={
+                            touched.rc_bn_number ? errors.rc_bn_number : ''
+                          }
+                          onBlur={() => setFieldTouched('rc_bn_number')}
                         />
                       </View>
                       <View
@@ -376,13 +433,13 @@ const VendorEditProfile = () => {
                             width: Dimensions.get('window').width * 0.44,
                             marginLeft: 8,
                           }}
-                          onChange={handleChange('fullname')}
-                          value={values.fullname}
-                          error={touched.fullname ? errors.fullname : ''}
-                          onBlur={() => setFieldTouched('fullname')}
+                          onChange={handleChange('nin')}
+                          value={values.nin}
+                          error={touched.nin ? errors.nin : ''}
+                          onBlur={() => setFieldTouched('nin')}
                         />
                         <InputWithLabel
-                          label="Primary Contact"
+                          label="Business Phone"
                           labelStyle={{
                             // fontFamily: fonts.mulishSemiBold,
                             color: colors.yellowHeading,
@@ -394,10 +451,12 @@ const VendorEditProfile = () => {
                             width: Dimensions.get('window').width * 0.44,
                             marginLeft: 10,
                           }}
-                          onChange={handleChange('fullname')}
-                          value={values.fullname}
-                          error={touched.fullname ? errors.fullname : ''}
-                          onBlur={() => setFieldTouched('fullname')}
+                          onChange={handleChange('business_phone')}
+                          value={values.business_phone}
+                          error={
+                            touched.business_phone ? errors.business_phone : ''
+                          }
+                          onBlur={() => setFieldTouched('business_phone')}
                         />
                       </View>
 
@@ -412,10 +471,12 @@ const VendorEditProfile = () => {
                           fontSize: 12,
                         }}
                         styleInput={{fontSize: 11}}
-                        onChange={handleChange('email')}
-                        value={values.email}
-                        error={touched.email ? errors.email : ''}
-                        onBlur={() => setFieldTouched('email')}
+                        onChange={handleChange('business_email')}
+                        value={values.business_email}
+                        error={
+                          touched.business_email ? errors.business_email : ''
+                        }
+                        onBlur={() => setFieldTouched('business_email')}
                       />
                       <View style={{height: 7}} />
 
@@ -429,10 +490,14 @@ const VendorEditProfile = () => {
                           color: colors.yellowHeading,
                           fontSize: 12,
                         }}
-                        onChange={handleChange('street_name')}
-                        value={values.street_name}
-                        error={touched.street_name ? errors.street_name : ''}
-                        onBlur={() => setFieldTouched('street_name')}
+                        onChange={handleChange('main_branch_address')}
+                        value={values.main_branch_address}
+                        error={
+                          touched.main_branch_address
+                            ? errors.main_branch_address
+                            : ''
+                        }
+                        onBlur={() => setFieldTouched('main_branch_address')}
                       />
                       <View
                         style={{
@@ -441,35 +506,92 @@ const VendorEditProfile = () => {
 
                           width: '85%',
                         }}>
-                        <Pressable onPress={() => setShowModal(true)}>
-                          <View style={styles.imageView}>
-                            <Feather color={'#fff'} name="plus" size={35} />
-                          </View>
+                        <Pressable
+                          onPress={() => {
+                            setType('cac');
+                            setShowModal(true);
+                          }}>
+                          {cacImage || businessData?.cac_certificate_url ? (
+                            <Image
+                              style={styles.imageView}
+                              source={{
+                                uri: cacImage
+                                  ? `data:${cacImage?.mime};base64,${cacImage?.data}`
+                                  : businessData?.cac_certificate_url,
+                              }}
+                            />
+                          ) : (
+                            <View style={styles.imageView}>
+                              <Feather color={'#fff'} name="plus" size={35} />
+                            </View>
+                          )}
 
                           <Text style={styles.imageViewText}>CAC</Text>
                           <Text style={styles.imageViewText}>Document</Text>
                         </Pressable>
-                        <Pressable onPress={() => setShowModal(true)}>
-                          <View style={styles.imageView}>
-                            <Feather color={'#fff'} name="plus" size={35} />
-                          </View>
-
+                        <Pressable
+                          onPress={() => {
+                            setType('lp');
+                            setShowModal(true);
+                          }}>
+                          {lpImage || businessData?.license_permit_url ? (
+                            <Image
+                              style={styles.imageView}
+                              source={{
+                                uri: lpImage
+                                  ? `data:${lpImage?.mime};base64,${lpImage?.data}`
+                                  : businessData?.license_permit_url,
+                              }}
+                            />
+                          ) : (
+                            <View style={styles.imageView}>
+                              <Feather color={'#fff'} name="plus" size={35} />
+                            </View>
+                          )}
                           <Text style={styles.imageViewText}>Licence</Text>
                           <Text style={styles.imageViewText}>Permit</Text>
                         </Pressable>
-                        <Pressable onPress={() => setShowModal(true)}>
-                          <View style={styles.imageView}>
-                            <Feather color={'#fff'} name="plus" size={35} />
-                          </View>
-
+                        <Pressable
+                          onPress={() => {
+                            setType('poa');
+                            setShowModal(true);
+                          }}>
+                          {poaImage || businessData?.address_proof_url ? (
+                            <Image
+                              style={styles.imageView}
+                              source={{
+                                uri: poaImage
+                                  ? `data:${poaImage?.mime};base64,${poaImage?.data}`
+                                  : businessData?.address_proof_url,
+                              }}
+                            />
+                          ) : (
+                            <View style={styles.imageView}>
+                              <Feather color={'#fff'} name="plus" size={35} />
+                            </View>
+                          )}
                           <Text style={styles.imageViewText}>Proof of</Text>
                           <Text style={styles.imageViewText}>Address</Text>
                         </Pressable>
-                        <Pressable onPress={() => setShowModal(true)}>
-                          <View style={styles.imageView}>
-                            <Feather color={'#fff'} name="plus" size={35} />
-                          </View>
-
+                        <Pressable
+                          onPress={() => {
+                            setType('ra');
+                            setShowModal(true);
+                          }}>
+                          {raImage || businessData?.regulatory_id_url ? (
+                            <Image
+                              style={styles.imageView}
+                              source={{
+                                uri: poaImage
+                                  ? `data:${raImage?.mime};base64,${raImage?.data}`
+                                  : businessData?.regulatory_id_url,
+                              }}
+                            />
+                          ) : (
+                            <View style={styles.imageView}>
+                              <Feather color={'#fff'} name="plus" size={35} />
+                            </View>
+                          )}
                           <Text style={styles.imageViewText}>Regulatory</Text>
                           <Text style={styles.imageViewText}>Address</Text>
                         </Pressable>

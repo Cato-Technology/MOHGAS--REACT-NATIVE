@@ -52,11 +52,19 @@ import AuthContext from '../../../utils/auth-context';
 import {useTheme} from '@react-navigation/native';
 import GradientButton from '../../../components/buttons/gradient-button';
 import LinearGradient from 'react-native-linear-gradient';
+import {useDispatch, useSelector} from 'react-redux';
+import {getVendorBusinessProfileR} from '../../../redux/global/actions';
+import {GlobalState} from '../../../redux/global/GlobalState';
 export default function VendorDashBoard({navigation, props}) {
   const {colors} = useTheme();
   const styles = makeStyles(colors);
+  const dispatch = useDispatch();
   const authContext = React.useContext(AuthContext);
   console.log('authContext==>', authContext);
+  const businessData = useSelector(
+    (state: GlobalState) => state?.global?.businessProfileData,
+  );
+
   React.useEffect(() => {
     // Load the user data from storage when the app starts
     const loadUserData = async () => {
@@ -70,10 +78,11 @@ export default function VendorDashBoard({navigation, props}) {
     };
     loadUserData();
   }, []);
+  console.log('businessData', businessData);
 
-  const goToNewCard = () => {
-    navigation.navigate('card');
-  };
+  useEffect(() => {
+    dispatch(getVendorBusinessProfileR());
+  }, [dispatch]);
 
   return (
     <View style={styles.container}>
