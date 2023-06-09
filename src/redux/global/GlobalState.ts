@@ -1,6 +1,7 @@
 import {
   BranchesResponse,
   SupportResponse,
+  VendorBusinessProfileResponse,
   VendorProductResponse,
 } from '../types';
 
@@ -9,4 +10,5 @@ export class GlobalState {
   accountRealtedIssues: SupportResponse[] = [];
   branches: BranchesResponse[] = [];
   vendorProducts: VendorProductResponse[] = [];
+  businessProfileData: VendorBusinessProfileResponse[] = [];
 }

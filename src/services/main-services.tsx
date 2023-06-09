@@ -17,8 +17,6 @@ const getVendorProducts = (detail: any) => {
   return client.get(API_URLS_VENDOR.VENDOR_PRODUCTS, detail);
 };
 const upDateProdcutPrice = (data: any, id: string) => {
-  console.log('idsSS', id);
-  console.log('deee', data);
   return client.put(API_URLS_VENDOR.VENDOR_PRODUCTS + '/' + id, data);
 };
 //User Services
@@ -49,7 +47,12 @@ const sendSupport = (detail: any) => {
 const gasOrder = (detail: any) => {
   return client.post(API_URLS.gas_order, detail);
 };
-
+const updateVendorBusinessProfile = (detail: any) => {
+  return client.post(API_URLS_VENDOR.PROFILE, detail);
+};
+const getVendorBusinessProfile = () => {
+  return client.get(API_URLS_VENDOR.PROFILE);
+};
 export const mainServics = {
   addBranch,
   getBranches,
@@ -65,4 +68,6 @@ export const mainServics = {
   sendSupport,
   gasOrder,
   upDateProdcutPrice,
+  updateVendorBusinessProfile,
+  getVendorBusinessProfile,
 };
