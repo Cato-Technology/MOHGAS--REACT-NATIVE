@@ -69,3 +69,9 @@ export interface VendorBusinessProfileResponse {
   cac_certificate_url: string;
   license_permit_url: string;
 }
+export interface VendorAccountDetialsResponse {
+  bank: string;
+  account_number: string;
+  account_title: string;
+}
+export interface VendorOrderHistoryResponse {}

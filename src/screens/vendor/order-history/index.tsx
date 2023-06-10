@@ -52,22 +52,24 @@ import {useDispatch, useSelector} from 'react-redux';
 import {OrderState} from '../../../redux/orders/OrderState';
 import {getReduxOrderHistory} from '../../../redux/orders/orders-actions';
 import {capitalizeFirstLetter} from '../../../utils/functions/general-functions';
+import {getVendorOrderHistory} from '../../../redux/global/actions';
+import {GlobalState} from '../../../redux/global/GlobalState';
 export default function OrderHistoryVendor({navigation}) {
   const {colors} = useTheme();
   const styles = makeStyles(colors);
   const authContext = React.useContext(AuthContext);
   const dispatch = useDispatch();
+
   const orderHistory = useSelector(
-    (state: OrderState) => state?.order?.orderHistory,
+    (state: GlobalState) => state?.global?.vendorOrderHistory,
   );
   console.log('orderHistory', orderHistory);
   console.log('authContext', authContext?.userData?.user_id);
 
   useEffect(() => {
-    //authContext?.userData?.user_id
     let data = new FormData();
-    data.append('user_id', 33);
-    dispatch(getReduxOrderHistory(data));
+    data.append('user_id', authContext?.userData?.user_id);
+    dispatch(getVendorOrderHistory());
   }, [dispatch]);
 
   return (

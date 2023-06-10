@@ -53,7 +53,10 @@ import {useTheme} from '@react-navigation/native';
 import GradientButton from '../../../components/buttons/gradient-button';
 import LinearGradient from 'react-native-linear-gradient';
 import {useDispatch, useSelector} from 'react-redux';
-import {getVendorBusinessProfileR} from '../../../redux/global/actions';
+import {
+  getVendorAccountDetials,
+  getVendorBusinessProfileR,
+} from '../../../redux/global/actions';
 import {GlobalState} from '../../../redux/global/GlobalState';
 export default function VendorDashBoard({navigation, props}) {
   const {colors} = useTheme();
@@ -78,10 +81,10 @@ export default function VendorDashBoard({navigation, props}) {
     };
     loadUserData();
   }, []);
-  console.log('businessData', businessData);
 
   useEffect(() => {
     dispatch(getVendorBusinessProfileR());
+    dispatch(getVendorAccountDetials());
   }, [dispatch]);
 
   return (

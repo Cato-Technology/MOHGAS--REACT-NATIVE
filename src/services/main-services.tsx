@@ -53,6 +53,15 @@ const updateVendorBusinessProfile = (detail: any) => {
 const getVendorBusinessProfile = () => {
   return client.get(API_URLS_VENDOR.PROFILE);
 };
+const upDateVendorBankAccount = (detail: any) => {
+  return client.post(API_URLS_VENDOR.VENDOR_BANK_ACCOUNT, detail);
+};
+const getVendorBankAccount = () => {
+  return client.get(API_URLS_VENDOR.VENDOR_BANK_ACCOUNT);
+};
+const getVendorOrderHistory = () => {
+  return client.get(API_URLS_VENDOR.VENDOR_ORDER_HISTORY);
+};
 export const mainServics = {
   addBranch,
   getBranches,
@@ -70,4 +79,7 @@ export const mainServics = {
   upDateProdcutPrice,
   updateVendorBusinessProfile,
   getVendorBusinessProfile,
+  upDateVendorBankAccount,
+  getVendorBankAccount,
+  getVendorOrderHistory,
 };

@@ -54,6 +54,7 @@ export default function SuccessScreen({navigation, route}) {
 
   const item = route?.params?.item;
   const render = route?.params?.render;
+  console.log('item', item);
 
   return (
     <View style={styles.container}>
@@ -160,6 +161,34 @@ export default function SuccessScreen({navigation, route}) {
             <View style={{marginTop: '15%'}}>
               <GradientButton
                 onPress={() => navigation.navigate(SCREENS.DASHBOARD)}
+                disabled={false}
+                title={'Back to Dashboard'}
+              />
+            </View>
+          </View>
+        )}
+        {render == 'UpdateBank' && (
+          <View
+            style={{
+              marginTop: '65%',
+              paddingHorizontal: 30,
+              alignItems: 'center',
+            }}>
+            <SuccessImage width={50} height={50} />
+            <Text style={[styles.heading, {fontSize: RFValue(16)}]}>
+              Bank Account Updated
+            </Text>
+            <Text style={styles.detailText}>Bank Name: {item?.bank}</Text>
+            <Text style={styles.detailText}>
+              Account Title: {item?.account_title}
+            </Text>
+            <Text style={styles.detailText}>
+              Account Number: {item?.account_number}
+            </Text>
+
+            <View style={{marginTop: '15%'}}>
+              <GradientButton
+                onPress={() => navigation.navigate(SCREENS.VENDOR_DASHBOARD)}
                 disabled={false}
                 title={'Back to Dashboard'}
               />

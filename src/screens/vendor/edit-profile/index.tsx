@@ -119,6 +119,9 @@ const VendorEditProfile = () => {
         } else if (type == 'ra') {
           setRaImage(image);
           setShowModal(false);
+        } else if (type == 'pi') {
+          setImage(image);
+          setShowModal(false);
         } else {
           setImage(image);
           setShowModal(false);
@@ -182,12 +185,43 @@ const VendorEditProfile = () => {
       data.append('nin', values.nin);
       data.append('rc_bn_number', values.rc_bn_number);
       if (Platform.OS == 'ios') {
-        data.append('regulatory_id', {
-          uri: 'file:///' + image?.path,
-          type: image?.mime,
-          name: 'image.jpg',
-        });
+        image &&
+          data.append('business_image', {
+            uri: 'file:///' + image?.path,
+            type: image?.mime,
+            name: 'image.jpg',
+          });
+        raImage &&
+          data.append('regulatory_id', {
+            uri: 'file:///' + raImage?.path,
+            type: raImage?.mime,
+            name: 'image.jpg',
+          });
+        poaImage &&
+          data.append('address_proof', {
+            uri: 'file:///' + poaImage?.path,
+            type: poaImage?.mime,
+            name: 'image.jpg',
+          });
+        cacImage &&
+          data.append('cac_certificate', {
+            uri: 'file:///' + cacImage?.path,
+            type: cacImage?.mime,
+            name: 'image.jpg',
+          });
+        lpImage &&
+          data.append('license_permit', {
+            uri: 'file:///' + lpImage?.path,
+            type: lpImage?.mime,
+            name: 'image.jpg',
+          });
       } else {
+        image &&
+          data.append('business_image', {
+            uri: image?.path,
+            type: image?.mime,
+            name: 'image.jpg',
+          });
         raImage &&
           data.append('regulatory_id', {
             uri: raImage?.path,
@@ -239,8 +273,8 @@ const VendorEditProfile = () => {
       console.log('error', e);
       showMessage({
         message: JSON.stringify(e),
-        type: 'success',
-        icon: 'success',
+        type: 'danger',
+        icon: 'danger',
       });
     }
   };
@@ -258,7 +292,10 @@ const VendorEditProfile = () => {
         rightIcon={<AntDesign name="setting" size={25} color={colors.text} />}
       />
       <EditProfileModal
-        iconPress={() => setShowModal(false)}
+        iconPress={() => {
+          setType('pi');
+          setShowModal(true);
+        }}
         visible={showModal}
         onPressGallery={() => imagePickerFromGallery()}
         onPressPhoto={() => imagePickerFromCamera()}
@@ -272,19 +309,14 @@ const VendorEditProfile = () => {
               <Image
                 onLoadStart={() => setProfileLoader(true)}
                 onLoadEnd={() => setProfileLoader(false)}
-                source={
-                  image
-                    ? {
-                        uri: image,
-                      }
-                    : !authContext?.userData?.image
-                    ? authContext?.userData?.gender == 'Female'
-                      ? Images.femaleAvatar
-                      : Images.avatar
-                    : {uri: authContext?.userData?.image}
-                }
+                source={{
+                  uri: image
+                    ? `data:${image?.mime};base64,${image?.data}`
+                    : businessData?.business_image_url,
+                }}
                 style={styles.image}
               />
+
               <View
                 style={{
                   position: 'absolute',
@@ -582,7 +614,7 @@ const VendorEditProfile = () => {
                             <Image
                               style={styles.imageView}
                               source={{
-                                uri: poaImage
+                                uri: raImage
                                   ? `data:${raImage?.mime};base64,${raImage?.data}`
                                   : businessData?.regulatory_id_url,
                               }}

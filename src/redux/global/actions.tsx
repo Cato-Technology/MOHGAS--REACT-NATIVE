@@ -3,7 +3,9 @@ import {HIDE_LOADER, SHOW_LOADER} from '../event/constants';
 import {
   BranchesResponse,
   SupportResponse,
+  VendorAccountDetialsResponse,
   VendorBusinessProfileResponse,
+  VendorOrderHistoryResponse,
   VendorProductResponse,
 } from '../types';
 import {
@@ -12,6 +14,8 @@ import {
   BUSINESS_PROFILE,
   PRODUCTS,
   SUPPORT,
+  VENDOR_ACCOUNT_DETAILS,
+  VENDOR_ORDER_HISTORY,
 } from './constants';
 import {mainServics} from '../../services';
 
@@ -37,6 +41,17 @@ export const addVendorBusinessProfile = (
   type: BUSINESS_PROFILE,
   payload: data,
 });
+export const addVendorAccountDetials = (
+  data: VendorAccountDetialsResponse,
+) => ({
+  type: VENDOR_ACCOUNT_DETAILS,
+  payload: data,
+});
+export const addVendorOrderHistory = (data: VendorOrderHistoryResponse) => ({
+  type: VENDOR_ORDER_HISTORY,
+  payload: data,
+});
+
 export const getSupportData =
   data => async (dispatch: (arg0: {type: string; payload?: any}) => void) => {
     dispatch({
@@ -117,6 +132,41 @@ export const getVendorBusinessProfileR =
       .getVendorBusinessProfile()
       .then(async res => {
         await dispatch(addVendorBusinessProfile(res.data));
+        dispatch({
+          type: HIDE_LOADER,
+        });
+      })
+      .catch(err => {
+        console.log('err', err);
+      });
+  };
+
+export const getVendorAccountDetials =
+  () => async (dispatch: (arg0: {type: string; payload?: any}) => void) => {
+    dispatch({
+      type: SHOW_LOADER,
+    });
+    await mainServics
+      .getVendorBankAccount()
+      .then(async res => {
+        await dispatch(addVendorAccountDetials(res.data));
+        dispatch({
+          type: HIDE_LOADER,
+        });
+      })
+      .catch(err => {
+        console.log('err', err);
+      });
+  };
+export const getVendorOrderHistory =
+  () => async (dispatch: (arg0: {type: string; payload?: any}) => void) => {
+    dispatch({
+      type: SHOW_LOADER,
+    });
+    await mainServics
+      .getVendorOrderHistory()
+      .then(async res => {
+        await dispatch(addVendorOrderHistory(res.data));
         dispatch({
           type: HIDE_LOADER,
         });

@@ -23,6 +23,7 @@ import AuthContext from '../../utils/auth-context';
 import EditEmail from '../../screens/customer/home/edit-email';
 import ForgetPassword from '../../screens/auth/forget-password';
 import BottomTabNavigatorVendor from './bottom-tab-navigator-vendor';
+import UpdateVendorAccount from '../../screens/vendor/update-account';
 const Drawer = createDrawerNavigator();
 
 const CustomDrawerContent = props => {
@@ -58,7 +59,11 @@ const CustomDrawerContent = props => {
       </View>
       <DrawerItem
         label="Business Account"
-        labelStyle={{color: '#000000'}}
+        labelStyle={{
+          color: '#000000',
+          fontFamily: 'Rubik-SemiBold',
+          fontSize: 15,
+        }}
         style={{borderRadius: 0}}
         onPress={() =>
           props.navigation.navigate(SCREENS.PROFILE_NAVIGATOR_VENDOR, {
@@ -71,7 +76,11 @@ const CustomDrawerContent = props => {
 
       <DrawerItem
         label="Logout"
-        labelStyle={{color: '#000000'}}
+        labelStyle={{
+          color: '#000000',
+          fontFamily: 'Rubik-SemiBold',
+          fontSize: 15,
+        }}
         style={{marginVertical: -5, borderRadius: 0}}
         onPress={() => auth.authContext.signOut()}
         icon={() => <Icon4 name="logout" size={22} color="#000000" />}
@@ -100,11 +109,31 @@ const DrawerNavigatorVendor = () => {
         }}
       />
       <Drawer.Screen
+        name={SCREENS.UPDATE_ACCOUNT_VENDOR}
+        component={UpdateVendorAccount}
+        options={{
+          drawerLabel: 'Bank Information',
+          drawerLabelStyle: {
+            color: '#000000',
+            fontFamily: 'Rubik-SemiBold',
+            fontSize: 15,
+          },
+          drawerIcon: ({color, number, focused}) => {
+            //set the icon for all screens
+            return <Icon name="plus" size={20} color="#000000" />;
+          },
+        }}
+      />
+      <Drawer.Screen
         name={SCREENS.EDIT_USERNAME}
         component={EditUsername}
         options={{
           drawerLabel: 'Username',
-          drawerLabelStyle: {color: '#000000', fontSize: 16},
+          drawerLabelStyle: {
+            color: '#000000',
+            fontFamily: 'Rubik-SemiBold',
+            fontSize: 15,
+          },
           drawerIcon: ({color, number, focused}) => {
             //set the icon for all screens
             return <Icon2 name="person-outline" size={20} color="#000000" />;
@@ -116,7 +145,11 @@ const DrawerNavigatorVendor = () => {
         component={EditEmail}
         options={{
           drawerLabel: 'Email',
-          drawerLabelStyle: {color: '#000000', fontSize: 16},
+          drawerLabelStyle: {
+            color: '#000000',
+            fontFamily: 'Rubik-SemiBold',
+            fontSize: 15,
+          },
           drawerIcon: ({color, number, focused}) => {
             //set the icon for all screens
             return <Icon3 name="email" size={20} color="#000000" />;
@@ -128,7 +161,11 @@ const DrawerNavigatorVendor = () => {
         component={ForgetPassword}
         options={{
           drawerLabel: 'Password',
-          drawerLabelStyle: {color: '#000000', fontSize: 16},
+          drawerLabelStyle: {
+            color: '#000000',
+            fontFamily: 'Rubik-SemiBold',
+            fontSize: 15,
+          },
           drawerIcon: ({color, number, focused}) => {
             //set the icon for all screens
             return (

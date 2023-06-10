@@ -4,6 +4,8 @@ import {
   BUSINESS_PROFILE,
   PRODUCTS,
   SUPPORT,
+  VENDOR_ACCOUNT_DETAILS,
+  VENDOR_ORDER_HISTORY,
 } from './constants';
 import {GlobalState} from './GlobalState';
 
@@ -41,6 +43,19 @@ export default function (state = INITIAL_STATE, action: any) {
         businessProfileData: action.payload,
       };
     }
+    case VENDOR_ACCOUNT_DETAILS: {
+      return {
+        ...state,
+        vendorBankDetalis: action.payload,
+      };
+    }
+    case VENDOR_ORDER_HISTORY: {
+      return {
+        ...state,
+        vendorOrderHistory: action.payload,
+      };
+    }
+
     default:
       return state;
   }

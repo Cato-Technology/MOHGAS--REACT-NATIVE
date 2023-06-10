@@ -99,10 +99,11 @@ export const makeStyles = (colors: any) =>
     },
     detailText: {
       fontSize: RFValue(12),
-      fontWeight: '300',
+
       color: '#000000',
       textAlign: 'center',
       marginTop: 10,
+      fontFamily: 'Rubik-Regular',
     },
     centerText: {
       width: 230,
