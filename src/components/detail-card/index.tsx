@@ -50,7 +50,7 @@ const BranchCard = ({
                 styles.detailText,
                 {
                   color:
-                    srNo == 'pending'
+                    srNo == 'Pending'
                       ? '#ebae4f'
                       : srNo == 'reject'
                       ? 'red'

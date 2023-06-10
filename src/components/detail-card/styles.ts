@@ -37,6 +37,7 @@ export const makeStyles = (colors: any) =>
     headingText: {
       color: '#000000',
       marginTop: 12,
+      fontSize: 10,
 
       fontFamily: 'Rubik-Regular',
     },

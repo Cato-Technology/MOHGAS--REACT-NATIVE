@@ -54,6 +54,7 @@ import {getReduxOrderHistory} from '../../../redux/orders/orders-actions';
 import {capitalizeFirstLetter} from '../../../utils/functions/general-functions';
 import {getVendorOrderHistory} from '../../../redux/global/actions';
 import {GlobalState} from '../../../redux/global/GlobalState';
+import moment from 'moment';
 export default function OrderHistoryVendor({navigation}) {
   const {colors} = useTheme();
   const styles = makeStyles(colors);
@@ -119,12 +120,16 @@ export default function OrderHistoryVendor({navigation}) {
               data={orderHistory}
               renderItem={({item, index}) => (
                 <DetailCard
-                  title={`${capitalizeFirstLetter(
-                    item?.order_type,
-                  )} - LPG 25kg`}
-                  subTitle={item?.order_date}
+                  title={`${capitalizeFirstLetter(item?.order_type)} - ${
+                    item?.cylinder_size
+                  }`}
+                  subTitle={
+                    item?.createdate
+                      ? moment(item?.createdate).format('MMMM,DD,YYYY')
+                      : '--'
+                  }
                   style={{backgroundColor: '#eaf5fc'}}
-                  price={'N12.34'}
+                  price={`N${item?.price}`}
                   srNo={capitalizeFirstLetter(item?.status)}
                   icon={<Icon3 name="arrow-up" size={25} color="#455F9B" />}
                   onPressDelete={() => {
