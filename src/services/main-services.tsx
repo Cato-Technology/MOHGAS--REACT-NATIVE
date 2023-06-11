@@ -29,8 +29,11 @@ const swapCylinder = (detail: any) => {
 const nearByGasAgencyAsPerRequiredSize = (detail: any) => {
   return client.post(API_URLS.nearByGasAgencyAsPerRequiredSize, detail);
 };
-const getAccessoriesAsPerNearestAgencies = (detail: any) => {
-  return client.post(API_URLS.getAccessoriesAsPerNearestAgencies, detail);
+const getAccessoriesAsPerNearestAgencies = (lat, lon, userId) => {
+  return client.get(
+    API_URLS.getAccessoriesAsPerNearestAgencies +
+      `?latitude=${lat}&longitude=${lon}&userid=${userId}`,
+  );
 };
 const checkOut = (detail: any) => {
   return client.post(API_URLS.checkout, detail);

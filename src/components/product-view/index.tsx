@@ -27,7 +27,11 @@ const ProductView = ({title, image, price, onPress}: Props) => {
         flex: 1 / 4,
         height: 110,
       }}>
-      <Image style={{height: 70, width: 70}} source={image} />
+      <Image
+        style={{height: 70, width: 70}}
+        source={image}
+        resizeMode={'contain'}
+      />
 
       <Text style={styles.middleText}>{title}</Text>
 

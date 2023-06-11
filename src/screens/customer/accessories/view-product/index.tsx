@@ -53,7 +53,7 @@ import AuthContext from '../../../../utils/auth-context';
 import {useTheme} from '@react-navigation/native';
 import GradientButton from '../../../../components/buttons/gradient-button';
 import HeaderBottom from '../../../../components/header-bottom';
-export default function ViewProduct({navigation}) {
+export default function ViewProduct({navigation, route}) {
   const {colors} = useTheme();
   const styles = makeStyles(colors);
   const auth = React.useContext(AuthContext);
@@ -62,11 +62,11 @@ export default function ViewProduct({navigation}) {
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState(false);
   const [checked, setChecked] = useState(false);
+  const [weight, setWeight] = useState('');
 
-  const goToNewCard = () => {
-    navigation.navigate('card');
-  };
-
+  let item = route?.params?.item;
+  let size = item.size_of_product;
+  const arr = size?.split(',');
   return (
     <View style={styles.container}>
       <ActivityIndicator visible={false} />
@@ -95,22 +95,25 @@ export default function ViewProduct({navigation}) {
 
             <Image
               style={{height: 200, width: '100%'}}
-              source={aImage}
-              resizeMode={'cover'}
+              source={{uri: item?.images[0]?.image_url}}
+              resizeMode={'center'}
             />
             <View style={{height: 8}} />
-            <Text style={{color: 'gray', fontSize: 16}}>Gas Cylinder</Text>
-            <Text style={{color: '#000000', fontSize: 16}}>N 8.00</Text>
+            <Text style={{color: 'gray', fontSize: 16}}>
+              {item?.accessories_name}
+            </Text>
+            <Text style={{color: '#000000', fontSize: 16}}>N{item?.price}</Text>
             <View style={{height: 8}} />
             <Text style={{color: '#000000', fontSize: 12}}>
               <AntDesign name="star" size={12} color={'#debf5a'} />
-              3.8{'   '}|{'   '}
-              23 Solid{'   '}|{'   '}5 Reviews
+              {item?.rating ? item?.rating : '-'}
+              {'   '}|{'   '}
+              {item?.no_of_solds ? item?.no_of_solds : '-'} Solid{'   '}|{'   '}
+              {item?.reviews ? item?.reviews : '-'}
             </Text>
             <View style={{height: 8}} />
             <Text style={{color: 'gray', fontSize: 13}}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua.
+              {item?.description}
             </Text>
             <View style={{height: 8}} />
             <Text
@@ -122,7 +125,20 @@ export default function ViewProduct({navigation}) {
               Size
             </Text>
             <View style={{flexDirection: 'row', marginTop: 10}}>
-              <Text style={styles.tagText}>6KG</Text>
+              {arr?.map(ele => (
+                <Text
+                  onPress={() => setWeight(ele)}
+                  style={[
+                    styles.tagText,
+                    {
+                      backgroundColor: ele == weight ? '#4ca757' : '#efefef',
+                      color: ele == weight ? '#fff' : '#000000',
+                    },
+                  ]}>
+                  {ele}KG
+                </Text>
+              ))}
+              {/* <Text style={styles.tagText}>6KG</Text>
               <Text style={styles.tagText}>12KG</Text>
               <Text
                 style={[
@@ -131,7 +147,7 @@ export default function ViewProduct({navigation}) {
                 ]}>
                 25KG
               </Text>
-              <Text style={styles.tagText}>50KG</Text>
+              <Text style={styles.tagText}>50KG</Text> */}
             </View>
             <View
               style={{

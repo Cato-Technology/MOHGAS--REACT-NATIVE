@@ -58,11 +58,13 @@ import HeaderBottom from '../../../components/header-bottom';
 import Geolocation from '@react-native-community/geolocation';
 import {mainServics} from '../../../services';
 import {showMessage} from 'react-native-flash-message';
+import {getAddress} from '../../../utils/functions/get-address';
 export default function Accessories({navigation}) {
   const {colors} = useTheme();
   const styles = makeStyles(colors);
   const auth = React.useContext(AuthContext);
-  const authContext = React.useContext(AuthContext);
+
+  const [userAddress, setUserAddress] = useState();
   const [accessories, setAccessories] = useState();
   const [myDirection, setMyDirection] = useState({
     latitudeDelta: 0.0922,
@@ -96,13 +98,20 @@ export default function Accessories({navigation}) {
     console.log('Getting Location ... ');
     Geolocation.getCurrentPosition(
       //Will give you the current location
-      position => {
+      async position => {
         console.log('currentLongitude', position);
 
         setMyDirection({
           latitude: Number(position.coords.latitude),
           longitude: Number(position.coords.longitude),
         });
+        const addressString = await getAddress(
+          position.coords.latitude,
+          position.coords.longitude,
+        );
+        console.log('addressString', addressString);
+
+        setUserAddress(addressString?.address);
 
         // console.log('currentLatitude ', currentLatitude)
         // console.log('currentLongitude ', currentLongitude)
@@ -130,15 +139,17 @@ export default function Accessories({navigation}) {
   }, []);
   const getAcceories = async () => {
     try {
-      let data = new FormData();
-      data.append('user_id', 33);
-      // data.append('latitude', myDirection.latitude);
-      // data.append('longitude', myDirection.longitude);
-      data.append('latitude', 24.817556456461972);
-      data.append('longitude', 67.0560846850276);
-      data.append('size_of_cylinder', 25.0);
+      console.log('auth==>', auth?.userData?.user_id);
+
+      // let lat = myDirection.latitude;
+      // let lon = myDirection.longitude;
+      let lat = 24.817556456461972;
+      let lon = 67.0560846850276;
+
       const resData = await mainServics.getAccessoriesAsPerNearestAgencies(
-        data,
+        lat,
+        lon,
+        auth?.userData?.user_id,
       );
       console.log('resData', resData);
       if (resData?.message === 'Near By Gas Agencies Found') {
@@ -223,27 +234,28 @@ export default function Accessories({navigation}) {
               <Icon name="location-sharp" size={20} color="#357bc3" /> Deliver
               to{' '}
               <Text style={{color: '#000000', fontSize: 12}}>
-                100 Main Street fake, City, Country
+                {userAddress}
               </Text>
             </Text>
 
             <FlatList
-              data={[
-                1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
-                19, 20, 21, 22, 23, 24,
-              ]}
+              data={accessories}
               numColumns={4}
               scrollEnabled={true}
               contentContainerStyle={{marginTop: 10}}
-              columnWrapperStyle={{
-                justifyContent: 'space-evenly',
-              }}
+              columnWrapperStyle={
+                {
+                  // justifyContent: 'space-evenly',
+                }
+              }
               renderItem={({item, index}) => (
                 <ProductView
-                  title={'Name of Product'}
-                  price={'N 8.00'}
-                  image={aImage}
-                  onPress={() => navigation.navigate(SCREENS.VIEW_PRODUCTS)}
+                  title={item?.accessories_name}
+                  price={`N${item?.price}`}
+                  image={{uri: item?.images[0]?.image_url}}
+                  onPress={() =>
+                    navigation.navigate(SCREENS.VIEW_PRODUCTS, {item: item})
+                  }
                 />
               )}
               ListEmptyComponent={() => (

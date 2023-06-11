@@ -20,7 +20,7 @@ const API_URLS = {
   // Swap Cylinder
   SWAP_CYLINDER: '/Api/swapCylinder',
   nearByGasAgencyAsPerRequiredSize: '/Api/nearByGasAgencyAsPerRequiredSize',
-  getAccessoriesAsPerNearestAgencies: '/Api/getAccessoriesAsPerNearestAgencies',
+  getAccessoriesAsPerNearestAgencies: '/backend/user/nearest_products',
   checkout: '/Api/checkout',
 
   //Support
