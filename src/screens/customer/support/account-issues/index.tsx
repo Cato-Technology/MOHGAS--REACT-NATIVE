@@ -64,6 +64,7 @@ import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import ImagePicker from 'react-native-image-crop-picker';
 import {useDispatch, useSelector} from 'react-redux';
 import {getSupportAccountRelatedIssues} from '../../../../redux/global/actions';
+import {State} from 'react-native-gesture-handler';
 let cameraIs = false;
 export default function AccountIssues({navigation}) {
   const {colors} = useTheme();
@@ -77,10 +78,7 @@ export default function AccountIssues({navigation}) {
     (state: State) => state?.global?.accountRealtedIssues,
   );
   useEffect(() => {
-    //authContext?.userData?.user_id
-    let data = new FormData();
-    data.append('user_id', 33);
-    dispatch(getSupportAccountRelatedIssues(data));
+    dispatch(getSupportAccountRelatedIssues());
   }, [dispatch]);
   console.log('data', data);
 

@@ -81,10 +81,7 @@ export default function DashBoard({navigation, props}) {
   }, []);
 
   useEffect(() => {
-    //authContext?.userData?.user_id
-    let data = new FormData();
-    data.append('user_id', 33);
-    dispatch(getReduxRecentOrderHistory(data));
+    dispatch(getReduxRecentOrderHistory());
   }, [dispatch]);
 
   return (

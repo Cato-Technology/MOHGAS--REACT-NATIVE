@@ -54,6 +54,7 @@ import AuthContext from '../../../../utils/auth-context';
 import {useTheme} from '@react-navigation/native';
 import GradientButton from '../../../../components/buttons/gradient-button';
 import HeaderBottom from '../../../../components/header-bottom';
+import {mainServics} from '../../../../services';
 let sucessData = {
   title: 'Account Created',
   desc: 'Details submitted success your account number is 123 456 789 and has been updated on your dashboard redirecting in 9 sec',
@@ -63,11 +64,32 @@ export default function CreateBvn({navigation}) {
   const styles = makeStyles(colors);
   const [showText, setShowText] = useState(false);
   const authContext = React.useContext(AuthContext);
-  const [ammount, setAmmount] = useState(0);
+  const [bvn, setBvn] = useState(0);
   const [checked, setChecked] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const handleBvn = async () => {
+    // navigation.navigate(SCREENS.CONFIRM_PAYMENT)}
+    setIsLoading(true);
+    try {
+      let fdata = new FormData();
+      fdata.append('bvn', bvn);
+      // fdata.append('latitude', myDirection.latitude);
+
+      const resData = await mainServics.createBvn(fdata);
+      console.log('resData', resData);
+      setIsLoading(false);
+      // navigation.navigate(SCREENS.SUCCESS_SCREEN, {
+      //   item: sucessData,
+      //   render: 'MohgasWallet',
+      // })
+    } catch (e) {
+      console.log('e', e);
+      setIsLoading(false);
+    }
+  };
   return (
     <View style={styles.container}>
-      <ActivityIndicator visible={false} />
+      <ActivityIndicator visible={isLoading} />
       {/* <ErrorModal
         onPress={() => setLoginError(!loginError)} 
         visible={loginError}
@@ -102,9 +124,9 @@ export default function CreateBvn({navigation}) {
                 color: colors.yellowHeading,
                 fontSize: 15,
               }}
-              onChange={txt => setAmmount(txt)}
-              placeholder={'eg. 0.0'}
-              keyboardType={'number-pad'}
+              onChange={txt => setBvn(txt)}
+              placeholder={'eg. 2948398'}
+              // keyboardType={'number-pad'}
               // error={touched.email ? errors.email : ''}
               // onBlur={() => setFieldTouched('email')}
             />
@@ -178,12 +200,7 @@ export default function CreateBvn({navigation}) {
             <Text style={styles.tcTextStyle}>
               <Text>I have read and agree to the </Text>
 
-              <Pressable
-                onPress={() =>
-                  navigation.navigate(SCREENS.TERMS_AND_PRIVACY, {
-                    privacyPolicy: false,
-                  })
-                }>
+              <Pressable onPress={() => undefined}>
                 {({pressed}) => (
                   <Text
                     style={[
@@ -202,12 +219,7 @@ export default function CreateBvn({navigation}) {
 
               <Text> and </Text>
 
-              <Pressable
-                onPress={() =>
-                  navigation.navigate(SCREENS.TERMS_AND_PRIVACY, {
-                    privacyPolicy: true,
-                  })
-                }>
+              <Pressable onPress={() => undefined}>
                 {({pressed}) => (
                   <Text
                     style={[
@@ -232,13 +244,8 @@ export default function CreateBvn({navigation}) {
               paddingVertical: heightPercentageToDP(2),
             }}>
             <GradientButton
-              onPress={() =>
-                navigation.navigate(SCREENS.SUCCESS_SCREEN, {
-                  item: sucessData,
-                  render: 'MohgasWallet',
-                })
-              }
-              // disabled={!isValid || loader || !checked}
+              onPress={() => handleBvn()}
+              disabled={!bvn || !checked}
               title="Countinue"
             />
           </View>

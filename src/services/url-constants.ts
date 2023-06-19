@@ -12,10 +12,10 @@ const API_URLS = {
 
   //order history contants
   ORDER_HISTORY: '/Api/user_order_history',
-  RECENT_HISTORY: '/Api/userDashboard',
+  RECENT_HISTORY: '/backend/user/dashboard',
 
   // Topup gas
-  NEAR_BY_GAS_REFILL: '/Api/nearByGasAgencyForGasRefill',
+  NEAR_BY_GAS_REFILL: '/backend/orders/nearest_vendors',
 
   // Swap Cylinder
   SWAP_CYLINDER: '/Api/swapCylinder',
@@ -24,9 +24,9 @@ const API_URLS = {
   checkout: '/Api/checkout',
 
   //Support
-  getSupportHelpTopics: '/Api/getSupportHelpTopics',
-  getSupportAccountRelatedIssues: '/Api/getSupportAccountRelatedIssues',
-  support: '/Api/support',
+  getSupportHelpTopics: '/backend/support/help_topics',
+  getSupportAccountRelatedIssues: '/backend/support/account_related_issues',
+  support: '/backend/support',
   gas_order: '/Api/gas_order',
 };
 

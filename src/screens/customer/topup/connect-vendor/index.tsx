@@ -73,7 +73,10 @@ export default function ConnectVendor({navigation, route}) {
     {label: '50KG', value: 50},
     {label: 'Set Quantity', value: 'other'},
   ];
-  const handleSubmitted = async val => {
+  useEffect(() => {
+    getData();
+  }, []);
+  const getData = async val => {
     try {
       setIsLoading(true);
       let item = route?.params?.item;
@@ -92,12 +95,15 @@ export default function ConnectVendor({navigation, route}) {
       fdata.append('size_of_cylinder', val);
       console.log('ffff=>', fdata);
 
-      const resData = await mainServics.nearByGasAgencyRefill(fdata);
+      const resData = await mainServics.nearByGasAgencyRefill(
+        '24.817556456461972',
+        '67.0560846850276',
+      );
       console.log('resData', resData);
-      if (resData?.message === 'Near By Gas Agencies Found') {
-        setData(resData?.responsedata);
+      if (resData?.status) {
+        setData(resData?.data);
         setIsLoading(false);
-      } else if (resData?.message === 'No Agencies Available Near By You') {
+      } else if (!resData?.status) {
         showMessage({
           message: resData?.message,
           type: 'warning',
@@ -245,14 +251,16 @@ export default function ConnectVendor({navigation, route}) {
                       backgroundColor={
                         itemVendor == item ? '#dee8d2' : '#f5f5f5'
                       }
-                      image={item.image}
-                      title={item?.user_name}
+                      image={item.vendor_image_url}
+                      title={item?.vendor_name}
                       orders={item?.orders}
                       rating={item?.rating}
                       price={item?.price}
                       distance={parseFloat(item?.distance).toFixed(2) + 'KM'}
-                      time={item?.distance_time + 'mins'}
-                      pricePerKg={'Price Per Kg - ' + item?.price}
+                      time={
+                        item?.distance_time ? item?.distance_time : '-' + 'mins'
+                      }
+                      pricePerKg={'Price Per Kg - ' + item?.avg_price_per_kg}
                     />
                   </View>
                 )}
@@ -302,9 +310,6 @@ export default function ConnectVendor({navigation, route}) {
                   ]}
                   onPress={() => {
                     setWeight(ele.value);
-                    if (ele.value != 'other') {
-                      handleSubmitted(ele.value);
-                    }
                   }}>
                   {ele.label}
                 </Text>
@@ -321,7 +326,6 @@ export default function ConnectVendor({navigation, route}) {
                 keyboardType={'numeric'}
                 onChange={txt => {
                   setWeightInput(txt);
-                  handleSubmitted(txt);
                 }}
                 placeholder={'0'}
                 // error={touched.email ? errors.email : ''}

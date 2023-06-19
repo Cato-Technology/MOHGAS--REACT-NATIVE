@@ -25,10 +25,10 @@ function orderHistory(data) {
       });
   });
 }
-function orderRecentHistory(data) {
+function orderRecentHistory() {
   return new Promise((resolve, reject) => {
     client
-      .post(API_URLS.RECENT_HISTORY, data)
+      .get(API_URLS.RECENT_HISTORY)
       .then(async response => {
         try {
           resolve(response);

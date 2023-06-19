@@ -135,10 +135,10 @@ export default function PinLocation({navigation}) {
   const handleSubmitted = async () => {
     let item = {
       user_id: auth?.userData?.user_id,
-      // latitude: myDirection.latitude,
-      // longitude: myDirection.longitude,
-      latitude: 24.817556456461972,
-      longitude: 67.0560846850276,
+      latitude: myDirection.latitude,
+      longitude: myDirection.longitude,
+      // latitude: 24.817556456461972,
+      // longitude: 67.0560846850276,
       faddress: userAddress,
       city: city,
       postal: postal ? postal : '000000',

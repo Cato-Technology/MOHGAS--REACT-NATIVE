@@ -244,7 +244,6 @@ export default function SendSupport({navigation}) {
     try {
       setIsLoading(true);
       let data = new FormData();
-      data.append('user_id', authContext?.userData?.user_id);
       data.append('subject', subject);
       data.append('message', message);
       if (list.length == 1) {
@@ -260,7 +259,7 @@ export default function SendSupport({navigation}) {
           type: list[0]?.filetype,
           name: list[0]?.filename,
         });
-        data.append('screenshot_2', {
+        data.append('screenshot_1', {
           uri: list[1]?.uri,
           type: list[1]?.filetype,
           name: list[1]?.filename,
@@ -272,12 +271,12 @@ export default function SendSupport({navigation}) {
           type: list[0]?.filetype,
           name: list[0]?.filename,
         });
-        data.append('screenshot_2', {
+        data.append('screenshot_1', {
           uri: list[1]?.uri,
           type: list[1]?.filetype,
           name: list[1]?.filename,
         });
-        data.append('screenshot_3', {
+        data.append('screenshot_1', {
           uri: list[2]?.uri,
           type: list[2]?.filetype,
           name: list[2]?.filename,

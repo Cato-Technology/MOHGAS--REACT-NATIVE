@@ -173,7 +173,7 @@ export default function MohgasWallet({navigation, route}) {
             </View>
             <View style={{paddingVertical: 40}}>
               <GradientButton
-                onPress={() => navigation.navigate(SCREENS.FUND_WALLET)}
+                onPress={() => navigation.navigate(SCREENS.CREATE_BVN)}
                 disabled={false}
                 title={'Continue'}
               />

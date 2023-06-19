@@ -53,12 +53,12 @@ export const addVendorOrderHistory = (data: VendorOrderHistoryResponse) => ({
 });
 
 export const getSupportData =
-  data => async (dispatch: (arg0: {type: string; payload?: any}) => void) => {
+  () => async (dispatch: (arg0: {type: string; payload?: any}) => void) => {
     dispatch({
       type: SHOW_LOADER,
     });
     await mainServics
-      .getSupportHelpTopics(data)
+      .getSupportHelpTopics()
       .then(async res => {
         await dispatch(addGetSupportData(res.responsedata));
         dispatch({
@@ -71,12 +71,12 @@ export const getSupportData =
   };
 
 export const getSupportAccountRelatedIssues =
-  data => async (dispatch: (arg0: {type: string; payload?: any}) => void) => {
+  () => async (dispatch: (arg0: {type: string; payload?: any}) => void) => {
     dispatch({
       type: SHOW_LOADER,
     });
     await mainServics
-      .getSupportAccountRelatedIssues(data)
+      .getSupportAccountRelatedIssues()
       .then(async res => {
         await dispatch(addGetSupportAccountRelatedIssues(res.responsedata));
         dispatch({

@@ -30,12 +30,12 @@ export const getReduxOrderHistory =
       });
   };
 export const getReduxRecentOrderHistory =
-  data => async (dispatch: (arg0: {type: string; payload?: any}) => void) => {
+  () => async (dispatch: (arg0: {type: string; payload?: any}) => void) => {
     dispatch({
       type: SHOW_LOADER,
     });
     await orderServices
-      .orderRecentHistory(data)
+      .orderRecentHistory()
       .then(async res => {
         await dispatch(addRecentHistory(res.responsedata));
         dispatch({

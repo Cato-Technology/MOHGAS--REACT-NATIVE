@@ -73,10 +73,7 @@ export default function CustomerSupport({navigation}) {
   const authContext = React.useContext(AuthContext);
   const data = useSelector((state: State) => state?.global?.supportData);
   useEffect(() => {
-    //authContext?.userData?.user_id
-    let data = new FormData();
-    data.append('user_id', 33);
-    dispatch(getSupportData(data));
+    dispatch(getSupportData());
   }, [dispatch]);
   console.log('data', data);
 
@@ -220,7 +217,7 @@ export default function CustomerSupport({navigation}) {
                     icon={
                       <Ionicons name="person" size={25} color={'#3478c3'} />
                     }
-                    title={item?.supprt_topic_name}
+                    title={item?.support_topic_name}
                     onPress={() => {
                       if (item?.id == 1) {
                         navigation.navigate(SCREENS.ACCOUNT_ISSUES);

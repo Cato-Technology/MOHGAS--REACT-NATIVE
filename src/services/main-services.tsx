@@ -20,8 +20,12 @@ const upDateProdcutPrice = (data: any, id: string) => {
   return client.put(API_URLS_VENDOR.VENDOR_PRODUCTS + '/' + id, data);
 };
 //User Services
-const nearByGasAgencyRefill = (detail: any) => {
-  return client.post(API_URLS.NEAR_BY_GAS_REFILL, detail);
+const nearByGasAgencyRefill = (lat: string, lon: string) => {
+  console.log('lat==>', lat);
+
+  return client.get(
+    API_URLS.NEAR_BY_GAS_REFILL + `?latitude=${lat}&longitude=${lon}`,
+  );
 };
 const swapCylinder = (detail: any) => {
   return client.post(API_URLS.SWAP_CYLINDER, detail);
@@ -38,11 +42,11 @@ const getAccessoriesAsPerNearestAgencies = (lat, lon, userId) => {
 const checkOut = (detail: any) => {
   return client.post(API_URLS.checkout, detail);
 };
-const getSupportHelpTopics = (detail: any) => {
-  return client.post(API_URLS.getSupportHelpTopics, detail);
+const getSupportHelpTopics = () => {
+  return client.get(API_URLS.getSupportHelpTopics);
 };
-const getSupportAccountRelatedIssues = (detail: any) => {
-  return client.post(API_URLS.getSupportAccountRelatedIssues, detail);
+const getSupportAccountRelatedIssues = () => {
+  return client.get(API_URLS.getSupportAccountRelatedIssues);
 };
 const sendSupport = (detail: any) => {
   return client.post(API_URLS.support, detail);
@@ -65,6 +69,9 @@ const getVendorBankAccount = () => {
 const getVendorOrderHistory = () => {
   return client.get(API_URLS_VENDOR.VENDOR_ORDER_HISTORY);
 };
+const createBvn = (detail: any) => {
+  return client.post(API_URLS_VENDOR.CREATE_BVN, detail);
+};
 export const mainServics = {
   addBranch,
   getBranches,
@@ -85,4 +92,5 @@ export const mainServics = {
   upDateVendorBankAccount,
   getVendorBankAccount,
   getVendorOrderHistory,
+  createBvn,
 };
