@@ -13,10 +13,24 @@ export const makeStyles = (colors: any) =>
       flex: 1,
       backgroundColor: colors.primary,
     },
+    contentView: {
+      flex: 1,
+      paddingHorizontal: widthPercentageToDP(3),
+      alignItems: 'center',
+    },
+    image: {
+      width: widthPercentageToDP(35),
+      height: widthPercentageToDP(35),
+      borderRadius: widthPercentageToDP(35),
+      marginTop: 10,
+    },
+    profile: {
+      paddingHorizontal: widthPercentageToDP(4),
+    },
     logo: {
-      marginTop: 100,
-      width: 250,
-      height: 250,
+      marginTop: 10,
+      width: 200,
+      height: 200,
     },
     icon: {
       overflow: 'hidden',

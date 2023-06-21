@@ -1,7 +1,7 @@
 const API_URLS = {
   //Auth constants
   LOGIN: '/api/login',
-  SIGNUP: '/Api/user_register',
+  SIGNUP: '/backend/register/user',
   FORGOT_PASSWORD: '/Api/forget_password',
   VERIFY_OTP: '/Api/verify_otp',
   REGISTER_VENDOR: '/backend/register/vendor',

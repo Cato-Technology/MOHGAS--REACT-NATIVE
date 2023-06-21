@@ -57,10 +57,11 @@ export default function Login({navigation}) {
   const handleLogin = async () => {
     try {
       setLoader(true);
+      const fcm = await AsyncStorage.getItem('fcm');
       let data = new FormData();
       data.append('email', userName);
       data.append('password', password);
-      data.append('firebase_token', 'bfbdf');
+      data.append('firebase_token', fcm);
       data.append('device_name', 'gfbdf');
 
       const result = await authService.login(data);

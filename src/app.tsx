@@ -6,6 +6,7 @@ import FlashMessage from 'react-native-flash-message';
 import Router from './router';
 import messaging from '@react-native-firebase/messaging';
 import PushNotification, {Importance} from 'react-native-push-notification';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const App = () => {
   const isDarkMode = useColorScheme() === 'light';
@@ -31,10 +32,7 @@ const App = () => {
           token: fcmTokenn,
         },
       };
-      //  let registerFcm = await mainServices.registerFcm(details);
-      // console.log('registerFcm', registerFcm);
-
-      //  await AsyncStorage.setItem('fcm', fcmTokenn);
+      await AsyncStorage.setItem('fcm', fcmTokenn);
     }
   }
   messaging().setBackgroundMessageHandler(async remoteMessage => {});

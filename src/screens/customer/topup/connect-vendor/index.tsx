@@ -61,18 +61,12 @@ export default function ConnectVendor({navigation, route}) {
   const styles = makeStyles(colors);
 
   const [isLoading, setIsLoading] = useState(false);
-  const [weight, setWeight] = useState('');
+  const [weightData, setWeightData] = useState('');
   const [weightInput, setWeightInput] = useState('');
   const [data, setData] = useState();
   const [itemVendor, setItemVendor] = useState();
   console.log('route', route.params);
 
-  let weightData = [
-    {label: '6KG', value: 6},
-    {label: '12KG', value: 12},
-    {label: '50KG', value: 50},
-    {label: 'Set Quantity', value: 'other'},
-  ];
   useEffect(() => {
     getData();
   }, []);
@@ -278,14 +272,17 @@ export default function ConnectVendor({navigation, route}) {
           }}>
           <View style={{width: '100%', paddingHorizontal: 20}}>
             <View style={{height: 20}} />
-            <Text
-              style={{
-                color: '#000000',
-                fontFamily: 'Rubik-Bold',
-                fontSize: 16,
-              }}>
-              Size of cylinder
-            </Text>
+            {itemVendor?.refill_size && (
+              <Text
+                style={{
+                  color: '#000000',
+                  fontFamily: 'Rubik-Bold',
+                  fontSize: 16,
+                }}>
+                Size of cylinder
+              </Text>
+            )}
+
             <View style={{flexDirection: 'row', marginTop: 10}}>
               {/* <Text style={styles.tagText}>6KG</Text>
               <Text style={styles.tagText}>12KG</Text>
@@ -298,24 +295,24 @@ export default function ConnectVendor({navigation, route}) {
               </Text>
               <Text style={styles.tagText}>50KG</Text>
               <Text style={styles.tagText}>Set Quantity</Text> */}
-              {weightData.map(ele => (
+              {itemVendor?.refill_size?.map(ele => (
                 <Text
                   style={[
                     styles.tagText,
                     {
                       backgroundColor:
-                        weight == ele.value ? '#4ca757' : '#efefef',
-                      color: weight == ele.value ? '#fff' : '#000000',
+                        weightData?.size == ele.size ? '#4ca757' : '#efefef',
+                      color: weightData?.size == ele.size ? '#fff' : '#000000',
                     },
                   ]}
                   onPress={() => {
-                    setWeight(ele.value);
+                    setWeightData(ele);
                   }}>
-                  {ele.label}
+                  {ele.size}
                 </Text>
               ))}
             </View>
-            {weight == 'other' && (
+            {weightData == 'other' && (
               <InputWithLabel
                 labelStyle={{
                   //   fontFamily: fonts.mulishSemiBold,
@@ -343,7 +340,7 @@ export default function ConnectVendor({navigation, route}) {
                 onPress={() => {
                   handleOrder();
                 }}
-                disabled={!weight || !itemVendor}
+                disabled={!weightData || !itemVendor}
                 title="Countinue to Checkout"
               />
             </View>
