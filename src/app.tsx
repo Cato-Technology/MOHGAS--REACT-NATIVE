@@ -21,21 +21,12 @@ const App = () => {
     if (enabled) {
       const fcmTokenn = await messaging().getToken();
       console.log('fcm', fcmTokenn);
-      let details = {
-        metaData: {
-          txnType: 'ADD_TOKEN',
-          dvceId: '1E231aAA18',
-          clntTxnRefNo: '1E23118',
-          clntId: 'EN',
-        },
-        data: {
-          token: fcmTokenn,
-        },
-      };
       await AsyncStorage.setItem('fcm', fcmTokenn);
     }
   }
-  messaging().setBackgroundMessageHandler(async remoteMessage => {});
+  messaging().setBackgroundMessageHandler(async remoteMessage => {
+    console.log('remoteMessage', remoteMessage);
+  });
   // PushNotification.configure({
   //   onRegister: function (token) {},
 

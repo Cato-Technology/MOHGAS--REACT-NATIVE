@@ -58,11 +58,13 @@ export default function Login({navigation}) {
     try {
       setLoader(true);
       const fcm = await AsyncStorage.getItem('fcm');
+
       let data = new FormData();
       data.append('email', userName);
       data.append('password', password);
       data.append('firebase_token', fcm);
       data.append('device_name', 'gfbdf');
+      console.log('data', data);
 
       const result = await authService.login(data);
       console.log('result', result);
