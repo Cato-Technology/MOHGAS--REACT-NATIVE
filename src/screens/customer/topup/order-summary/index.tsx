@@ -52,24 +52,123 @@ import {useTheme} from '@react-navigation/native';
 import GradientButton from '../../../../components/buttons/gradient-button';
 import HeaderBottom from '../../../../components/header-bottom';
 import VendorCard from '../../../../components/vendor-card';
+import moment from 'moment';
+import ConnectingVendor from '../../../../components/connecting-vendor/connecting-vendor';
+import {showMessage} from 'react-native-flash-message';
+import {mainServics} from '../../../../services';
 
-export default function OrderSummary({navigation}) {
+export default function OrderSummary({navigation, route}) {
   const {colors} = useTheme();
   const styles = makeStyles(colors);
   const auth = React.useContext(AuthContext);
-  const authContext = React.useContext(AuthContext);
-  const [userName, setUserName] = useState('');
-  const [password, setPassword] = useState('');
-  const [loginError, setLoginError] = useState(false);
-  const [checked, setChecked] = useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [vendorRender, setVendorRender] = useState(false);
+  const [count, setCount] = useState(10); // seconds 180
 
-  const goToNewCard = () => {
-    navigation.navigate('card');
+  let item = route?.params?.item;
+  console.log('item', item);
+
+  const TimerFunction = () => {
+    setCount(10);
+    setVendorRender(true);
+    console.log('start ho gaya');
+
+    // navigation.navigate(SCREENS.ORDER_SUMMARY)
+  };
+  const onTimeEnd = () => {
+    console.log('done ho gaya');
+    setVendorRender(false);
+    orderExpired();
+
+    // navigation.navigate(SCREENS.ORDER_SUMMARY)
+  };
+  const orderExpired = async () => {
+    try {
+      let data = new FormData();
+      // data.append('user_id', item?.vendor_details?.branch_store_manager_id);
+      data.append('branch_id', item?.vendor_details?.branch_id);
+      data.append('order_id', item?.order_details?.order_id);
+
+      console.log('fdata', data);
+
+      const resData = await mainServics.orderExpired(data);
+      console.log('resData', resData);
+      if (resData?.status) {
+        setIsLoading(false);
+        navigation.goBack();
+      } else {
+        console.log('gda');
+
+        setIsLoading(false);
+        showMessage({
+          message: JSON.stringify(resData),
+          type: 'danger',
+          icon: 'danger',
+        });
+      }
+    } catch (e) {
+      console.log('e', e);
+
+      setIsLoading(false);
+      showMessage({
+        message: JSON.stringify(e),
+        type: 'danger',
+        icon: 'danger',
+      });
+      console.log('e', e);
+    }
+  };
+  const sendNotification = async () => {
+    try {
+      setIsLoading(true);
+      let data = new FormData();
+      data.append('user_id', item?.vendor_details?.branch_store_manager_id);
+      // data.append('user_id', 1);
+      data.append('title', 'MohGas');
+      data.append(
+        'body',
+        `New order received ! From : ${item?.customer_details?.full_name}`,
+      );
+      console.log('fdata', data);
+
+      const resData = await mainServics.notifyVendor(data);
+      console.log('resDataNot', resData);
+      if (resData?.status && resData?.message == 'Success send notif') {
+        setIsLoading(false);
+        TimerFunction();
+      } else {
+        console.log('gda');
+
+        setIsLoading(false);
+        showMessage({
+          message: JSON.stringify(resData),
+          type: 'danger',
+          icon: 'danger',
+        });
+      }
+    } catch (e) {
+      console.log('error', e);
+      setIsLoading(false);
+      showMessage({
+        message: JSON.stringify(e),
+        type: 'danger',
+        icon: 'danger',
+      });
+    }
   };
 
   return (
     <View style={styles.container}>
-      <ActivityIndicator visible={false} />
+      <ActivityIndicator visible={isLoading} />
+      {vendorRender && (
+        <ConnectingVendor
+          count={count}
+          setCount={setCount}
+          vendorRender={vendorRender}
+          setVendorRender={setVendorRender}
+          onTimeOut={onTimeEnd}
+        />
+      )}
       {/* <ErrorModal
         onPress={() => setLoginError(!loginError)} 
         visible={loginError}
@@ -133,15 +232,21 @@ export default function OrderSummary({navigation}) {
                       </View>
                       <Text style={styles.heading}>Order Details</Text>
                     </View>
-                    <Text style={styles.descText}>Order ID - #MGS78299</Text>
+                    <Text style={styles.descText}>
+                      Order ID - {item?.order_details?.invoice}
+                    </Text>
                     <Text style={styles.descText}>
                       Order Status -{' '}
                       <Text style={[styles.descText, {color: '#eaa844'}]}>
                         Pending
                       </Text>
                     </Text>
+
                     <Text style={styles.descText}>
-                      Order Date - 12 Nov 2023 @ 4:13am
+                      {'Order Date - ' +
+                        moment(item?.order_details?.order_date).format(
+                          'DD MMM YYYY HH:MM:A',
+                        )}
                     </Text>
                   </View>
                   <View style={{paddingBottom: 10}}>
@@ -152,7 +257,9 @@ export default function OrderSummary({navigation}) {
                       <Text style={styles.heading}>Customer Details</Text>
                     </View>
                     <Text style={styles.descText}>
-                      Emeka Mohammed{'\n'}123 main street abuja
+                      {item?.customer_details?.full_name}
+                      {'\n'}
+                      {item?.customer_details?.address}
                     </Text>
                   </View>
                 </View>
@@ -165,7 +272,12 @@ export default function OrderSummary({navigation}) {
                       </View>
                       <Text style={styles.heading}>Vendor Details</Text>
                     </View>
-                    <Text style={styles.descText}>Vendor Emeka Collins</Text>
+                    <Text style={styles.descText}>
+                      {' '}
+                      {item?.vendor_details?.vendor_branch_name}
+                      {'\n'}
+                      {item?.vendor_details?.address}
+                    </Text>
                   </View>
                   <View style={{paddingBottom: 10}}>
                     <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -174,9 +286,15 @@ export default function OrderSummary({navigation}) {
                       </View>
                       <Text style={styles.heading}>Products Details</Text>
                     </View>
-                    <Text style={styles.descText}>Product Type - Refill</Text>
-                    <Text style={styles.descText}>Size - 12 kg</Text>
-                    <Text style={styles.descText}>Due - N 5,600.00</Text>
+                    <Text style={styles.descText}>
+                      Product Type - {item?.product_details?.product_type}
+                    </Text>
+                    <Text style={styles.descText}>
+                      Size - {item?.product_details?.size} kg
+                    </Text>
+                    <Text style={styles.descText}>
+                      Due - N {item?.product_details?.price}
+                    </Text>
                     <Text style={[styles.descText, {color: 'pink'}]}>
                       See Breakdown
                     </Text>
@@ -190,12 +308,36 @@ export default function OrderSummary({navigation}) {
                   width: '100%',
                   textAlign: 'center',
                 }}>
-                N 5,600.00
+                N {item?.summary?.total}
               </Text>
               <Text style={{width: '100%', fontSize: 11, textAlign: 'center'}}>
-                Service Charge: N50{'   '}|{'   '}Delivery Cost: N100
+                Service Charge: N{item?.summary?.service_charge}
+                {'   '}|{'   '}Delivery Cost: N{item?.summary?.delivery_cost}
               </Text>
               <View
+                style={{
+                  width: '100%',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  paddingVertical: 20,
+                }}>
+                <TouchableOpacity
+                  onPress={() => {
+                    sendNotification();
+                    // onPressContinue()
+                  }}
+                  disabled={isLoading}
+                  style={[
+                    styles.btnStyle,
+                    {
+                      backgroundColor: isLoading ? 'gray' : '#469830',
+                      width: '80%',
+                    },
+                  ]}>
+                  <Text style={styles.btnTextStyle}>Continue</Text>
+                </TouchableOpacity>
+              </View>
+              {/* <View
                 style={{
                   width: '100%',
                   flexDirection: 'row',
@@ -210,7 +352,7 @@ export default function OrderSummary({navigation}) {
                   style={[styles.btnStyle, {backgroundColor: '#469830'}]}>
                   <Text style={styles.btnTextStyle}>Continue to payment</Text>
                 </TouchableOpacity>
-              </View>
+              </View> */}
             </View>
           </View>
         </View>

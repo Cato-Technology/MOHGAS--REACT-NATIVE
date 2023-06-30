@@ -92,6 +92,8 @@ export default function ConnectVendor({navigation, route}) {
       const resData = await mainServics.nearByGasAgencyRefill(
         '24.817556456461972',
         '67.0560846850276',
+        // item.latitude,
+        // item.longitude,
       );
       console.log('resData', resData);
       if (resData?.status) {
@@ -124,8 +126,10 @@ export default function ConnectVendor({navigation, route}) {
     //  navigation.navigate(SCREENS.CONNECT_VENDOR);
   };
   console.log('vvv', itemVendor);
+  console.log('weightData', weightData);
+  console.log('pData', route?.params?.item);
 
-  const handleOrder = async val => {
+  const handleOrder = async () => {
     // navigation.navigate(SCREENS.CONFIRM_PAYMENT)}
     try {
       setIsLoading(true);
@@ -133,30 +137,25 @@ export default function ConnectVendor({navigation, route}) {
 
       console.log('data=>', item);
       let fdata = new FormData();
-      fdata.append('user_id', item.user_id);
-      // fdata.append('latitude', myDirection.latitude);
-      // fdata.append('longitude', myDirection.longitude);
+      fdata.append('order_type', 'REFILL');
+      fdata.append('product_id', parseInt(weightData?.product_id));
+      fdata.append('qty', 1);
+      fdata.append('price', parseInt(weightData?.price));
+      fdata.append('branch_id', parseInt(itemVendor?.branch_id));
       fdata.append('latitude', item.latitude);
       fdata.append('longitude', item.longitude);
       fdata.append('address', item.faddress);
       fdata.append('city', item.city);
-      fdata.append('postal_code', item.postal);
+      fdata.append('postal', parseInt(item.postal));
       fdata.append('state', item.state);
-      fdata.append('size_of_cylinder', val);
-      fdata.append('order_type', 'refillGas');
-      fdata.append('agency_id', itemVendor?.id);
-      fdata.append('product_id', itemVendor?.product_id);
-      fdata.append('price', itemVendor?.price);
-
       console.log('ffff=>', fdata);
 
       const resData = await mainServics.gasOrder(fdata);
       console.log('resData', resData);
-      if (resData?.message === 'Cart ID Recieved') {
+      if (resData?.status) {
         setIsLoading(false);
-        navigation.navigate(SCREENS.CONFIRM_PAYMENT, {
-          id: resData?.responsedata?.cart_id,
-          price: itemVendor?.price,
+        navigation.navigate(SCREENS.ORDER_SUMMARY, {
+          item: resData?.data,
         });
       } else {
         showMessage({
@@ -341,7 +340,7 @@ export default function ConnectVendor({navigation, route}) {
                   handleOrder();
                 }}
                 disabled={!weightData || !itemVendor}
-                title="Countinue to Checkout"
+                title="Countinue"
               />
             </View>
           </View>

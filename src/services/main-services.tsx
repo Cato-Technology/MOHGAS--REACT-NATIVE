@@ -52,7 +52,7 @@ const sendSupport = (detail: any) => {
   return client.post(API_URLS.support, detail);
 };
 const gasOrder = (detail: any) => {
-  return client.post(API_URLS.gas_order, detail);
+  return client.post(API_URLS.ORDERS, detail);
 };
 const updateVendorBusinessProfile = (detail: any) => {
   return client.post(API_URLS_VENDOR.PROFILE, detail);
@@ -71,6 +71,12 @@ const getVendorOrderHistory = () => {
 };
 const createBvn = (detail: any) => {
   return client.post(API_URLS_VENDOR.CREATE_BVN, detail);
+};
+const notifyVendor = (detail: any) => {
+  return client.post(API_URLS.NOTIFY_VENDOR, detail);
+};
+const orderExpired = (detail: any) => {
+  return client.post(API_URLS.ORDER_EXPIRED, detail);
 };
 export const mainServics = {
   addBranch,
@@ -93,4 +99,6 @@ export const mainServics = {
   getVendorBankAccount,
   getVendorOrderHistory,
   createBvn,
+  notifyVendor,
+  orderExpired,
 };

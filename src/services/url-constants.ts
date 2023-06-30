@@ -27,7 +27,9 @@ const API_URLS = {
   getSupportHelpTopics: '/backend/support/help_topics',
   getSupportAccountRelatedIssues: '/backend/support/account_related_issues',
   support: '/backend/support',
-  gas_order: '/Api/gas_order',
+  ORDERS: '/backend/orders',
+  NOTIFY_VENDOR: '/backend/user/notification',
+  ORDER_EXPIRED: '/backend/orders/expired',
 };
 
 export {API_URLS};
