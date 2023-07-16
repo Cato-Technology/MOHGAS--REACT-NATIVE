@@ -1,6 +1,6 @@
 const API_URLS = {
   //Auth constants
-  LOGIN: '/api/login',
+  LOGIN: '/backend/login',
   SIGNUP: '/backend/register/user',
   FORGOT_PASSWORD: '/Api/forget_password',
   VERIFY_OTP: '/Api/verify_otp',
@@ -8,7 +8,7 @@ const API_URLS = {
 
   //Profile constants
   UPDATE_USER: '/Api/update_user',
-  GET_USER: '/Api/user_details',
+  GET_USER: '/backend/user/all_detail',
 
   //order history contants
   ORDER_HISTORY: '/Api/user_order_history',
@@ -20,7 +20,7 @@ const API_URLS = {
   // Swap Cylinder
   SWAP_CYLINDER: '/Api/swapCylinder',
   nearByGasAgencyAsPerRequiredSize: '/Api/nearByGasAgencyAsPerRequiredSize',
-  getAccessoriesAsPerNearestAgencies: '/backend/user/nearest_products',
+  GET_NEAREST_ACCESSORIES: '/backend/orders/nearest_products',
   checkout: '/Api/checkout',
 
   //Support
@@ -30,6 +30,10 @@ const API_URLS = {
   ORDERS: '/backend/orders',
   NOTIFY_VENDOR: '/backend/user/notification',
   ORDER_EXPIRED: '/backend/orders/expired',
+
+  //Accept Reject Order
+  ACCEPT_ORDER: '/backend/orders/accepted',
+  REJECT_ORDER: '/backend/orders/decline',
 };
 
 export {API_URLS};

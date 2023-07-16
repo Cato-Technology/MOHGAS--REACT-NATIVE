@@ -56,20 +56,65 @@ import moment from 'moment';
 import ConnectingVendor from '../../../../components/connecting-vendor/connecting-vendor';
 import {showMessage} from 'react-native-flash-message';
 import {mainServics} from '../../../../services';
-
+import {useSelector} from 'react-redux';
+import {GlobalState} from '../../../../redux/global/GlobalState';
+import messaging from '@react-native-firebase/messaging';
 export default function OrderSummary({navigation, route}) {
   const {colors} = useTheme();
   const styles = makeStyles(colors);
   const auth = React.useContext(AuthContext);
   const [isLoading, setIsLoading] = React.useState(false);
   const [vendorRender, setVendorRender] = useState(false);
-  const [count, setCount] = useState(10); // seconds 180
+  const [count, setCount] = useState(180); // seconds 180
+  const orderSummary = useSelector(
+    (state: GlobalState) => state?.global?.orderSummary,
+  );
+  console.log('orderSummary', orderSummary);
+  console.log('route', route?.params?.itemVendor);
+  let vandorData = route?.params?.itemVendor;
+  useEffect(() => {
+    // Assume a message-notification contains a "type" property in the data payload of the screen to open
 
-  let item = route?.params?.item;
-  console.log('item', item);
-
+    messaging().onMessage(async remoteMessage => {
+      console.log('Notification caused app to openDash==>', remoteMessage);
+      if (remoteMessage?.data?.status === 'Accepted') {
+        navigation.navigate(SCREENS.CONFIRM_PAYMENT);
+        setVendorRender(false);
+      }
+      if (remoteMessage?.data?.status === 'Rejected') {
+        navigation.goBack();
+        //  navigate(remoteMessage.data.click_action);
+      }
+    });
+    // Check whether an initial notification is available
+    messaging()
+      .getInitialNotification()
+      .then(remoteMessage => {
+        if (remoteMessage?.data?.status === 'Accepted') {
+          navigation.navigate(SCREENS.CONFIRM_PAYMENT);
+          setVendorRender(false);
+        }
+        if (remoteMessage?.data?.status === 'Rejected') {
+          navigation.goBack();
+          //  navigate(remoteMessage.data.click_action);
+        }
+      });
+    messaging()
+      .getInitialNotification()
+      .then(remoteMessage => {
+        if (remoteMessage?.data?.status === 'Accepted') {
+          navigation.navigate(SCREENS.CONFIRM_PAYMENT);
+          setVendorRender(false);
+          //  navigate(remoteMessage.data.click_action);
+        }
+        if (remoteMessage?.data?.status === 'Rejected') {
+          navigation.goBack();
+          //  navigate(remoteMessage.data.click_action);
+        }
+      });
+  }, []);
   const TimerFunction = () => {
-    setCount(10);
+    setCount(180);
     setVendorRender(true);
     console.log('start ho gaya');
 
@@ -86,8 +131,8 @@ export default function OrderSummary({navigation, route}) {
     try {
       let data = new FormData();
       // data.append('user_id', item?.vendor_details?.branch_store_manager_id);
-      data.append('branch_id', item?.vendor_details?.branch_id);
-      data.append('order_id', item?.order_details?.order_id);
+      data.append('branch_id', orderSummary?.vendor_details?.branch_id);
+      data.append('order_id', orderSummary?.order_details?.order_id);
 
       console.log('fdata', data);
 
@@ -118,17 +163,38 @@ export default function OrderSummary({navigation, route}) {
       console.log('e', e);
     }
   };
+  console.log('auth?.userData?.user_id', auth?.userData?.user_id);
+
   const sendNotification = async () => {
     try {
       setIsLoading(true);
       let data = new FormData();
-      data.append('user_id', item?.vendor_details?.branch_store_manager_id);
+      data.append(
+        'user_id',
+        orderSummary?.vendor_details?.branch_store_manager_id,
+      );
       // data.append('user_id', 1);
       data.append('title', 'MohGas');
       data.append(
         'body',
-        `New order received ! From : ${item?.customer_details?.full_name}`,
+        `New order received ! From : ${orderSummary?.customer_details?.full_name}`,
       );
+      data.append('data[priority]', 'high');
+      data.append('data[click_action]', 'VENDOR_NEW_ORDER');
+      data.append('data[full_name]', orderSummary?.customer_details?.full_name);
+      data.append(
+        'data[product_type]',
+        orderSummary?.product_details?.product_type,
+      );
+      data.append('data[customer_id]', auth?.userData?.user_id);
+
+      data.append('data[size]', orderSummary?.product_details?.size);
+      data.append('data[distance]', vandorData?.distance);
+      data.append(
+        'data[distance_time]',
+        vandorData?.distance_time ? vandorData?.distance_time : '-',
+      );
+
       console.log('fdata', data);
 
       const resData = await mainServics.notifyVendor(data);
@@ -233,7 +299,7 @@ export default function OrderSummary({navigation, route}) {
                       <Text style={styles.heading}>Order Details</Text>
                     </View>
                     <Text style={styles.descText}>
-                      Order ID - {item?.order_details?.invoice}
+                      Order ID - {orderSummary?.order_details?.invoice}
                     </Text>
                     <Text style={styles.descText}>
                       Order Status -{' '}
@@ -244,29 +310,37 @@ export default function OrderSummary({navigation, route}) {
 
                     <Text style={styles.descText}>
                       {'Order Date - ' +
-                        moment(item?.order_details?.order_date).format(
+                        moment(orderSummary?.order_details?.order_date).format(
                           'DD MMM YYYY HH:MM:A',
                         )}
                     </Text>
                   </View>
                   <View style={{paddingBottom: 10}}>
-                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                      }}>
                       <View style={styles.check}>
                         <Entypo name="check" size={9} color={'#fff'} />
                       </View>
                       <Text style={styles.heading}>Customer Details</Text>
                     </View>
                     <Text style={styles.descText}>
-                      {item?.customer_details?.full_name}
+                      {orderSummary?.customer_details?.full_name}
                       {'\n'}
-                      {item?.customer_details?.address}
+                      {orderSummary?.customer_details?.address}
                     </Text>
                   </View>
                 </View>
 
                 <View style={styles.twoView}>
                   <View style={{paddingBottom: 10}}>
-                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignorderSummarys: 'center',
+                      }}>
                       <View style={styles.check}>
                         <Entypo name="check" size={9} color={'#fff'} />
                       </View>
@@ -274,26 +348,31 @@ export default function OrderSummary({navigation, route}) {
                     </View>
                     <Text style={styles.descText}>
                       {' '}
-                      {item?.vendor_details?.vendor_branch_name}
+                      {orderSummary?.vendor_details?.vendor_branch_name}
                       {'\n'}
-                      {item?.vendor_details?.address}
+                      {orderSummary?.vendor_details?.address}
                     </Text>
                   </View>
                   <View style={{paddingBottom: 10}}>
-                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignorderSummarys: 'center',
+                      }}>
                       <View style={styles.check}>
                         <Entypo name="check" size={9} color={'#fff'} />
                       </View>
                       <Text style={styles.heading}>Products Details</Text>
                     </View>
                     <Text style={styles.descText}>
-                      Product Type - {item?.product_details?.product_type}
+                      Product Type -{' '}
+                      {orderSummary?.product_details?.product_type}
                     </Text>
                     <Text style={styles.descText}>
-                      Size - {item?.product_details?.size} kg
+                      Size - {orderSummary?.product_details?.size} kg
                     </Text>
                     <Text style={styles.descText}>
-                      Due - N {item?.product_details?.price}
+                      Due - N {orderSummary?.product_details?.price}
                     </Text>
                     <Text style={[styles.descText, {color: 'pink'}]}>
                       See Breakdown
@@ -308,11 +387,12 @@ export default function OrderSummary({navigation, route}) {
                   width: '100%',
                   textAlign: 'center',
                 }}>
-                N {item?.summary?.total}
+                N {orderSummary?.summary?.total}
               </Text>
               <Text style={{width: '100%', fontSize: 11, textAlign: 'center'}}>
-                Service Charge: N{item?.summary?.service_charge}
-                {'   '}|{'   '}Delivery Cost: N{item?.summary?.delivery_cost}
+                Service Charge: N{orderSummary?.summary?.service_charge}
+                {'   '}|{'   '}Delivery Cost: N
+                {orderSummary?.summary?.delivery_cost}
               </Text>
               <View
                 style={{
@@ -324,7 +404,8 @@ export default function OrderSummary({navigation, route}) {
                 <TouchableOpacity
                   onPress={() => {
                     sendNotification();
-                    // onPressContinue()
+
+                    // navigation.navigate(SCREENS.CONFIRM_PAYMENT);
                   }}
                   disabled={isLoading}
                   style={[

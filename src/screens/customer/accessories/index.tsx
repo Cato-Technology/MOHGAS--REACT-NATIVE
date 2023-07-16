@@ -112,7 +112,7 @@ export default function Accessories({navigation}) {
         console.log('addressString', addressString);
 
         setUserAddress(addressString?.address);
-
+        getAcceories(position, addressString?.address);
         // console.log('currentLatitude ', currentLatitude)
         // console.log('currentLongitude ', currentLongitude)
         // let tempCoords = {
@@ -133,27 +133,24 @@ export default function Accessories({navigation}) {
       },
     );
   };
-  console.log('myDir', myDirection);
-  useEffect(() => {
-    getAcceories();
-  }, []);
-  const getAcceories = async () => {
+
+  const getAcceories = async (position, address) => {
+    console.log('address', address);
+    console.log('position', position);
+
     try {
       console.log('auth==>', auth?.userData?.user_id);
 
-      // let lat = myDirection.latitude;
-      // let lon = myDirection.longitude;
-      let lat = 24.817556456461972;
-      let lon = 67.0560846850276;
+      let lat = position?.coords?.latitude;
+      let lon = position?.coords?.longitude;
 
       const resData = await mainServics.getAccessoriesAsPerNearestAgencies(
         lat,
         lon,
-        auth?.userData?.user_id,
       );
       console.log('resData', resData);
-      if (resData?.message === 'Near By Gas Agencies Found') {
-        setAccessories(resData.responsedata);
+      if (resData?.status) {
+        setAccessories(resData.data);
       } else if (resData?.message === 'No Agencies Available Near By You') {
         showMessage({
           message: resData?.message,
@@ -250,9 +247,9 @@ export default function Accessories({navigation}) {
               }
               renderItem={({item, index}) => (
                 <ProductView
-                  title={item?.accessories_name}
+                  title={item?.products_name}
                   price={`N${item?.price}`}
-                  image={{uri: item?.images[0]?.image_url}}
+                  image={{uri: item?.business_image}}
                   onPress={() =>
                     navigation.navigate(SCREENS.VIEW_PRODUCTS, {item: item})
                   }

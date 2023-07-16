@@ -75,3 +75,5 @@ export interface VendorAccountDetialsResponse {
   account_title: string;
 }
 export interface VendorOrderHistoryResponse {}
+export interface OrderSummaryRes {}
+export interface NotificationRes {}

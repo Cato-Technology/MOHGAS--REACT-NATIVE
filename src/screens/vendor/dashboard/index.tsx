@@ -58,7 +58,9 @@ import {
   getVendorBusinessProfileR,
 } from '../../../redux/global/actions';
 import {GlobalState} from '../../../redux/global/GlobalState';
-export default function VendorDashBoard({navigation, props}) {
+import messaging from '@react-native-firebase/messaging';
+import {navigate} from '../../../utils/functions/RootNavigator';
+export default function VendorDashBoard({navigation}) {
   const {colors} = useTheme();
   const styles = makeStyles(colors);
   const dispatch = useDispatch();
@@ -81,7 +83,38 @@ export default function VendorDashBoard({navigation, props}) {
     };
     loadUserData();
   }, []);
+  useEffect(() => {
+    // Assume a message-notification contains a "type" property in the data payload of the screen to open
 
+    messaging().onMessage(async remoteMessage => {
+      console.log('Notification caused app to openDash==>', remoteMessage);
+      navigation.navigate(remoteMessage.data.click_action);
+    });
+    // Check whether an initial notification is available
+    messaging()
+      .getInitialNotification()
+      .then(remoteMessage => {
+        if (remoteMessage) {
+          console.log(
+            'Notification caused app to open from quit state:a',
+            remoteMessage.notification,
+          );
+          navigation.navigate(remoteMessage.data.click_action);
+        }
+      });
+    messaging()
+      .getInitialNotification()
+      .then(remoteMessage => {
+        if (remoteMessage) {
+          console.log(
+            'Notification caused app to open from quit state:===>',
+            remoteMessage?.data?.click_action,
+          );
+          navigation.navigate(remoteMessage.data.click_action);
+          //  navigate(remoteMessage.data.click_action);
+        }
+      });
+  }, []);
   useEffect(() => {
     dispatch(getVendorBusinessProfileR());
     dispatch(getVendorAccountDetials());

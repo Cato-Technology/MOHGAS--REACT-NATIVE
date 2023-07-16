@@ -55,6 +55,8 @@ import HeaderBottom from '../../../../components/header-bottom';
 import VendorCard from '../../../../components/vendor-card';
 import {showMessage} from 'react-native-flash-message';
 import {mainServics} from '../../../../services';
+import {useDispatch} from 'react-redux';
+import {ORDER_SUMMARY} from '../../../../redux/global/constants';
 
 export default function ConnectVendor({navigation, route}) {
   const {colors} = useTheme();
@@ -70,6 +72,7 @@ export default function ConnectVendor({navigation, route}) {
   useEffect(() => {
     getData();
   }, []);
+  const dispatch = useDispatch();
   const getData = async val => {
     try {
       setIsLoading(true);
@@ -146,16 +149,21 @@ export default function ConnectVendor({navigation, route}) {
       fdata.append('longitude', item.longitude);
       fdata.append('address', item.faddress);
       fdata.append('city', item.city);
-      fdata.append('postal', parseInt(item.postal));
+      fdata.append('postal', item.postal);
       fdata.append('state', item.state);
       console.log('ffff=>', fdata);
 
       const resData = await mainServics.gasOrder(fdata);
       console.log('resData', resData);
+      dispatch({
+        type: ORDER_SUMMARY,
+        payload: resData.data,
+      });
       if (resData?.status) {
         setIsLoading(false);
         navigation.navigate(SCREENS.ORDER_SUMMARY, {
           item: resData?.data,
+          itemVendor: itemVendor,
         });
       } else {
         showMessage({

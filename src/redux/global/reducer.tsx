@@ -2,6 +2,8 @@ import {
   ACCOUNT_REALTED_ISSUES,
   BRANCHES,
   BUSINESS_PROFILE,
+  NOTIFICATION,
+  ORDER_SUMMARY,
   PRODUCTS,
   SUPPORT,
   VENDOR_ACCOUNT_DETAILS,
@@ -55,7 +57,18 @@ export default function (state = INITIAL_STATE, action: any) {
         vendorOrderHistory: action.payload,
       };
     }
-
+    case ORDER_SUMMARY: {
+      return {
+        ...state,
+        orderSummary: action.payload,
+      };
+    }
+    case NOTIFICATION: {
+      return {
+        ...state,
+        notificationData: action.payload,
+      };
+    }
     default:
       return state;
   }

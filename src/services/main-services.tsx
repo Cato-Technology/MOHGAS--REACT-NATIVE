@@ -33,10 +33,9 @@ const swapCylinder = (detail: any) => {
 const nearByGasAgencyAsPerRequiredSize = (detail: any) => {
   return client.post(API_URLS.nearByGasAgencyAsPerRequiredSize, detail);
 };
-const getAccessoriesAsPerNearestAgencies = (lat, lon, userId) => {
+const getAccessoriesAsPerNearestAgencies = (lat, lon) => {
   return client.get(
-    API_URLS.getAccessoriesAsPerNearestAgencies +
-      `?latitude=${lat}&longitude=${lon}&userid=${userId}`,
+    API_URLS.GET_NEAREST_ACCESSORIES + `?latitude=${lat}&longitude=${lon}`,
   );
 };
 const checkOut = (detail: any) => {
@@ -78,6 +77,14 @@ const notifyVendor = (detail: any) => {
 const orderExpired = (detail: any) => {
   return client.post(API_URLS.ORDER_EXPIRED, detail);
 };
+
+//Accept Reject Order
+const acceptOrder = (detail: any) => {
+  return client.post(API_URLS.ACCEPT_ORDER, detail);
+};
+const rejectOrder = (detail: any) => {
+  return client.post(API_URLS.REJECT_ORDER, detail);
+};
 export const mainServics = {
   addBranch,
   getBranches,
@@ -101,4 +108,6 @@ export const mainServics = {
   createBvn,
   notifyVendor,
   orderExpired,
+  acceptOrder,
+  rejectOrder,
 };

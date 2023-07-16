@@ -1105,6 +1105,11 @@
     "@jridgewell/resolve-uri" "3.1.0"
     "@jridgewell/sourcemap-codec" "1.4.14"
 
+"@monnify/react-native-sdk@^0.1.18":
+  version "0.1.18"
+  resolved "https://registry.yarnpkg.com/@monnify/react-native-sdk/-/react-native-sdk-0.1.18.tgz#9e5313595d46a8b0f154c577aef294407f9b58ac"
+  integrity sha512-pkb0kstMaVrQ4rArQExy5gEih6bdWN5lyco+N6g86EVE7yE2jMGu8hL97a+4oHvi9GwVVfap6gvnrXOc4pHi5g==
+
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
   resolved "https://registry.yarnpkg.com/@nodelib/fs.scandir/-/fs.scandir-2.1.5.tgz#7619c2eb21b25483f6d167548b4cfd5a7488c3d5"

@@ -45,7 +45,6 @@ import LinearGradient from 'react-native-linear-gradient';
 export default function MohgasWallet({navigation, route}) {
   const {colors} = useTheme();
   const styles = makeStyles(colors);
-  const auth = React.useContext(AuthContext);
   const authContext = React.useContext(AuthContext);
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
@@ -55,6 +54,7 @@ export default function MohgasWallet({navigation, route}) {
 
   const item = route?.params?.item;
   const render = route?.params?.render;
+  console.log('authContext', authContext?.userData);
 
   return (
     <View style={styles.container}>
@@ -173,7 +173,14 @@ export default function MohgasWallet({navigation, route}) {
             </View>
             <View style={{paddingVertical: 40}}>
               <GradientButton
-                onPress={() => navigation.navigate(SCREENS.CREATE_BVN)}
+                onPress={() => {
+                  console.log(authContext?.userData?.bvn_verification_date);
+                  if (authContext?.userData?.bvn_verification_date) {
+                    navigation.navigate(SCREENS.FUND_WALLET);
+                  } else {
+                    navigation.navigate(SCREENS.CREATE_BVN);
+                  }
+                }}
                 disabled={false}
                 title={'Continue'}
               />

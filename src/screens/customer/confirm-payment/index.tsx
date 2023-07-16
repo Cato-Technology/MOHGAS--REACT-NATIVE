@@ -67,6 +67,9 @@ import ImagePicker from 'react-native-image-crop-picker';
 import {Checkbox} from 'react-native-paper';
 import {showMessage} from 'react-native-flash-message';
 import {mainServics} from '../../../services';
+import RNMonnify from '@monnify/react-native-sdk';
+import {useSelector} from 'react-redux';
+import {GlobalState} from '../../../redux/global/GlobalState';
 let cameraIs = false;
 let sucessData = {
   title: 'Thanks for your order',
@@ -102,11 +105,20 @@ let cbData = [
 export default function ConfirmPayment({navigation, route}) {
   const {colors} = useTheme();
   const styles = makeStyles(colors);
+  const orderSummary = useSelector(
+    (state: GlobalState) => state?.global?.orderSummary,
+  );
+  RNMonnify.initialize({
+    apiKey: 'MK_TEST_3X874HXYN3',
+    contractCode: '6871168621',
+    applicationMode: 'TEST',
+  });
+  console.log('orderSummary', orderSummary);
 
   const authContext = React.useContext(AuthContext);
   const [isFlipped, setIsFlipped] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [cardId, setCardId] = useState();
+  const [cardId, setCardId] = useState(null);
   console.log('route', route?.params?.id);
 
   const hanldeCb = txt => {
@@ -124,45 +136,35 @@ export default function ConfirmPayment({navigation, route}) {
     });
   };
   const handleSubmitted = async () => {
-    try {
-      setIsLoading(true);
-      let data = new FormData();
-      data.append('cart_id', route?.params?.id);
-      // data.append('latitude', myDirection.latitude);
-      // data.append('longitude', myDirection.longitude);
-      data.append('payment_type', cardId == 3 ? 'cod' : 'stripe');
-
-      const resData = await mainServics.checkOut(data);
-      console.log('resData', resData);
-      if (resData?.message === 'Payment Success') {
-        setIsLoading(false);
-        showMessage({
-          message: resData?.message,
-          type: 'warning',
-          icon: 'warning',
+    console.log('card', cardId);
+    if (cardId == 2 || cardId == 4) {
+      RNMonnify.initializePayment({
+        amount: orderSummary?.payment_params?.amount,
+        customerName: orderSummary?.payment_params?.customerName,
+        customerEmail: orderSummary?.payment_params?.customerEmail,
+        paymentReference:
+          orderSummary?.payment_params?.paymentReference + 'dfd',
+        paymentDescription: orderSummary?.payment_params?.paymentDescription,
+        currencyCode: orderSummary?.payment_params?.currencyCode,
+        incomeSplitConfig: [],
+      })
+        .then(response => {
+          console.log(response); // card charged successfully, get reference here
+          if (response.transactionStatus == 'PAID') {
+            navigation.navigate(SCREENS.SUCCESS_SCREEN, {
+              render: 'topup',
+              item: sucessData,
+            });
+          } else {
+            navigation.navigate(SCREENS.UN_SUCCESS_SCREEN);
+          }
+        })
+        .catch(error => {
+          console.log(error); // error is a javascript Error object
+          console.log(error.message);
+          console.log(error.code);
         });
-        navigation.navigate(SCREENS.SUCCESS_SCREEN, {
-          item: sucessData,
-          render: 'topup',
-        });
-      } else {
-        setIsLoading(false);
-        showMessage({
-          message: JSON.stringify(resData),
-          type: 'danger',
-          icon: 'danger',
-        });
-      }
-    } catch (e) {
-      setIsLoading(false);
-      showMessage({
-        message: JSON.stringify(e),
-        type: 'danger',
-        icon: 'danger',
-      });
-      console.log('e', e);
     }
-    //  navigation.navigate(SCREENS.CONNECT_VENDOR);
   };
   return (
     <View style={styles.container}>

@@ -7,7 +7,7 @@ import Router from './router';
 import messaging from '@react-native-firebase/messaging';
 import PushNotification, {Importance} from 'react-native-push-notification';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import PushNotificationIOS from '@react-native-community/push-notification-ios';
 const App = () => {
   const isDarkMode = useColorScheme() === 'light';
   useEffect(() => {
@@ -27,37 +27,37 @@ const App = () => {
   messaging().setBackgroundMessageHandler(async remoteMessage => {
     console.log('remoteMessage', remoteMessage);
   });
-  // PushNotification.configure({
-  //   onRegister: function (token) {},
+  PushNotification.configure({
+    onRegister: function (token) {},
 
-  //   onNotification: function (notification) {
-  //     // Platform.OS === ‘android’ &&
-  //     PushNotification.localNotification({
-  //       channelId: 'channel-id',
-  //       foreground: true,
-  //       userInteraction: true,
-  //       autoCancel: false,
-  //       title: notification.data.title,
-  //       message: notification.data.message,
-  //     });
+    onNotification: function (notification) {
+      // Platform.OS === ‘android’ &&
+      PushNotification.localNotification({
+        channelId: 'channel-id',
+        foreground: true,
+        userInteraction: true,
+        autoCancel: false,
+        title: notification.data.title,
+        message: notification.data.message,
+      });
 
-  //     notification.finish(PushNotificationIOS.FetchResult.NoData);
-  //   },
-  //   onAction: function (notification) {},
-  //   onRegistrationError: function (err) {
-  //     console.error(err.message, err);
-  //   },
-  //   permissions: {
-  //     alert: true,
-  //     badge: true,
-  //     sound: true,
-  //   },
-  //   popInitialNotification: true,
-  //   requestPermissions: true,
-  // });
+      notification.finish(PushNotificationIOS.FetchResult.NoData);
+    },
+    onAction: function (notification) {},
+    onRegistrationError: function (err) {
+      console.error(err.message, err);
+    },
+    permissions: {
+      alert: true,
+      badge: true,
+      sound: true,
+    },
+    popInitialNotification: true,
+    requestPermissions: true,
+  });
   useEffect(() => {
     const unsubscribe = messaging().onMessage(async remoteMessage => {
-      console.log('remoteMessage', remoteMessage);
+      console.log('remoteMessage==>', remoteMessage);
 
       PushNotification.localNotification({
         message: remoteMessage.notification.body,

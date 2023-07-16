@@ -58,6 +58,7 @@ export default function Login({navigation}) {
     try {
       setLoader(true);
       const fcm = await AsyncStorage.getItem('fcm');
+      console.log('fcmAsync', fcm);
 
       let data = new FormData();
       data.append('email', userName);

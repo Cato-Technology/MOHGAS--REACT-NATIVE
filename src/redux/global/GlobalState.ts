@@ -1,5 +1,7 @@
 import {
   BranchesResponse,
+  NotificationRes,
+  OrderSummaryRes,
   SupportResponse,
   VendorAccountDetialsResponse,
   VendorBusinessProfileResponse,
@@ -15,4 +17,6 @@ export class GlobalState {
   businessProfileData: VendorBusinessProfileResponse[] = [];
   vendorBankDetalis: VendorAccountDetialsResponse[] = [];
   vendorOrderHistory: VendorOrderHistoryResponse[] = [];
+  orderSummary: OrderSummaryRes[] = [];
+  notificationData: NotificationRes[] = [];
 }

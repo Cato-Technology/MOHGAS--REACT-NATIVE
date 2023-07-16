@@ -120,7 +120,7 @@ export default function FundWallet({navigation}) {
           />
           <View style={{width: '100%', paddingHorizontal: 20}}>
             <HeaderBottom
-              title="Support"
+              title="Wallet"
               subTitle={'Funding your Mohgas wallet to Enable Quick Purchase'}
               contentStyle={{marginTop: 40}}
             />
@@ -197,17 +197,17 @@ export default function FundWallet({navigation}) {
                 marginTop: 50,
               }}>
               <GradientButton
-                onPress={() => navigation.navigate(SCREENS.CREATE_BVN)}
-                // disabled={!isValid || loader || !checked}
-                title="Countinue"
-              />
-              <GradientButton
                 onPress={() =>
                   navigation.navigate(SCREENS.SUCCESS_SCREEN, {
                     item: sucessData,
                     render: 'MohgasWalletTranSucess',
                   })
                 }
+                // disabled={!isValid || loader || !checked}
+                title="Countinue"
+              />
+              <GradientButton
+                onPress={() => navigation.navigate(SCREENS.UN_SUCCESS_SCREEN)}
                 // disabled={!isValid || loader || !checked}
                 title="Transcation unsucess removed after integrate api"
               />

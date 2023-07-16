@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import SCREENS from '../../utils/constants';
@@ -28,10 +28,44 @@ import UpdateVendorAccount from '../../screens/vendor/update-account';
 import VendorRequest from '../../screens/vendor/request';
 import OrderSummarySwap from '../../screens/customer/accessories/swap-cylinder/order-summary';
 import ViewProductVendor from '../../screens/vendor/view-product';
-
+import NewOrder from '../../screens/vendor/new-order';
+import messaging from '@react-native-firebase/messaging';
+import {ActivityIndicator} from '../../components';
 const Stack = createNativeStackNavigator();
 
 const HomeNavigatorVendor = () => {
+  const [initialRoute, setInitialRoute] = useState('');
+  const [loading, setLoading] = useState(true);
+  // useEffect(() => {
+  //   // Assume a message-notification contains a "type" property in the data payload of the screen to open
+
+  //   messaging().onNotificationOpenedApp(remoteMessage => {
+  //     console.log(
+  //       'Notification caused app to open from background state:',
+  //       remoteMessage,
+  //     );
+  //     //  navigation.navigate(remoteMessage.data.type);
+  //   });
+
+  //   // Check whether an initial notification is available
+  //   messaging()
+  //     .getInitialNotification()
+  //     .then(remoteMessage => {
+  //       if (remoteMessage) {
+  //         console.log(
+  //           'Notification caused app to open from quit state:',
+  //           remoteMessage,
+  //         );
+  //         setInitialRoute(remoteMessage.data.click_action); // e.g. "Settings"
+  //       }
+  //       setLoading(false);
+  //     });
+  // }, []);
+
+  // if (loading) {
+  //   return <ActivityIndicator visible={true} />;
+  // }
+
   return (
     <Stack.Navigator
       screenOptions={{
@@ -73,6 +107,7 @@ const HomeNavigatorVendor = () => {
 
       <Stack.Screen name={SCREENS.CONNECT_VENDOR} component={ConnectVendor} />
       <Stack.Screen name={SCREENS.SWAP_CYLINDER} component={SwapCylinder} />
+      <Stack.Screen name={SCREENS.VENDOR_NEW_ORDER} component={NewOrder} />
     </Stack.Navigator>
   );
 };

@@ -35,7 +35,7 @@ function getProfile(data: any) {
 
   return new Promise<UserResponse>((resolve, reject) => {
     client
-      .post(API_URLS.GET_USER, data)
+      .get(API_URLS.GET_USER)
       .then(async response => {
         try {
           console.log('res ', response);

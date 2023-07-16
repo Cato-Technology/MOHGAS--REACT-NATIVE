@@ -23,7 +23,7 @@ import Icon6 from 'react-native-vector-icons/AntDesign';
 import card from '../../../assets/card.png';
 import aImage from '../../../assets/avatar.jpg';
 import {Avatar} from 'react-native-paper';
-
+import RNMonnify from '@monnify/react-native-sdk';
 import {
   // ErrorModal,
   ActivityIndicator,
@@ -32,7 +32,7 @@ import {
   InputWithLabel,
   DetailCard,
 } from '../../../components';
-
+import {profileService} from '../../../services';
 import SCREENS from '../../../utils/constants';
 
 import makeStyles from './styles';
@@ -56,6 +56,11 @@ import {getReduxRecentOrderHistory} from '../../../redux/orders/orders-actions';
 import {capitalizeFirstLetter} from '../../../utils/functions/general-functions';
 import LinearGradient from 'react-native-linear-gradient';
 export default function DashBoard({navigation, props}) {
+  RNMonnify.initialize({
+    apiKey: 'MK_TEST_3X874HXYN3',
+    contractCode: '6871168621',
+    applicationMode: 'TEST',
+  });
   const {colors} = useTheme();
   const styles = makeStyles(colors);
   const authContext = React.useContext(AuthContext);
@@ -66,23 +71,38 @@ export default function DashBoard({navigation, props}) {
   console.log('recentHistory', recentHistory);
 
   console.log('authContext==>', authContext);
-  React.useEffect(() => {
-    // Load the user data from storage when the app starts
-    const loadUserData = async () => {
-      try {
-        const jsonValue = await AsyncStorage.getItem('userData');
-        const data = jsonValue != null ? JSON.parse(jsonValue) : null;
-        console.log('data', data);
-      } catch (e) {
-        console.error('Failed to load user data from storage');
-      }
-    };
-    loadUserData();
-  }, []);
 
+  const getProfile = async () => {
+    try {
+      const getProfile = await profileService.getProfile();
+      console.log('getProfile', getProfile?.response);
+      if (getProfile?.status) {
+        const updatedUserData = {
+          ...authContext?.userData,
+          ...getProfile?.response,
+        };
+        console.log('updatedUserData', updatedUserData);
+
+        try {
+          const jsonValue = JSON.stringify(updatedUserData);
+          await AsyncStorage.setItem('userData', jsonValue);
+        } catch (e) {
+          console.error('Failed to save user data to storage');
+        }
+
+        authContext.setUserData(updatedUserData);
+      }
+    } catch (e) {
+      console.log('error', r);
+    }
+  };
   useEffect(() => {
     dispatch(getReduxRecentOrderHistory());
   }, [dispatch]);
+
+  useEffect(() => {
+    getProfile();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -165,11 +185,28 @@ export default function DashBoard({navigation, props}) {
               }}>
               <TouchableOpacity
                 style={{alignItems: 'center'}}
-                onPress={() =>
+                onPress={() => {
+                  // RNMonnify.initializePayment({
+                  //   amount: 1200.5,
+                  //   customerName: 'Tobi Adeyemivfd',
+                  //   customerEmail: 'tobiadeyemidfd@gmail.com',
+                  //   paymentReference: '222',
+                  //   paymentDescription: 'Foodies',
+                  //   currencyCode: 'NGN',
+                  //   incomeSplitConfig: [],
+                  // })
+                  //   .then(response => {
+                  //     console.log(response); // card charged successfully, get reference here
+                  //   })
+                  //   .catch(error => {
+                  //     console.log(error); // error is a javascript Error object
+                  //     console.log(error.message);
+                  //     console.log(error.code);
+                  //   });
                   navigation.navigate(SCREENS.ADD_DELIVERY_ADDRESS, {
                     render: 'refill',
-                  })
-                }>
+                  });
+                }}>
                 <View style={styles.circleView}>
                   <Icon3 name="arrow-up" size={25} color="#fff" />
                 </View>
