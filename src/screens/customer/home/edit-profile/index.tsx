@@ -1,4 +1,4 @@
-import React, {Component, useMemo, useState} from 'react';
+import React, {Component, useEffect, useMemo, useState} from 'react';
 import {
   Text,
   View,
@@ -12,6 +12,7 @@ import {
 
 import {
   ActivityIndicator,
+  DatePickerModal,
   EditProfileModal,
   Header,
   InputWithLabel,
@@ -40,6 +41,7 @@ import {profileService} from '../../../../services';
 import {showMessage} from 'react-native-flash-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import RNFetchBlob from 'rn-fetch-blob';
+import moment from 'moment';
 let cameraIs = false;
 const EditProfile = () => {
   const navigation = useNavigation();
@@ -53,9 +55,17 @@ const EditProfile = () => {
   const [loader, setLoader] = useState(false);
   const [showModal, setShowModal] = React.useState(false);
   const [edit, setEdit] = React.useState(false);
-  const [image, setImage] = useState('');
+  const [image, setImage] = useState({});
+  const [date, setDate] = useState(new Date('1990-01-01'));
+  const [isPickerShow, setIsPickerShow] = useState(false);
+  console.log('uuser', authContext?.userData?.dateOfBirth);
+  console.log('date', date);
 
-  console.log('uuser', authContext);
+  useEffect(() => {
+    if (authContext?.userData?.dateOfBirth) {
+      setDate(new Date(authContext?.userData?.dateOfBirth));
+    }
+  }, []);
 
   const signUpSchema = useMemo(
     () =>
@@ -90,10 +100,14 @@ const EditProfile = () => {
       // compressImageMaxWidth: 113,
       // compressImageMaxHeight: 113,
     })
-      .then(image => {
-        console.log('resImage', image);
-        let img = `data:${image.mime};base64,${image.data}`;
-        setImage(image);
+      .then(res => {
+        console.log('resresG', res);
+        setImage({
+          name: res?.modificationDate,
+          uri: res?.path,
+          type: res?.mime,
+          base64: res?.data,
+        });
         setShowModal(false);
         //   setProfile({...profile, dp: image.path});
         //   updateProfilePicture(image?.data);
@@ -132,9 +146,16 @@ const EditProfile = () => {
           } else {
             //setImage(res.assets[0].base64);
             console.log('resImage', res);
+            // setImage(res?.assets[0]);
+            //  setImage(...image.name)
 
-            let img = `data:${image[0].mime};base64,${image[0].base64}`;
-            setImage(image[0].base64);
+            setImage({
+              name: res?.assets[0]?.fileName,
+              uri: res?.assets[0]?.uri,
+              type: res?.assets[0]?.type,
+              base64: res?.assets[0]?.base64,
+            });
+
             setShowModal(false);
             cameraIs = false;
           }
@@ -148,14 +169,21 @@ const EditProfile = () => {
     try {
       // setLoader(true);
       let data = new FormData();
+      if (Platform.OS == 'android') {
+        data.append('image', {
+          uri: image?.uri,
+          type: image?.type,
+          name: 'image.jpg',
+        });
+      } else {
+        data.append('image', {
+          uri: 'file:///' + image?.uri,
+          type: image?.type,
+          name: 'image.jpg',
+        });
+      }
 
-      data.append('image', {
-        uri: 'file:///' + image?.path,
-        type: image?.mime,
-        name: 'image.jpg',
-      });
-      data.append('user_id', authContext?.userData?.user_id);
-      data.append('image', image);
+      data.append('dateOfBirth', moment(date).format('YYYY-MM-DD'));
       data.append('fullname', values.fullname);
       data.append('phone_no', values.phone_no);
       data.append('email', values.email);
@@ -169,25 +197,16 @@ const EditProfile = () => {
       const result = await profileService.updateProfile(data);
       console.log('result', result);
 
-      if (result?.message == 'Profile Updated Successfully') {
+      if (result?.status) {
         try {
           let dataUpdate = new FormData();
           dataUpdate.append('user_id', authContext?.userData?.user_id);
           const resultUpdate = await profileService.getProfile(dataUpdate);
           console.log('resultUpdate', resultUpdate);
-          if (resultUpdate?.message == 'User Details Received') {
+          if (resultUpdate) {
             const updatedUserData = {
               ...authContext?.userData,
-              image: resultUpdate?.responsedata.image,
-              type: resultUpdate?.responsedata.type,
-              full_name: resultUpdate?.responsedata.full_name,
-              email: resultUpdate?.responsedata.email,
-              phone_no: resultUpdate?.responsedata.phone_no,
-              street_name: resultUpdate?.responsedata.street_name,
-              province: resultUpdate?.responsedata.province,
-              city: resultUpdate?.responsedata.city,
-              lga: resultUpdate?.responsedata.lga,
-              referal_code: resultUpdate?.responsedata.referal_code,
+              ...resultUpdate?.response,
             };
             console.log('updatedUserData', updatedUserData);
 
@@ -255,7 +274,7 @@ const EditProfile = () => {
                 source={
                   image
                     ? {
-                        uri: image?.path,
+                        uri: image?.uri,
                       }
                     : !authContext?.userData?.image
                     ? authContext?.userData?.gender == 'Female'
@@ -307,7 +326,7 @@ const EditProfile = () => {
                 }) => (
                   <>
                     {console.log('errors', errors)}
-                    <View>
+                    <View style={{width: '90%'}}>
                       <InputWithLabel
                         label="Full Name"
                         labelStyle={{
@@ -322,6 +341,18 @@ const EditProfile = () => {
                         error={touched.fullname ? errors.fullname : ''}
                         onBlur={() => setFieldTouched('fullname')}
                       />
+                      <View style={{height: 20}} />
+                      <Text style={styles.inputLablel}>Date of Birth</Text>
+                      <View style={{paddingHorizontal: 20}}>
+                        <DatePickerModal
+                          isPickerShow={isPickerShow}
+                          setIsPickerShow={setIsPickerShow}
+                          date={date}
+                          setDate={setDate}
+                          maximumDate={new Date()}
+                          minimumDate={new Date('jan-01-1922')}
+                        />
+                      </View>
                       <View style={{height: 20}} />
                       <InputWithLabel
                         label={'Phone number'}

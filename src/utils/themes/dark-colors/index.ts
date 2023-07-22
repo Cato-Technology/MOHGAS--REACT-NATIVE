@@ -1,9 +1,9 @@
 const darkcColors = {
-  primary: '#272828',
+  primary: '#ffffff',
   secondary: '#f9d649',
-  text: '#fff',
+  text: '#000000',
   disable: '#8b8f92',
-  yellowHeading: '#ebbd41',
+  yellowHeading: '#000000',
   tabTextColor: '#f9d649',
   lightYellow: '#987b2e',
   cardBackground: '#333435',

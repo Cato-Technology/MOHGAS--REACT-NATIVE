@@ -4,7 +4,7 @@ import {UserResponse} from '../redux/types/auth/auth-types';
 //import { ErrorResponse } from 'types/ErrorResponse';
 //import { setAuthAsyncStorage } from '../async-storage/auth-async-storage';
 import client from './client';
-import {API_URLS} from '../../src/services/url-constants';
+import {backend_URLS} from '../../src/services/url-constants';
 //import {store} from '../redux';
 
 function login(data: any) {
@@ -12,7 +12,7 @@ function login(data: any) {
 
   return new Promise<UserResponse>((resolve, reject) => {
     client
-      .post(API_URLS.LOGIN, data)
+      .post(backend_URLS.LOGIN, data)
       .then(async response => {
         try {
           console.log('res', response);
@@ -35,7 +35,7 @@ function signUp(data: any) {
 
   return new Promise<UserResponse>((resolve, reject) => {
     client
-      .post(API_URLS.SIGNUP, data)
+      .post(backend_URLS.SIGNUP, data)
       .then(async response => {
         try {
           console.log('res SIGN', response);
@@ -58,7 +58,7 @@ function forgotPassword(data: any) {
 
   return new Promise<UserResponse>((resolve, reject) => {
     client
-      .post(API_URLS.FORGOT_PASSWORD, data)
+      .post(backend_URLS.FORGOT_PASSWORD, data)
       .then(async response => {
         try {
           console.log('res', response);
@@ -81,7 +81,7 @@ function verifyOtp(data: any) {
 
   return new Promise<UserResponse>((resolve, reject) => {
     client
-      .post(API_URLS.VERIFY_OTP, data)
+      .post(backend_URLS.VERIFY_OTP, data)
       .then(async response => {
         try {
           console.log('res', response);
@@ -100,7 +100,7 @@ function verifyOtp(data: any) {
   });
 }
 const registerVendor = (detail: any) => {
-  return client.post(API_URLS.REGISTER_VENDOR, detail);
+  return client.post(backend_URLS.REGISTER_VENDOR, detail);
 };
 export const authService = {
   login,

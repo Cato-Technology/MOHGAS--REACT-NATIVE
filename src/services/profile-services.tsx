@@ -4,7 +4,7 @@ import {UserResponse} from '../redux/types/auth/auth-types';
 //import { ErrorResponse } from 'types/ErrorResponse';
 //import { setAuthAsyncStorage } from '../async-storage/auth-async-storage';
 import client from './client';
-import {API_URLS} from '../../src/services/url-constants';
+import {backend_URLS} from '../../src/services/url-constants';
 //import {store} from '../redux';
 
 function updateProfile(data: any) {
@@ -12,7 +12,7 @@ function updateProfile(data: any) {
 
   return new Promise<UserResponse>((resolve, reject) => {
     client
-      .post(API_URLS.UPDATE_USER, data)
+      .post(backend_URLS.UPDATE_USER, data)
       .then(async response => {
         try {
           console.log('res ', response);
@@ -35,7 +35,7 @@ function getProfile(data: any) {
 
   return new Promise<UserResponse>((resolve, reject) => {
     client
-      .get(API_URLS.GET_USER)
+      .get(backend_URLS.GET_USER)
       .then(async response => {
         try {
           console.log('res ', response);

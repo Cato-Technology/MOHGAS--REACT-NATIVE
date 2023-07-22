@@ -129,6 +129,12 @@ export default function DashBoard({navigation, props}) {
               alignItems: 'center',
             }}>
             <View style={{marginTop: 20}}>
+              <Icon3
+                name="menu"
+                onPress={() => navigation.openDrawer()}
+                size={25}
+                color="#000000"
+              />
               <Text style={{fontFamily: 'Rubik-Bold', fontSize: 15}}>
                 Wellcome
               </Text>

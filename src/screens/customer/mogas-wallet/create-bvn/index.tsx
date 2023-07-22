@@ -55,6 +55,7 @@ import {useTheme} from '@react-navigation/native';
 import GradientButton from '../../../../components/buttons/gradient-button';
 import HeaderBottom from '../../../../components/header-bottom';
 import {mainServics} from '../../../../services';
+import {showMessage} from 'react-native-flash-message';
 let sucessData = {
   title: 'Account Created',
   desc: 'Details submitted success your account number is 123 456 789 and has been updated on your dashboard redirecting in 9 sec',
@@ -84,6 +85,11 @@ export default function CreateBvn({navigation}) {
       // })
     } catch (e) {
       console.log('e', e);
+      showMessage({
+        message: e?.errMsg?.message,
+        type: 'warning',
+        icon: 'warning',
+      });
       setIsLoading(false);
     }
   };

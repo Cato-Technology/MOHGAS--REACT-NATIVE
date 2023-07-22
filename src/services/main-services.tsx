@@ -1,5 +1,5 @@
 import client from './client';
-import {API_URLS} from './url-constants';
+import {backend_URLS} from './url-constants';
 import {API_URLS_VENDOR} from './url-constants-vendor';
 
 //Vendor Services
@@ -24,34 +24,34 @@ const nearByGasAgencyRefill = (lat: string, lon: string) => {
   console.log('lat==>', lat);
 
   return client.get(
-    API_URLS.NEAR_BY_GAS_REFILL + `?latitude=${lat}&longitude=${lon}`,
+    backend_URLS.NEAR_BY_GAS_REFILL + `?latitude=${lat}&longitude=${lon}`,
   );
 };
 const swapCylinder = (detail: any) => {
-  return client.post(API_URLS.SWAP_CYLINDER, detail);
+  return client.post(backend_URLS.SWAP_CYLINDER, detail);
 };
 const nearByGasAgencyAsPerRequiredSize = (detail: any) => {
-  return client.post(API_URLS.nearByGasAgencyAsPerRequiredSize, detail);
+  return client.post(backend_URLS.nearByGasAgencyAsPerRequiredSize, detail);
 };
 const getAccessoriesAsPerNearestAgencies = (lat, lon) => {
   return client.get(
-    API_URLS.GET_NEAREST_ACCESSORIES + `?latitude=${lat}&longitude=${lon}`,
+    backend_URLS.GET_NEAREST_ACCESSORIES + `?latitude=${lat}&longitude=${lon}`,
   );
 };
 const checkOut = (detail: any) => {
-  return client.post(API_URLS.checkout, detail);
+  return client.post(backend_URLS.checkout, detail);
 };
 const getSupportHelpTopics = () => {
-  return client.get(API_URLS.getSupportHelpTopics);
+  return client.get(backend_URLS.getSupportHelpTopics);
 };
 const getSupportAccountRelatedIssues = () => {
-  return client.get(API_URLS.getSupportAccountRelatedIssues);
+  return client.get(backend_URLS.getSupportAccountRelatedIssues);
 };
 const sendSupport = (detail: any) => {
-  return client.post(API_URLS.support, detail);
+  return client.post(backend_URLS.support, detail);
 };
 const gasOrder = (detail: any) => {
-  return client.post(API_URLS.ORDERS, detail);
+  return client.post(backend_URLS.ORDERS, detail);
 };
 const updateVendorBusinessProfile = (detail: any) => {
   return client.post(API_URLS_VENDOR.PROFILE, detail);
@@ -72,18 +72,18 @@ const createBvn = (detail: any) => {
   return client.post(API_URLS_VENDOR.CREATE_BVN, detail);
 };
 const notifyVendor = (detail: any) => {
-  return client.post(API_URLS.NOTIFY_VENDOR, detail);
+  return client.post(backend_URLS.NOTIFY_VENDOR, detail);
 };
 const orderExpired = (detail: any) => {
-  return client.post(API_URLS.ORDER_EXPIRED, detail);
+  return client.post(backend_URLS.ORDER_EXPIRED, detail);
 };
 
 //Accept Reject Order
 const acceptOrder = (detail: any) => {
-  return client.post(API_URLS.ACCEPT_ORDER, detail);
+  return client.post(backend_URLS.ACCEPT_ORDER, detail);
 };
 const rejectOrder = (detail: any) => {
-  return client.post(API_URLS.REJECT_ORDER, detail);
+  return client.post(backend_URLS.REJECT_ORDER, detail);
 };
 export const mainServics = {
   addBranch,

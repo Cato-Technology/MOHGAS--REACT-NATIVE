@@ -327,6 +327,7 @@ export default function SwapCylinder({navigation}) {
     );
   };
   console.log('list', list);
+  console.log('direction', myDirection);
 
   const handleSubmitted = async () => {
     setIsLoading(true);
@@ -345,36 +346,33 @@ export default function SwapCylinder({navigation}) {
 
       data.append('latitude', myDirection.latitude);
       data.append('longitude', myDirection.longitude);
-      data.append('user_id', 33);
-      data.append(
-        'address',
-        '39 Khayaban-e-Momin, Phase V Defence V Defence Housing Authority, Karachi, Karachi City, Sindh 75500, Pakistan',
-      );
+      data.append('address', userAddress);
 
       // data.append('latitude', 24.817556456461972);
       // data.append('longitude', 67.0560846850276);
       data.append('size_of_cylinder', sizeSelected.size);
       data.append('swap_type', rdId);
-      data.append('cylinder_img_1', {
-        uri: list[0]?.uri,
-        type: list[0]?.filetype,
-        name: list[0]?.filename,
-      });
-      data.append('cylinder_img_2', {
-        uri: list[1]?.uri,
-        type: list[1]?.filetype,
-        name: list[1]?.filename,
-      });
-      data.append('cylinder_img_3', {
-        uri: list[2]?.uri,
-        type: list[2]?.filetype,
-        name: list[2]?.filename,
-      });
-      data.append('cylinder_img_4', {
-        uri: list[3]?.uri,
-        type: list[3]?.filetype,
-        name: list[3]?.filename,
-      });
+      // data.append('cylinder_img_1', {
+      //   uri: list[0]?.uri,
+      //   type: list[0]?.filetype,
+      //   name: list[0]?.filename,
+      // });
+      // data.append('cylinder_img_2', {
+      //   uri: list[1]?.uri,
+      //   type: list[1]?.filetype,
+      //   name: list[1]?.filename,
+      // });
+      // data.append('cylinder_img_3', {
+      //   uri: list[2]?.uri,
+      //   type: list[2]?.filetype,
+      //   name: list[2]?.filename,
+      // });
+      // data.append('cylinder_img_4', {
+      //   uri: list[3]?.uri,
+      //   type: list[3]?.filetype,
+      //   name: list[3]?.filename,
+      // });
+      console.log('formData', data);
 
       // data.append('cylinder_img_1', list[0]?.base64 ? list[0]?.base64 : '');
       // data.append('cylinder_img_2', list[1]?.base64 ? list[1]?.base64 : '');

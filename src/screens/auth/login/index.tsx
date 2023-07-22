@@ -70,11 +70,11 @@ export default function Login({navigation}) {
       const result = await authService.login(data);
       console.log('result', result);
 
-      if (result?.status == '0') {
+      if (!result?.status) {
         setLoader(false);
         setLoginError(true);
       }
-      if (result?.message == 'Login Success') {
+      if (result?.status) {
         await AsyncStorage.setItem('token', result?.response?.token);
         try {
           const jsonValue = JSON.stringify(result?.response);
@@ -118,7 +118,7 @@ export default function Login({navigation}) {
           </View>
           <View style={{marginTop: 230, paddingHorizontal: 25}}>
             <InputWithLabel
-              label="Username"
+              label="Email or Number"
               labelStyle={{
                 // fontFamily: fonts.mulishSemiBold,
                 color: colors.yellowHeading,

@@ -1,27 +1,27 @@
-const API_URLS = {
+const backend_URLS = {
   //Auth constants
   LOGIN: '/backend/login',
   SIGNUP: '/backend/register/user',
-  FORGOT_PASSWORD: '/Api/forget_password',
-  VERIFY_OTP: '/Api/verify_otp',
+  FORGOT_PASSWORD: '/backend/forget_password',
+  VERIFY_OTP: '/backend/verify_otp',
   REGISTER_VENDOR: '/backend/register/vendor',
 
   //Profile constants
-  UPDATE_USER: '/Api/update_user',
+  UPDATE_USER: '/backend/user',
   GET_USER: '/backend/user/all_detail',
 
   //order history contants
-  ORDER_HISTORY: '/Api/user_order_history',
+  ORDER_HISTORY: '/backend/user_order_history',
   RECENT_HISTORY: '/backend/user/dashboard',
 
   // Topup gas
   NEAR_BY_GAS_REFILL: '/backend/orders/nearest_vendors',
 
   // Swap Cylinder
-  SWAP_CYLINDER: '/Api/swapCylinder',
-  nearByGasAgencyAsPerRequiredSize: '/Api/nearByGasAgencyAsPerRequiredSize',
+  SWAP_CYLINDER: '/backend/orders/swap',
+  nearByGasAgencyAsPerRequiredSize: '/backend/nearByGasAgencyAsPerRequiredSize',
   GET_NEAREST_ACCESSORIES: '/backend/orders/nearest_products',
-  checkout: '/Api/checkout',
+  checkout: '/backend/checkout',
 
   //Support
   getSupportHelpTopics: '/backend/support/help_topics',
@@ -36,4 +36,4 @@ const API_URLS = {
   REJECT_ORDER: '/backend/orders/decline',
 };
 
-export {API_URLS};
+export {backend_URLS};

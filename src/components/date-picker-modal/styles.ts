@@ -13,7 +13,7 @@ export const makeStyles = (colors: any) =>
       alignSelf: 'center',
       borderRadius: widthPercentageToDP(2),
       height: heightPercentageToDP(5.5),
-      backgroundColor: colors.cardBackground,
+      backgroundColor: '#f9f9f9',
       width: '100%',
     },
     textContainer: {
