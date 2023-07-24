@@ -85,7 +85,17 @@ const acceptOrder = (detail: any) => {
 const rejectOrder = (detail: any) => {
   return client.post(backend_URLS.REJECT_ORDER, detail);
 };
+const getStates = () => {
+  return client.get(backend_URLS.GET_STATES);
+};
+const getCities = id => {
+  console.log('id', id);
+
+  return client.get(backend_URLS.GET_CITIES + `?state_id=${id}`);
+};
 export const mainServics = {
+  getCities,
+  getStates,
   addBranch,
   getBranches,
   addVendorProducts,

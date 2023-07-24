@@ -34,6 +34,8 @@ const backend_URLS = {
   //Accept Reject Order
   ACCEPT_ORDER: '/backend/orders/accepted',
   REJECT_ORDER: '/backend/orders/decline',
+  GET_STATES: '/backend/settings/states',
+  GET_CITIES: '/backend/settings/cities',
 };
 
 export {backend_URLS};

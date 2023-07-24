@@ -37,12 +37,23 @@ import {
 } from 'react-native-responsive-screen';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import ImagePicker from 'react-native-image-crop-picker';
-import {profileService} from '../../../../services';
+import {mainServics, profileService} from '../../../../services';
 import {showMessage} from 'react-native-flash-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import RNFetchBlob from 'rn-fetch-blob';
 import moment from 'moment';
+import {Dropdown} from 'react-native-element-dropdown';
 let cameraIs = false;
+const data = [
+  {label: 'Item 1', value: '1'},
+  {label: 'Item 2', value: '2'},
+  {label: 'Item 3', value: '3'},
+  {label: 'Item 4', value: '4'},
+  {label: 'Item 5', value: '5'},
+  {label: 'Item 6', value: '6'},
+  {label: 'Item 7', value: '7'},
+  {label: 'Item 8', value: '8'},
+];
 const EditProfile = () => {
   const navigation = useNavigation();
   const {colors} = useTheme();
@@ -58,6 +69,10 @@ const EditProfile = () => {
   const [image, setImage] = useState({});
   const [date, setDate] = useState(new Date('1990-01-01'));
   const [isPickerShow, setIsPickerShow] = useState(false);
+  const [stateData, setStateData] = useState([]);
+  const [cityData, setCityData] = useState([]);
+
+  const [value, setValue] = useState(null);
   console.log('uuser', authContext?.userData?.dateOfBirth);
   console.log('date', date);
 
@@ -66,7 +81,74 @@ const EditProfile = () => {
       setDate(new Date(authContext?.userData?.dateOfBirth));
     }
   }, []);
+  useEffect(() => {
+    getStateData();
+  }, []);
+  const getStateData = async () => {
+    try {
+      const result = await mainServics.getStates();
+      console.log('resultStates', result);
+      if (result.status) {
+        let arr = [];
+        result?.data?.map(ele => {
+          console.log('ele', ele);
+          arr.push({
+            label: ele.name,
+            value: ele.id,
+            country_id: ele?.country_id,
+            country_code: ele?.country_code,
+            fips_code: ele?.fips_code,
+            iso2: ele?.iso2,
+            type: ele?.type,
+            latitude: ele?.latitude,
+            longitude: ele?.longitude,
+            created_at: ele?.created_at,
+            updated_at: ele?.updated_at,
+            flag: ele?.flag,
+            wikiDataId: ele?.wikiDataId,
+            price_per_kg: ele?.price_per_kg,
+            service_charge: ele?.service_charge,
+            delivery_cost_per_km: ele?.delivery_cost_per_km,
+          });
+          setStateData(arr);
+        });
+        console.log('arr', arr);
+      }
+    } catch (e) {
+      console.log('eer', e);
+    }
+  };
+  const getCitiesData = async id => {
+    try {
+      const result = await mainServics.getCities(id);
+      console.log('resultCities', result);
+      if (result.status) {
+        let arr = [];
+        result?.data?.map(ele => {
+          console.log('ele', ele);
+          arr.push({
+            label: ele.name,
+            value: ele.id,
 
+            state_id: ele?.state_id,
+            state_code: ele?.state_code,
+            country_id: ele?.country_id,
+            country_code: ele?.country_code,
+            latitude: ele?.latitude,
+            longitude: ele?.longitude,
+            created_at: ele?.created_at,
+            updated_at: ele?.updated_at,
+            flag: ele?.flag,
+            wikiDataId: ele?.wikiDataId,
+          });
+          setCityData(arr);
+        });
+        console.log('arr', arr);
+      }
+    } catch (e) {
+      console.log('eer', e);
+    }
+  };
   const signUpSchema = useMemo(
     () =>
       Yup.object({
@@ -166,6 +248,8 @@ const EditProfile = () => {
   console.log('image', image);
 
   const handleUpdateUser = async values => {
+    console.log('vvalue', values);
+
     try {
       // setLoader(true);
       let data = new FormData();
@@ -308,8 +392,8 @@ const EditProfile = () => {
                   email: authContext?.userData?.email,
                   phone_no: authContext?.userData?.phone_no,
                   street_name: authContext?.userData?.street_name,
-                  state: authContext?.userData?.state,
-                  city: authContext?.userData?.city,
+                  state: stateData[0]?.value,
+                  city: cityData[0]?.value,
                 }}
                 onSubmit={values => handleUpdateUser(values)}
                 validationSchema={signUpSchema}>
@@ -354,6 +438,7 @@ const EditProfile = () => {
                         />
                       </View>
                       <View style={{height: 20}} />
+
                       <InputWithLabel
                         label={'Phone number'}
                         placeholder={'Eg. 564564565'}
@@ -399,7 +484,7 @@ const EditProfile = () => {
                         error={touched.street_name ? errors.street_name : ''}
                         onBlur={() => setFieldTouched('street_name')}
                       />
-                      <InputWithLabel
+                      {/* <InputWithLabel
                         label="State"
                         placeholder={'Eg.Nigeria'}
                         containerStyles={{paddingHorizontal: 20}}
@@ -408,12 +493,50 @@ const EditProfile = () => {
                           color: colors.yellowHeading,
                           fontSize: 15,
                         }}
-                        onChange={handleChange('state')}
+                        onChange={handleChange('state')} 
                         value={values.state}
                         error={touched.state ? errors.state : ''}
                         onBlur={() => setFieldTouched('state')}
-                      />
-                      <InputWithLabel
+                      /> */}
+                      <View style={{paddingHorizontal: 20}}>
+                        <Text
+                          style={{
+                            fontFamily: 'Rubik-Regular',
+                            color: '#000000',
+                            fontSize: 15,
+                            marginTop: 5,
+                          }}>
+                          Select State
+                        </Text>
+                        <Dropdown
+                          style={styles.dropdown}
+                          placeholderStyle={styles.placeholderStyle}
+                          selectedTextStyle={styles.selectedTextStyle}
+                          inputSearchStyle={styles.inputSearchStyle}
+                          iconStyle={styles.iconStyle}
+                          data={stateData}
+                          //search
+                          maxHeight={300}
+                          labelField="label"
+                          valueField="value"
+                          placeholder="Select State"
+                          //searchPlaceholder="Search..."
+                          value={values.state}
+                          onChange={item => {
+                            setFieldValue('state', item.value);
+                            getCitiesData(item.value);
+                          }}
+                          // renderLeftIcon={() => (
+                          //   <AntDesign
+                          //     style={styles.icon2}
+                          //     color="black"
+                          //     name="Safety"
+                          //     size={20}
+                          //   />
+                          // )}
+                        />
+                      </View>
+                      {/* <InputWithLabel
                         label="City"
                         placeholder={'Eg.Islamabad'}
                         containerStyles={{paddingHorizontal: 20}}
@@ -426,7 +549,44 @@ const EditProfile = () => {
                         value={values.city}
                         error={touched.city ? errors.city : ''}
                         onBlur={() => setFieldTouched('city')}
-                      />
+                      /> */}
+                      <View style={{paddingHorizontal: 20}}>
+                        <Text
+                          style={{
+                            fontFamily: 'Rubik-Regular',
+                            color: '#000000',
+                            fontSize: 15,
+                            marginTop: 5,
+                          }}>
+                          Select City
+                        </Text>
+                        <Dropdown
+                          style={styles.dropdown}
+                          placeholderStyle={styles.placeholderStyle}
+                          selectedTextStyle={styles.selectedTextStyle}
+                          inputSearchStyle={styles.inputSearchStyle}
+                          iconStyle={styles.iconStyle}
+                          data={cityData}
+                          //search
+                          maxHeight={300}
+                          labelField="label"
+                          valueField="value"
+                          placeholder="Select City"
+                          //searchPlaceholder="Search..."
+                          value={values.city}
+                          onChange={item => {
+                            setFieldValue('city', item.value);
+                          }}
+                          // renderLeftIcon={() => (
+                          //   <AntDesign
+                          //     style={styles.icon2}
+                          //     color="black"
+                          //     name="Safety"
+                          //     size={20}
+                          //   />
+                          // )}
+                        />
+                      </View>
                     </View>
 
                     <View
