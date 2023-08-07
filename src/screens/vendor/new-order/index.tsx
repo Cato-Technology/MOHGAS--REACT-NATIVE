@@ -159,14 +159,24 @@ export default function NewOrder({navigation, route}) {
           }}>
           <Text style={[styles.heading]}>New Order</Text>
 
-          <Text
-            style={[
-              styles.detailText,
-              {fontFamily: 'Rubik-SemiBold', fontSize: RFValue(16)},
-            ]}>
-            {notificationData?.data?.full_name} (
-            {notificationData?.data?.product_type})
-          </Text>
+          {notificationData?.data?.product_type ? (
+            <Text
+              style={[
+                styles.detailText,
+                {fontFamily: 'Rubik-SemiBold', fontSize: RFValue(16)},
+              ]}>
+              {notificationData?.data?.full_name} (
+              {notificationData?.data?.product_type})
+            </Text>
+          ) : (
+            <Text
+              style={[
+                styles.detailText,
+                {fontFamily: 'Rubik-SemiBold', fontSize: RFValue(16)},
+              ]}>
+              {notificationData?.data?.full_name}
+            </Text>
+          )}
           <Text style={styles.detailText}>
             {' '}
             {notificationData?.data?.size}Kg ({notificationData?.data?.distance}

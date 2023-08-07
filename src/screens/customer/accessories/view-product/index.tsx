@@ -12,6 +12,7 @@ import {
   KeyboardAvoidingView,
   FlatList,
   SafeAreaView,
+  PermissionsAndroid,
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -53,6 +54,11 @@ import AuthContext from '../../../../utils/auth-context';
 import {useTheme} from '@react-navigation/native';
 import GradientButton from '../../../../components/buttons/gradient-button';
 import HeaderBottom from '../../../../components/header-bottom';
+import {useDispatch} from 'react-redux';
+import {showMessage} from 'react-native-flash-message';
+import {mainServics} from '../../../../services';
+import {getAddress} from '../../../../utils/functions/get-address';
+import Geolocation from '@react-native-community/geolocation';
 export default function ViewProduct({navigation, route}) {
   const {colors} = useTheme();
   const styles = makeStyles(colors);
@@ -63,13 +69,148 @@ export default function ViewProduct({navigation, route}) {
   const [loginError, setLoginError] = useState(false);
   const [checked, setChecked] = useState(false);
   const [weight, setWeight] = useState('');
-
+  const [isLoading, setIsLoading] = useState(true);
+  const [userAddress, setUserAddress] = useState();
+  const [city, setCity] = useState();
+  const [postal, setPostal] = useState();
+  const [state, setState] = useState();
+  const [myDirection, setMyDirection] = useState({
+    latitude: 0.0,
+    longitude: 0.0,
+  });
+  const dispatch = useDispatch();
   let item = route?.params?.item;
   let size = item.size_of_product;
   const arr = size?.split(',');
+
+  console.log('item', item);
+
+  useEffect(() => {
+    const requestLocationPermission = async () => {
+      if (Platform.OS === 'ios') {
+        getOneTimeLocation();
+      } else {
+        try {
+          const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+          );
+          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+            getOneTimeLocation();
+          } else {
+            console.log('permission Denied');
+          }
+        } catch (err) {
+          console.warn(err);
+        }
+      }
+    };
+    setTimeout(() => {
+      requestLocationPermission();
+    }, 1000);
+  }, [navigation]);
+
+  const getOneTimeLocation = () => {
+    console.log('Getting Location ... ');
+    Geolocation.getCurrentPosition(
+      //Will give you the current location
+      async position => {
+        console.log('currentLongitude', position);
+        setIsLoading(false);
+        const currentLongitude = JSON.stringify(position.coords.longitude);
+        const currentLatitude = JSON.stringify(position.coords.latitude);
+
+        setMyDirection({
+          latitude: Number(position.coords.latitude),
+          longitude: Number(position.coords.longitude),
+        });
+        const addressString = await getAddress(
+          position.coords.latitude,
+          position.coords.longitude,
+        );
+        console.log('addressString', addressString);
+
+        setUserAddress(addressString?.address);
+        setCity(addressString?.city);
+        setPostal(addressString?.zipCode);
+        setState(addressString?.state);
+
+        // console.log('currentLatitude ', currentLatitude)
+        // console.log('currentLongitude ', currentLongitude)
+        // let tempCoords = {
+        //     latitude: Number(position.coords.latitude),
+        //     longitude: Number(position.coords.longitude)
+        // }
+        // if (MapRef.current && MapRef.current.animateCamera) {
+        //     MapRef.current.animateCamera({ center: tempCoords, pitch: 2, heading: 20, altitude: 200, zoom: 5 }, 1000)
+        // }
+      },
+      error => {
+        setIsLoading(false);
+        console.log('error ', error);
+      },
+      {
+        enableHighAccuracy: false,
+        timeout: 30000,
+        maximumAge: 1000,
+      },
+    );
+  };
+
+  const handleOrder = async () => {
+    // navigation.navigate(SCREENS.CONFIRM_PAYMENT)}
+    try {
+      setIsLoading(true);
+      let item = route?.params?.item;
+
+      console.log('data=>', item);
+
+      let fdata = new FormData();
+      fdata.append('order_type', 'ACCESSORIES');
+      fdata.append('product_id', item?.product_id);
+      fdata.append('qty', 1);
+      fdata.append('price', parseInt(item?.price));
+      fdata.append('branch_id', parseInt(item?.branch_id));
+      fdata.append('latitude', myDirection.latitude);
+      fdata.append('longitude', myDirection.longitude);
+      fdata.append('address', userAddress ? userAddress : 'No Address');
+      fdata.append('city', city ? city : 'No City');
+      fdata.append('postal', postal);
+      fdata.append('state', state ? state : 'No State');
+      console.log('ffff=>', fdata);
+
+      console.log('ffff=>', fdata);
+
+      const resData = await mainServics.gasOrder(fdata);
+      console.log('resData', resData);
+      if (resData?.status) {
+        setIsLoading(false);
+
+        navigation.navigate(SCREENS.CHECKOUT, {
+          orderData: resData?.data,
+          details: item,
+        });
+      } else {
+        showMessage({
+          message: JSON.stringify(resData),
+          type: 'danger',
+          icon: 'danger',
+        });
+        setIsLoading(false);
+      }
+    } catch (e) {
+      showMessage({
+        message: JSON.stringify(e),
+        type: 'danger',
+        icon: 'danger',
+      });
+      console.log('e', e);
+      setIsLoading(false);
+    }
+  };
+
   return (
     <View style={styles.container}>
-      <ActivityIndicator visible={false} />
+      <ActivityIndicator visible={isLoading} />
       {/* <ErrorModal
         onPress={() => setLoginError(!loginError)} 
         visible={loginError}
@@ -95,13 +236,11 @@ export default function ViewProduct({navigation, route}) {
 
             <Image
               style={{height: 200, width: '100%'}}
-              source={{uri: item?.images[0]?.image_url}}
+              source={{uri: item?.business_image}}
               resizeMode={'center'}
             />
             <View style={{height: 8}} />
-            <Text style={{color: 'gray', fontSize: 16}}>
-              {item?.accessories_name}
-            </Text>
+            <Text style={{color: 'gray', fontSize: 16}}>{item?.name}</Text>
             <Text style={{color: '#000000', fontSize: 16}}>N{item?.price}</Text>
             <View style={{height: 8}} />
             <Text style={{color: '#000000', fontSize: 12}}>
@@ -157,7 +296,7 @@ export default function ViewProduct({navigation, route}) {
                 marginTop: 50,
               }}>
               <GradientButton
-                onPress={() => navigation.navigate(SCREENS.CHECKOUT)}
+                onPress={() => handleOrder()}
                 // disabled={!isValid || loader || !checked}
                 title="Countinue to Checkout"
               />

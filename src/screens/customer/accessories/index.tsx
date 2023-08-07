@@ -112,7 +112,7 @@ export default function Accessories({navigation}) {
         console.log('addressString', addressString);
 
         setUserAddress(addressString?.address);
-        getAcceories(position, addressString?.address);
+
         // console.log('currentLatitude ', currentLatitude)
         // console.log('currentLongitude ', currentLongitude)
         // let tempCoords = {
@@ -133,23 +133,25 @@ export default function Accessories({navigation}) {
       },
     );
   };
-
-  const getAcceories = async (position, address) => {
-    console.log('address', address);
-    console.log('position', position);
-
+  console.log('myDir', myDirection);
+  useEffect(() => {
+    getAcceories();
+  }, []);
+  const getAcceories = async () => {
     try {
       console.log('auth==>', auth?.userData?.user_id);
 
-      let lat = position?.coords?.latitude;
-      let lon = position?.coords?.longitude;
+      // let lat = myDirection.latitude;
+      // let lon = myDirection.longitude;
+      let lat = 9.138435493506822;
+      let lon = 7.367293098773452;
 
       const resData = await mainServics.getAccessoriesAsPerNearestAgencies(
         lat,
         lon,
       );
       console.log('resData', resData);
-      if (resData?.status) {
+      if (resData?.message === 'Success get nearest products') {
         setAccessories(resData.data);
       } else if (resData?.message === 'No Agencies Available Near By You') {
         showMessage({
@@ -247,7 +249,7 @@ export default function Accessories({navigation}) {
               }
               renderItem={({item, index}) => (
                 <ProductView
-                  title={item?.products_name}
+                  title={item?.accessories_name}
                   price={`N${item?.price}`}
                   image={{uri: item?.business_image}}
                   onPress={() =>

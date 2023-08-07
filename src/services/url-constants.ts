@@ -36,6 +36,7 @@ const backend_URLS = {
   REJECT_ORDER: '/backend/orders/decline',
   GET_STATES: '/backend/settings/states',
   GET_CITIES: '/backend/settings/cities',
+  GET_TOPUP_WALLET_DETAILS: '/backend/user/wallet',
 };
 
 export {backend_URLS};

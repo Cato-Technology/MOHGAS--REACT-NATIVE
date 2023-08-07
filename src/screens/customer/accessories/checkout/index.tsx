@@ -54,7 +54,11 @@ import AuthContext from '../../../../utils/auth-context';
 import {useTheme} from '@react-navigation/native';
 import GradientButton from '../../../../components/buttons/gradient-button';
 import HeaderBottom from '../../../../components/header-bottom';
-export default function CheckOut({navigation}) {
+import moment from 'moment';
+import {useDispatch} from 'react-redux';
+import {ORDER_SUMMARY} from '../../../../redux/global/constants';
+export default function CheckOut({navigation, route}) {
+  const dispatch = useDispatch();
   const {colors} = useTheme();
   const styles = makeStyles(colors);
   const auth = React.useContext(AuthContext);
@@ -67,6 +71,11 @@ export default function CheckOut({navigation}) {
   const goToNewCard = () => {
     navigation.navigate('card');
   };
+  let orderData = route?.params?.orderData;
+  let details = route?.params?.details;
+  console.log('details', details);
+
+  console.log('route', route?.params?.orderData);
 
   return (
     <View style={styles.container}>
@@ -98,11 +107,11 @@ export default function CheckOut({navigation}) {
               <Icon name="location-sharp" size={20} color="#357bc3" /> Deliver
               to{' '}
               <Text style={{color: '#000000', fontSize: 12}}>
-                100 Main Street fake, City, Country
+                {orderData?.customer_details?.address}
               </Text>
             </Text>
             <View style={{height: 8}} />
-            <FlatList
+            {/* <FlatList
               data={[1, 2, 3, 4]}
               renderItem={({item, index}) => (
                 <CheckOutCard
@@ -125,6 +134,25 @@ export default function CheckOut({navigation}) {
                 <Text style={styles.noDataText}>No Data</Text>
               )}
               keyExtractor={(item, index) => index.toString()}
+            /> */}
+            <CheckOutCard
+              title={`${details?.products_name}`}
+              subTitle={
+                orderData?.order_details?.order_date
+                  ? moment(orderData?.order_details?.order_date).format(
+                      'MMMM-DD-YYYY',
+                    )
+                  : '--'
+              }
+              price={orderData?.product_details?.price}
+              image={aImage}
+
+              // onPressEdit={() =>
+              //   navigation.navigate(SCREENS.ADDPAYMENTMETHOD, {
+              //     edit: true,
+              //     item: item,
+              //   })
+              // }
             />
             <View
               style={{
@@ -136,15 +164,15 @@ export default function CheckOut({navigation}) {
             />
             <View style={styles.rowView}>
               <Text style={styles.metaText}>Sub Total</Text>
-              <Text>N 12000.00</Text>
+              <Text>{orderData?.summary?.total}</Text>
             </View>
             <View style={styles.rowView}>
               <Text style={styles.metaText}>Delivery Cost</Text>
-              <Text>N 400.00</Text>
+              <Text>{orderData?.summary?.delivery_cost}</Text>
             </View>
             <View style={styles.rowView}>
-              <Text style={styles.metaText}>Coupon Discount</Text>
-              <Text>N 0.00</Text>
+              <Text style={styles.metaText}>Service Charge</Text>
+              <Text>{orderData?.summary?.service_charge}</Text>
             </View>
             <View
               style={{
@@ -156,7 +184,7 @@ export default function CheckOut({navigation}) {
             />
             <View style={styles.rowView}>
               <Text style={styles.metaText}>Total</Text>
-              <Text>N 12400.00</Text>
+              <Text>{orderData?.summary?.total}</Text>
             </View>
             <View
               style={{
@@ -165,7 +193,16 @@ export default function CheckOut({navigation}) {
                 zIndex: -1,
               }}>
               <GradientButton
-                onPress={() => navigation.navigate(SCREENS.TRACK_ORDER)}
+                onPress={() => {
+                  dispatch({
+                    type: ORDER_SUMMARY,
+                    payload: orderData,
+                  });
+                  navigation.navigate(SCREENS.CONFIRM_PAYMENT, {
+                    render: 'acc',
+                  });
+                  // navigation.navigate(SCREENS.TRACK_ORDER);
+                }}
                 // disabled={!isValid || loader || !checked}
                 title="Checkout"
               />

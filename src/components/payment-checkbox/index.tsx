@@ -1,7 +1,6 @@
 import {useNavigation, useTheme} from '@react-navigation/native';
 import React, {useState} from 'react';
-import {Image, Pressable, Text, View} from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import {Image, Pressable, Text, View, TouchableOpacity} from 'react-native';
 import Entypo from 'react-native-vector-icons/Entypo';
 import makeStyles from './styles';
 
@@ -45,7 +44,6 @@ type Props = {
   onPress?: any;
 };
 const PaymentCheckBox = ({title, subTitle, check, onPress, id}: Props) => {
-  const navigations = useNavigation();
   const {colors} = useTheme();
   const styles = makeStyles(colors);
   return (

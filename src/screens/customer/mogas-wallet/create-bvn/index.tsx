@@ -68,6 +68,7 @@ export default function CreateBvn({navigation}) {
   const [bvn, setBvn] = useState(0);
   const [checked, setChecked] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
   const handleBvn = async () => {
     // navigation.navigate(SCREENS.CONFIRM_PAYMENT)}
     setIsLoading(true);
@@ -79,6 +80,15 @@ export default function CreateBvn({navigation}) {
       const resData = await mainServics.createBvn(fdata);
       console.log('resData', resData);
       setIsLoading(false);
+      if (resData?.requestSuccessful) {
+        navigation.navigate(SCREENS.FUND_WALLET);
+      } else if (!resData?.requestSuccessful) {
+        showMessage({
+          message: resData?.responseMessage,
+          type: 'warning',
+          icon: 'warning',
+        });
+      }
       // navigation.navigate(SCREENS.SUCCESS_SCREEN, {
       //   item: sucessData,
       //   render: 'MohgasWallet',

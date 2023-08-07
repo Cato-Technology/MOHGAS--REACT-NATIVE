@@ -108,7 +108,7 @@ export default function VendorDashBoard({navigation}) {
         if (remoteMessage) {
           console.log(
             'Notification caused app to open from quit state:===>',
-            remoteMessage?.data?.click_action,
+            remoteMessage,
           );
           navigation.navigate(remoteMessage.data.click_action);
           //  navigate(remoteMessage.data.click_action);

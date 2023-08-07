@@ -45,16 +45,16 @@ const CheckOutCard = ({
               <Text style={styles.detailText}>{subTitle}</Text>
               <Text style={[styles.detailText, {width: '60%'}]}>{price}</Text>
             </View>
-            <Text style={{fontSize: 18, color: 'gray'}}>
+            {/* <Text style={{fontSize: 18, color: 'gray'}}>
               {'    '}
               {'< '}
               <Text style={{fontSize: 10, color: '#000000'}}>2</Text>
               {' >'}
-            </Text>
+            </Text> */}
           </View>
         </View>
       </View>
-      <Icon name="ios-trash-outline" size={20} color={colors.text} />
+      {/* <Icon name="ios-trash-outline" size={20} color={colors.text} /> */}
     </View>
   );
 };

@@ -20,11 +20,17 @@ const upDateProdcutPrice = (data: any, id: string) => {
   return client.put(API_URLS_VENDOR.VENDOR_PRODUCTS + '/' + id, data);
 };
 //User Services
-const nearByGasAgencyRefill = (lat: string, lon: string) => {
-  console.log('lat==>', lat);
+const nearByGasAgencyRefill = (
+  lat: string,
+  lon: string,
+  type: string,
+  size: number,
+) => {
+  console.log('size==>', size);
 
   return client.get(
-    backend_URLS.NEAR_BY_GAS_REFILL + `?latitude=${lat}&longitude=${lon}`,
+    backend_URLS.NEAR_BY_GAS_REFILL +
+      `?latitude=${lat}&longitude=${lon}&type=${type}&size=${size}`,
   );
 };
 const swapCylinder = (detail: any) => {
@@ -93,7 +99,12 @@ const getCities = id => {
 
   return client.get(backend_URLS.GET_CITIES + `?state_id=${id}`);
 };
+const getWalletTopupDetails = (detail: any) => {
+  return client.post(backend_URLS.GET_TOPUP_WALLET_DETAILS, detail);
+};
+
 export const mainServics = {
+  getWalletTopupDetails,
   getCities,
   getStates,
   addBranch,

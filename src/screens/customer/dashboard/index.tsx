@@ -138,6 +138,7 @@ export default function DashBoard({navigation, props}) {
               <Text style={{fontFamily: 'Rubik-Bold', fontSize: 15}}>
                 Wellcome
               </Text>
+
               <Text style={{fontFamily: 'Rubik-Bold', fontSize: 25}}>
                 {authContext?.userData?.full_name}
               </Text>
@@ -168,7 +169,7 @@ export default function DashBoard({navigation, props}) {
                   Balance
                 </Text>
                 <Text style={{color: '#fff', fontFamily: 'Rubik-Regular'}}>
-                  N123.456.78
+                  N{authContext?.userData?.wallet}
                 </Text>
               </View>
               <Text style={{color: '#fff', fontFamily: 'Rubik-Regular'}}>
@@ -216,7 +217,7 @@ export default function DashBoard({navigation, props}) {
                 <View style={styles.circleView}>
                   <Icon3 name="arrow-up" size={25} color="#fff" />
                 </View>
-                <Text style={styles.centerViewText}>Top Up</Text>
+                <Text style={styles.centerViewText}>Refill</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -352,7 +353,7 @@ export default function DashBoard({navigation, props}) {
                 },
               ]}
               onPress={() => navigation.navigate(SCREENS.MOHGAS_WALLET)}>
-              Learn More
+              Get Started
             </Text>
           </View>
         </View>

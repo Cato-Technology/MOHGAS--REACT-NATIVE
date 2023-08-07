@@ -44,16 +44,7 @@ import RNFetchBlob from 'rn-fetch-blob';
 import moment from 'moment';
 import {Dropdown} from 'react-native-element-dropdown';
 let cameraIs = false;
-const data = [
-  {label: 'Item 1', value: '1'},
-  {label: 'Item 2', value: '2'},
-  {label: 'Item 3', value: '3'},
-  {label: 'Item 4', value: '4'},
-  {label: 'Item 5', value: '5'},
-  {label: 'Item 6', value: '6'},
-  {label: 'Item 7', value: '7'},
-  {label: 'Item 8', value: '8'},
-];
+
 const EditProfile = () => {
   const navigation = useNavigation();
   const {colors} = useTheme();
@@ -71,9 +62,11 @@ const EditProfile = () => {
   const [isPickerShow, setIsPickerShow] = useState(false);
   const [stateData, setStateData] = useState([]);
   const [cityData, setCityData] = useState([]);
+  const [stateValue, setStateValue] = useState(stateData[0]);
+  const [cityValue, setCityValue] = useState();
 
   const [value, setValue] = useState(null);
-  console.log('uuser', authContext?.userData?.dateOfBirth);
+  console.log('uuser', authContext?.userData);
   console.log('date', date);
 
   useEffect(() => {
@@ -83,6 +76,7 @@ const EditProfile = () => {
   }, []);
   useEffect(() => {
     getStateData();
+    getCitiesData();
   }, []);
   const getStateData = async () => {
     try {
@@ -110,8 +104,9 @@ const EditProfile = () => {
             service_charge: ele?.service_charge,
             delivery_cost_per_km: ele?.delivery_cost_per_km,
           });
-          setStateData(arr);
         });
+        setStateData(arr);
+        setStateValue(arr[0]);
         console.log('arr', arr);
       }
     } catch (e) {
@@ -141,8 +136,9 @@ const EditProfile = () => {
             flag: ele?.flag,
             wikiDataId: ele?.wikiDataId,
           });
-          setCityData(arr);
         });
+        setCityData(arr);
+        setCityValue(arr[0]);
         console.log('arr', arr);
       }
     } catch (e) {
@@ -159,8 +155,7 @@ const EditProfile = () => {
 
         phone_no: Yup.number().required('Phone number is Required'),
         street_name: Yup.string().required('Street Address Required'),
-        state: Yup.string().required('State is Required'),
-        city: Yup.string().required('City is Required'),
+
         email: Yup.string()
           .email('Please provide correct email')
           .required('Email is required'),
@@ -273,8 +268,8 @@ const EditProfile = () => {
       data.append('email', values.email);
       data.append('street_name', values.street_name);
       data.append('lga', 'abc');
-      data.append('state', values.state);
-      data.append('city', values.city);
+      data.append('state', stateValue?.value);
+      data.append('city', cityValue?.value);
 
       console.log('data==>', data);
 
@@ -392,8 +387,6 @@ const EditProfile = () => {
                   email: authContext?.userData?.email,
                   phone_no: authContext?.userData?.phone_no,
                   street_name: authContext?.userData?.street_name,
-                  state: stateData[0]?.value,
-                  city: cityData[0]?.value,
                 }}
                 onSubmit={values => handleUpdateUser(values)}
                 validationSchema={signUpSchema}>
@@ -521,9 +514,9 @@ const EditProfile = () => {
                           valueField="value"
                           placeholder="Select State"
                           //searchPlaceholder="Search..."
-                          value={values.state}
+                          value={stateValue}
                           onChange={item => {
-                            setFieldValue('state', item.value);
+                            setStateValue(item.value);
                             getCitiesData(item.value);
                           }}
                           // renderLeftIcon={() => (
@@ -536,20 +529,7 @@ const EditProfile = () => {
                           // )}
                         />
                       </View>
-                      {/* <InputWithLabel
-                        label="City"
-                        placeholder={'Eg.Islamabad'}
-                        containerStyles={{paddingHorizontal: 20}}
-                        labelStyle={{
-                          // fontFamily: fonts.mulishSemiBold,
-                          color: colors.yellowHeading,
-                          fontSize: 15,
-                        }}
-                        onChange={handleChange('city')}
-                        value={values.city}
-                        error={touched.city ? errors.city : ''}
-                        onBlur={() => setFieldTouched('city')}
-                      /> */}
+
                       <View style={{paddingHorizontal: 20}}>
                         <Text
                           style={{
@@ -573,9 +553,9 @@ const EditProfile = () => {
                           valueField="value"
                           placeholder="Select City"
                           //searchPlaceholder="Search..."
-                          value={values.city}
+                          value={cityValue}
                           onChange={item => {
-                            setFieldValue('city', item.value);
+                            setCityValue(item.value);
                           }}
                           // renderLeftIcon={() => (
                           //   <AntDesign

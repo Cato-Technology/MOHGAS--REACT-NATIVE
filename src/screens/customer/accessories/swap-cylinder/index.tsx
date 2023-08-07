@@ -79,6 +79,7 @@ export default function SwapCylinder({navigation}) {
   const [city, setCity] = useState();
   const [postal, setPostal] = useState();
   const [state, setState] = useState();
+  const [data, setData] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const [myDirection, setMyDirection] = useState({
     latitude: 0.0,
@@ -100,7 +101,7 @@ export default function SwapCylinder({navigation}) {
     },
   ]);
   let sizeCylinders = [
-    {id: 1, size: 6},
+    {id: 1, size: 5},
     {id: 2, size: 12},
     {id: 3, size: 25},
     {id: 4, size: 50},
@@ -151,6 +152,7 @@ export default function SwapCylinder({navigation}) {
       console.warn(err);
     }
   };
+  console.log('sizeSelected', sizeSelected.size);
 
   const permissionAndroid = async () => {
     const granted = await PermissionsAndroid.request(
@@ -287,6 +289,7 @@ export default function SwapCylinder({navigation}) {
       //Will give you the current location
       async position => {
         console.log('currentLongitude', position);
+        setIsLoading(false);
         const currentLongitude = JSON.stringify(position.coords.longitude);
         const currentLatitude = JSON.stringify(position.coords.latitude);
 
@@ -304,7 +307,7 @@ export default function SwapCylinder({navigation}) {
         setCity(addressString?.city);
         setPostal(addressString?.zipCode);
         setState(addressString?.state);
-        setIsLoading(false);
+
         // console.log('currentLatitude ', currentLatitude)
         // console.log('currentLongitude ', currentLongitude)
         // let tempCoords = {
@@ -402,53 +405,22 @@ export default function SwapCylinder({navigation}) {
     }
   };
   const fetchData = async () => {
-    try {
-      let data = new FormData();
+    let item = {
+      // user_id: auth?.userData?.user_id,
+      latitude: myDirection.latitude,
+      longitude: myDirection.longitude,
+      // latitude: 24.817556456461972,
+      // longitude: 67.0560846850276,
+      faddress: userAddress,
+      city: city,
+      postal: postal ? postal : '000000',
+      state: state,
+    };
 
-      // data.append('latitude', myDirection.latitude);
-      // data.append('longitude', myDirection.longitude);
-      data.append('latitude', 24.817556456461972);
-      data.append('longitude', 67.0560846850276);
-      data.append('userid', 33);
-      data.append('size_of_cylinder', sizeSelected.size);
-      console.log('data', data);
-
-      const resData = await mainServics.nearByGasAgencyAsPerRequiredSize(data);
-      console.log('resDataFetch', resData);
-      if (resData?.message === 'Near By Gas Agencies Found') {
-        setIsLoading(false);
-        let item = {
-          user_id: auth?.userData?.user_id,
-          // latitude: myDirection.latitude,
-          // longitude: myDirection.longitude,
-          latitude: 24.817556456461972,
-          longitude: 67.0560846850276,
-          faddress: userAddress,
-          city: city,
-          postal: postal ? postal : '000000',
-          state: state,
-        };
-        navigation.navigate(SCREENS.CONNECT_VENDOR_SWAP, {
-          data: resData?.responsedata,
-          item: item,
-        });
-      } else if (resData?.message === 'No Agencies Available Near By You') {
-        setIsLoading(false);
-        showMessage({
-          message: resData?.message,
-          type: 'warning',
-          icon: 'warning',
-        });
-      }
-    } catch (e) {
-      setIsLoading(false);
-      showMessage({
-        message: JSON.stringify(e),
-        type: 'danger',
-        icon: 'danger',
-      });
-      console.log('e', e);
-    }
+    navigation.navigate(SCREENS.CONNECT_VENDOR_SWAP, {
+      item: item,
+      sizeSelected: sizeSelected.size,
+    });
   };
   return (
     <View style={styles.container}>

@@ -78,27 +78,14 @@ export default function ConnectVendor({navigation, route}) {
       setIsLoading(true);
       let item = route?.params?.item;
 
-      console.log('data=>', item);
-      let fdata = new FormData();
-      fdata.append('user_id', item.user_id);
-      // fdata.append('latitude', myDirection.latitude);
-      // fdata.append('longitude', myDirection.longitude);
-      fdata.append('latitude', item.latitude);
-      fdata.append('longitude', item.longitude);
-      fdata.append('faddress', item.faddress);
-      fdata.append('city', item.city);
-      fdata.append('postal', item.postal);
-      fdata.append('state', item.state);
-      fdata.append('size_of_cylinder', val);
-      console.log('ffff=>', fdata);
-
       const resData = await mainServics.nearByGasAgencyRefill(
-        '24.817556456461972',
-        '67.0560846850276',
+        '9.138435493506822',
+        '7.367293098773452',
+        'REFILL',
         // item.latitude,
         // item.longitude,
       );
-      console.log('resData', resData);
+      console.log('resDataGet', resData);
       if (resData?.status) {
         setData(resData?.data);
         setIsLoading(false);

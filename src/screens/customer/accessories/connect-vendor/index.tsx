@@ -55,6 +55,8 @@ import HeaderBottom from '../../../../components/header-bottom';
 import VendorCard from '../../../../components/vendor-card';
 import {mainServics} from '../../../../services';
 import {showMessage} from 'react-native-flash-message';
+import {useDispatch} from 'react-redux';
+import {ORDER_SUMMARY} from '../../../../redux/global/constants';
 
 export default function ConnectVendorSwap({navigation, route}) {
   const {colors} = useTheme();
@@ -66,42 +68,89 @@ export default function ConnectVendorSwap({navigation, route}) {
   const [loginError, setLoginError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [itemVendor, setItemVendor] = useState();
+  const [dataF, setDataF] = useState();
 
-  console.log('route', route?.params?.data);
-  let data = route?.params?.data;
-  console.log('itemVendor', itemVendor);
+  useEffect(() => {
+    getData();
+  }, []);
+  const dispatch = useDispatch();
+  const getData = async val => {
+    try {
+      setIsLoading(true);
 
+      const resData = await mainServics.nearByGasAgencyRefill(
+        '9.138435493506822',
+        '7.367293098773452',
+        'SWAP',
+        route?.params?.sizeSelected,
+        // item.latitude,
+        // item.longitude,
+      );
+      console.log('resData==>', resData);
+      if (resData?.status) {
+        setDataF(resData?.data);
+        setIsLoading(false);
+      } else if (!resData?.status) {
+        showMessage({
+          message: resData?.message,
+          type: 'warning',
+          icon: 'warning',
+        });
+        setIsLoading(false);
+      } else {
+        showMessage({
+          message: JSON.stringify(resData),
+          type: 'danger',
+          icon: 'danger',
+        });
+        setIsLoading(false);
+      }
+    } catch (e) {
+      showMessage({
+        message: JSON.stringify(e),
+        type: 'danger',
+        icon: 'danger',
+      });
+      console.log('e', e);
+      setIsLoading(false);
+    }
+    //  navigation.navigate(SCREENS.CONNECT_VENDOR);
+  };
   const handleOrder = async () => {
     // navigation.navigate(SCREENS.CONFIRM_PAYMENT)}
     try {
       setIsLoading(true);
       let item = route?.params?.item;
+      console.log('item', item);
 
       console.log('data=>', item);
+      console.log('itemVendor', itemVendor);
+
       let fdata = new FormData();
-      fdata.append('user_id', item.user_id);
-      // fdata.append('latitude', myDirection.latitude);
-      // fdata.append('longitude', myDirection.longitude);
+      fdata.append('order_type', 'SWAP');
+      fdata.append('product_id', itemVendor?.swap_size?.product_id);
+      fdata.append('qty', 1);
+      fdata.append('price', parseInt(itemVendor?.avg_price_per_kg));
+      fdata.append('branch_id', parseInt(itemVendor?.branch_id));
       fdata.append('latitude', item.latitude);
       fdata.append('longitude', item.longitude);
-      fdata.append('address', item.faddress);
-      fdata.append('city', item.city);
-      fdata.append('postal_code', item.postal);
-      fdata.append('state', item.state);
-      // fdata.append('size_of_cylinder', val);
-      fdata.append('order_type', 'swapGas');
-      fdata.append('agency_id', itemVendor?.id);
-      fdata.append('product_id', itemVendor?.product_id);
-      fdata.append('price', itemVendor?.price);
+      fdata.append('address', item.faddress ? item.faddress : 'No Address');
+      fdata.append('city', item.city ? item.city : 'No City');
+      fdata.append('postal', item.postal);
+      fdata.append('state', item.state ? item.state : 'No State');
+      console.log('ffff=>', fdata);
 
       console.log('ffff=>', fdata);
 
       const resData = await mainServics.gasOrder(fdata);
-      console.log('resData', resData);
-      if (resData?.message === 'Cart ID Recieved') {
+      console.log('resDataVen', resData);
+      if (resData?.status) {
         setIsLoading(false);
+        dispatch({
+          type: ORDER_SUMMARY,
+          payload: resData.data,
+        });
         navigation.navigate(SCREENS.ORDER_SUMMARY_SWAP, {
-          id: resData?.responsedata?.cart_id,
           itemVendor: itemVendor,
         });
       } else {
@@ -181,22 +230,24 @@ export default function ConnectVendorSwap({navigation, route}) {
           <Text style={{width: '90%', color: '#000', fontSize: 16}}>
             Select a Vendor
           </Text>
-
+          {console.log('itemVendor', itemVendor)}
           <FlatList
-            data={data}
+            data={dataF}
             renderItem={({item}) => (
               <View style={{paddingHorizontal: 20}}>
                 <VendorCard
                   onPress={() => setItemVendor(item)}
                   backgroundColor={itemVendor == item ? '#dee8d2' : '#f5f5f5'}
-                  image={item.image}
-                  title={item?.user_name}
-                  orders={item?.orders}
+                  image={item?.business_image_url}
+                  title={item?.vendor_name}
+                  orders={item?.orders ? item?.orders : '-'}
                   rating={item?.rating}
-                  price={item?.price}
-                  distance={parseFloat(item?.distance).toFixed(2) + 'KM'}
-                  time={item?.distance_time + 'mins'}
-                  pricePerKg={'Price Per Kg - ' + item?.price}
+                  price={item?.avg_price_per_kg}
+                  distance={item?.distance + 'KM'}
+                  time={
+                    item?.distance_time ? item?.distance_time + 'mins' : '-'
+                  }
+                  pricePerKg={'Price Per Kg - ' + item?.price_per_kg}
                 />
               </View>
             )}

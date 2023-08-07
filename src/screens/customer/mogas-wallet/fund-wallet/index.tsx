@@ -53,16 +53,15 @@ import AuthContext from '../../../../utils/auth-context';
 import {useTheme} from '@react-navigation/native';
 import GradientButton from '../../../../components/buttons/gradient-button';
 import HeaderBottom from '../../../../components/header-bottom';
-import VendorCard from '../../../../components/vendor-card';
-import LabResultModal from '../../../../components/lab-results-modal';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
-import ImagePicker from 'react-native-image-crop-picker';
+import RNMonnify from '@monnify/react-native-sdk';
+import {mainServics} from '../../../../services';
+import {showMessage} from 'react-native-flash-message';
 let cameraIs = false;
 let cbData = [
   {
     id: 1,
-    title: 'Wallet',
-    subTitle: 'Pay from your mohgas wallet balance',
+    title: 'Transfer',
+    subTitle: 'Make Transfer to an account number',
     checked: false,
   },
   {
@@ -82,7 +81,12 @@ export default function FundWallet({navigation}) {
   const [isFlipped, setIsFlipped] = useState(false);
   const authContext = React.useContext(AuthContext);
   const [ammount, setAmmount] = React.useState(0);
+  const [checkValue, setCheckValue] = React.useState();
+  const [isLoading, setIsLoading] = useState(false);
+
   const hanldeCb = txt => {
+    console.log('txt', txt);
+    setCheckValue(txt);
     setIsFlipped(!isFlipped);
 
     cbData.map((ele, index) => {
@@ -94,10 +98,65 @@ export default function FundWallet({navigation}) {
       }
     });
   };
+  const getWalletDetails = async () => {
+    try {
+      setIsLoading(true);
+      let fdata = new FormData();
+      fdata.append(
+        'payment_type',
+        checkValue == 1 ? 'ACCOUNT_TRANSFER' : 'CARD',
+      );
+      fdata.append('amount', ammount);
+
+      const resData = await mainServics.getWalletTopupDetails(fdata);
+      console.log('resWallet', resData);
+      setIsLoading(false);
+      if (
+        resData?.status &&
+        resData?.message == 'Success create topup wallet order'
+      ) {
+        handlePayment(resData?.data);
+      }
+    } catch (e) {
+      showMessage({
+        message: e?.errMsg?.message,
+        type: 'danger',
+        icon: 'danger',
+      });
+      setIsLoading(false);
+    }
+  };
+  const handlePayment = async params => {
+    RNMonnify.initializePayment({
+      amount: params?.payment_params?.amount,
+      customerName: params?.payment_params?.customerName,
+      customerEmail: params?.payment_params?.customerEmail,
+      paymentReference: params?.payment_params?.paymentReference,
+      paymentDescription: params?.payment_params?.paymentDescription,
+      currencyCode: params?.payment_params?.currencyCode,
+      incomeSplitConfig: [],
+    })
+      .then(response => {
+        console.log(response); // card charged successfully, get reference here
+        if (response.transactionStatus == 'PAID') {
+          navigation.navigate(SCREENS.SUCCESS_SCREEN, {
+            item: sucessData,
+            render: 'MohgasWalletTranSucess',
+          });
+        } else {
+          navigation.navigate(SCREENS.UN_SUCCESS_SCREEN);
+        }
+      })
+      .catch(error => {
+        console.log(error); // error is a javascript Error object
+        console.log(error.message);
+        console.log(error.code);
+      });
+  };
 
   return (
     <View style={styles.container}>
-      <ActivityIndicator visible={false} />
+      <ActivityIndicator visible={isLoading} />
       {/* <ErrorModal
         onPress={() => setLoginError(!loginError)} 
         visible={loginError}
@@ -138,10 +197,15 @@ export default function FundWallet({navigation}) {
               // error={touched.email ? errors.email : ''}
               // onBlur={() => setFieldTouched('email')}
             />
-            <Text style={{fontSize: RFValue(9), fontWeight: '200'}}>
-              Maximum deposit through Mohgas account is N200.000
+            <Text
+              style={{
+                fontSize: RFValue(9),
+
+                color: '#000000',
+              }}>
+              Minimum deposit through Mohgas account is N200.000
             </Text>
-            {ammount > 200 && (
+            {ammount > 199 && (
               <>
                 <Text
                   style={{
@@ -166,10 +230,10 @@ export default function FundWallet({navigation}) {
                       }}>
                       <PaymentCheckBox
                         onPress={txt => hanldeCb(txt)}
-                        title={item.title}
-                        subTitle={item.subTitle}
-                        check={item.checked}
-                        id={item.id}
+                        title={item?.title}
+                        subTitle={item?.subTitle}
+                        check={item?.checked}
+                        id={item?.id}
                       />
                     </View>
                   )}
@@ -197,19 +261,16 @@ export default function FundWallet({navigation}) {
                 marginTop: 50,
               }}>
               <GradientButton
-                onPress={() =>
-                  navigation.navigate(SCREENS.SUCCESS_SCREEN, {
-                    item: sucessData,
-                    render: 'MohgasWalletTranSucess',
-                  })
+                onPress={
+                  () => getWalletDetails()
+
+                  // navigation.navigate(SCREENS.CONFIRM_PAYMENT, {
+                  //   ammount: ammount,
+                  //   render: 'wallet_topup',
+                  // })
                 }
-                // disabled={!isValid || loader || !checked}
+                disabled={!ammount || !checkValue}
                 title="Countinue"
-              />
-              <GradientButton
-                onPress={() => navigation.navigate(SCREENS.UN_SUCCESS_SCREEN)}
-                // disabled={!isValid || loader || !checked}
-                title="Transcation unsucess removed after integrate api"
               />
             </View>
           </View>

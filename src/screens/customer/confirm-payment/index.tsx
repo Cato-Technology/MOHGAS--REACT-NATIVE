@@ -119,7 +119,9 @@ export default function ConfirmPayment({navigation, route}) {
   const [isFlipped, setIsFlipped] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [cardId, setCardId] = useState(null);
+  const render = route?.params?.render;
   console.log('route', route?.params?.id);
+  console.log('render', render);
 
   const hanldeCb = txt => {
     console.log('txt', txt);
@@ -140,10 +142,10 @@ export default function ConfirmPayment({navigation, route}) {
     if (cardId == 2 || cardId == 4) {
       RNMonnify.initializePayment({
         amount: orderSummary?.payment_params?.amount,
+
         customerName: orderSummary?.payment_params?.customerName,
         customerEmail: orderSummary?.payment_params?.customerEmail,
-        paymentReference:
-          orderSummary?.payment_params?.paymentReference + 'dfd',
+        paymentReference: orderSummary?.payment_params?.paymentReference,
         paymentDescription: orderSummary?.payment_params?.paymentDescription,
         currencyCode: orderSummary?.payment_params?.currencyCode,
         incomeSplitConfig: [],
@@ -234,7 +236,7 @@ export default function ConfirmPayment({navigation, route}) {
                 fontSize: 16,
                 marginTop: 10,
               }}>
-              Ammount Due N{route?.params?.price}
+              Ammount Due N {orderSummary?.payment_params?.amount}
             </Text>
             <Text
               style={{

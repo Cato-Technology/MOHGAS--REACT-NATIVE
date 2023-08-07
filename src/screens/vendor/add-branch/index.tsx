@@ -11,7 +11,7 @@ import {
   Pressable,
   KeyboardAvoidingView,
   FlatList,
-  SafeAreaView,
+  PermissionsAndroid,
 } from 'react-native';
 
 import Icon5 from 'react-native-vector-icons/MaterialIcons';
@@ -51,6 +51,9 @@ import HeaderBottom from '../../../components/header-bottom';
 import {NAME} from '../../../utils/regix';
 import {mainServics} from '../../../services';
 import {showMessage} from 'react-native-flash-message';
+import Geolocation from '@react-native-community/geolocation';
+import {getAddress} from '../../../utils/functions/get-address';
+import {Dropdown} from 'react-native-element-dropdown';
 export default function AddBranch({navigation, route}) {
   const {colors} = useTheme();
   const styles = makeStyles(colors);
@@ -60,6 +63,12 @@ export default function AddBranch({navigation, route}) {
   const [loginError, setLoginError] = useState(false);
   const [checked, setChecked] = useState(false);
   const [loader, setLoader] = useState(false);
+  const [userAddress, setUserAddress] = useState();
+  const [city, setCity] = useState();
+  const [postal, setPostal] = useState();
+  const [state, setState] = useState();
+  const [stateData, setStateData] = useState([]);
+  const [cityData, setCityData] = useState([]);
   const render = route?.params?.render;
   const signUpSchema = useMemo(
     () =>
@@ -72,6 +81,8 @@ export default function AddBranch({navigation, route}) {
           .email('Please provide correct branch email')
           .required('Branch email is required'),
         address: Yup.string().required('Address is Required'),
+        city_id: Yup.string().required('City is Required'),
+        state_id: Yup.string().required('State is Required'),
         branch_store_manager_name: Yup.string().required(
           'Branch Manger Name is Required',
         ),
@@ -88,19 +99,92 @@ export default function AddBranch({navigation, route}) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   );
-  console.log('auth', auth?.userData?.user_id);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const [myDirection, setMyDirection] = useState({
+    latitude: 0.0,
+    longitude: 0.0,
+    latitudeDelta: 0.0922,
+    longitudeDelta: 0.0421,
+  });
+
+  useEffect(() => {
+    const requestLocationPermission = async () => {
+      if (Platform.OS === 'ios') {
+        getOneTimeLocation();
+      } else {
+        try {
+          const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+          );
+          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+            getOneTimeLocation();
+          } else {
+            console.log('permission Denied');
+          }
+        } catch (err) {
+          console.warn(err);
+        }
+      }
+    };
+    setTimeout(() => {
+      requestLocationPermission();
+    }, 1000);
+  }, [navigation]);
+  console.log('myDir', myDirection);
+
+  const getOneTimeLocation = () => {
+    console.log('Getting Location ... ');
+    Geolocation.getCurrentPosition(
+      //Will give you the current location
+      async position => {
+        console.log('currentLongitude', position);
+        const currentLongitude = JSON.stringify(position.coords.longitude);
+        const currentLatitude = JSON.stringify(position.coords.latitude);
+        setIsLoading(false);
+        setMyDirection({
+          latitude: Number(position.coords.latitude),
+          longitude: Number(position.coords.longitude),
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        });
+        const addressString = await getAddress(
+          position.coords.latitude,
+          position.coords.longitude,
+        );
+        console.log('addressString', addressString);
+
+        setUserAddress(addressString?.address);
+        setCity(addressString?.city);
+        setPostal(addressString?.zipCode);
+        setState(addressString?.state);
+      },
+      error => {
+        setIsLoading(false);
+        console.log('error ', error);
+      },
+      {
+        enableHighAccuracy: false,
+        timeout: 30000,
+        maximumAge: 1000,
+      },
+    );
+  };
 
   const handleSubmitted = async values => {
     console.log('values', values);
 
-    setLoader(true);
+    setIsLoading(true);
     try {
       let data = new FormData();
       data.append('branch_name', values?.branch_name);
       data.append('branch_email', values?.branch_email);
       data.append('branch_user_id', auth?.userData?.user_id);
       data.append('address', values?.address);
-
+      data.append('latitude', myDirection.latitude);
+      data.append('longitude', myDirection.longitude);
+      data.append('state_id', values?.state_id);
+      data.append('city_id', values?.city_id);
       data.append('branch_phone', values?.branch_phone);
       data.append(
         'branch_store_manager_name',
@@ -108,6 +192,8 @@ export default function AddBranch({navigation, route}) {
       );
 
       data.append('password', values?.password);
+      console.log('data', data);
+
       const result = await mainServics.addBranch(data);
       console.log('result', result);
       if (result.status) {
@@ -117,17 +203,17 @@ export default function AddBranch({navigation, route}) {
           icon: 'success',
         });
         navigation.goBack();
-        setLoader(false);
+        setIsLoading(false);
       } else {
         showMessage({
           message: result.message,
           type: 'warning',
           icon: 'warning',
         });
-        setLoader(false);
+        setIsLoading(false);
       }
     } catch (e) {
-      setLoader(false);
+      setIsLoading(false);
       console.log('error', e);
       showMessage({
         message: JSON.stringify(e),
@@ -136,10 +222,78 @@ export default function AddBranch({navigation, route}) {
       });
     }
   };
+  useEffect(() => {
+    getStateData();
+  }, [setStateData]);
+  const getStateData = async () => {
+    try {
+      const result = await mainServics.getStates();
+      console.log('resultStates', result);
+      if (result.status) {
+        let arr = [];
+        result?.data?.map(ele => {
+          console.log('ele', ele);
+          arr.push({
+            label: ele.name,
+            value: ele.id,
+            country_id: ele?.country_id,
+            country_code: ele?.country_code,
+            fips_code: ele?.fips_code,
+            iso2: ele?.iso2,
+            type: ele?.type,
+            latitude: ele?.latitude,
+            longitude: ele?.longitude,
+            created_at: ele?.created_at,
+            updated_at: ele?.updated_at,
+            flag: ele?.flag,
+            wikiDataId: ele?.wikiDataId,
+            price_per_kg: ele?.price_per_kg,
+            service_charge: ele?.service_charge,
+            delivery_cost_per_km: ele?.delivery_cost_per_km,
+          });
+          setStateData(arr);
+        });
+        getCitiesData(arr[0].value);
+        console.log('arr', arr);
+      }
+    } catch (e) {
+      console.log('eer', e);
+    }
+  };
+  const getCitiesData = async id => {
+    try {
+      const result = await mainServics.getCities(id);
+      console.log('resultCities', result);
+      if (result.status) {
+        let arr = [];
+        result?.data?.map(ele => {
+          console.log('ele', ele);
+          arr.push({
+            label: ele.name,
+            value: ele.id,
 
+            state_id: ele?.state_id,
+            state_code: ele?.state_code,
+            country_id: ele?.country_id,
+            country_code: ele?.country_code,
+            latitude: ele?.latitude,
+            longitude: ele?.longitude,
+            created_at: ele?.created_at,
+            updated_at: ele?.updated_at,
+            flag: ele?.flag,
+            wikiDataId: ele?.wikiDataId,
+          });
+          setCityData(arr);
+        });
+        console.log('arr', arr);
+      }
+    } catch (e) {
+      console.log('eer', e);
+    }
+  };
   return (
     <View style={styles.container}>
-      <ActivityIndicator visible={loader} />
+      <ActivityIndicator visible={isLoading} />
       {/* <ErrorModal
         onPress={() => setLoginError(!loginError)} 
         visible={loginError}
@@ -188,6 +342,8 @@ export default function AddBranch({navigation, route}) {
                     confirmPassword: '',
                     branch_store_manager_name: '',
                     branch_phone: '',
+                    state_id: '',
+                    city_id: '',
                   }}
                   onSubmit={values => handleSubmitted(values)}
                   validationSchema={signUpSchema}>
@@ -203,6 +359,7 @@ export default function AddBranch({navigation, route}) {
                     setFieldTouched,
                   }) => (
                     <>
+                      {console.log('stateData[0]?.value', stateData[0]?.value)}
                       <View>
                         <InputWithLabel
                           label="Name of Branch"
@@ -285,6 +442,83 @@ export default function AddBranch({navigation, route}) {
                           error={touched.address ? errors.address : ''}
                           onBlur={() => setFieldTouched('address')}
                         />
+                        <View style={{paddingHorizontal: 20}}>
+                          <Text
+                            style={{
+                              fontFamily: 'Rubik-Regular',
+                              color: '#000000',
+                              fontSize: 15,
+                              marginTop: 5,
+                            }}>
+                            Select State
+                          </Text>
+                          {console.log('state_id', values)}
+                          <Dropdown
+                            style={styles.dropdown}
+                            placeholderStyle={styles.placeholderStyle}
+                            selectedTextStyle={styles.selectedTextStyle}
+                            inputSearchStyle={styles.inputSearchStyle}
+                            iconStyle={styles.iconStyle}
+                            data={stateData}
+                            //search
+                            maxHeight={300}
+                            labelField="label"
+                            valueField="value"
+                            placeholder="Select State"
+                            //searchPlaceholder="Search..."
+                            value={values.state_id}
+                            onChange={item => {
+                              setFieldValue('state_id', item.value);
+                              getCitiesData(item.value);
+                            }}
+                            // renderLeftIcon={() => (
+                            //   <AntDesign
+                            //     style={styles.icon2}
+                            //       color="black"
+                            //     name="Safety"
+                            //     size={20}
+                            //   />
+                            // )}
+                          />
+                        </View>
+
+                        <View style={{paddingHorizontal: 20}}>
+                          <Text
+                            style={{
+                              fontFamily: 'Rubik-Regular',
+                              color: '#000000',
+                              fontSize: 15,
+                              marginTop: 5,
+                            }}>
+                            Select City
+                          </Text>
+                          <Dropdown
+                            style={styles.dropdown}
+                            placeholderStyle={styles.placeholderStyle}
+                            selectedTextStyle={styles.selectedTextStyle}
+                            inputSearchStyle={styles.inputSearchStyle}
+                            iconStyle={styles.iconStyle}
+                            data={cityData}
+                            //search
+                            maxHeight={300}
+                            labelField="label"
+                            valueField="value"
+                            placeholder="Select City"
+                            //searchPlaceholder="Search..."
+                            value={values.city_id}
+                            onChange={item => {
+                              setFieldValue('city_id', item.value);
+                            }}
+                            // renderLeftIcon={() => (
+                            //   <AntDesign
+                            //     style={styles.icon2}
+                            //     color="black"
+                            //     name="Safety"
+                            //     size={20}
+                            //   />
+                            // )}
+                          />
+                        </View>
                         <InputWithLabel
                           label={'Password'}
                           placeholder={'Enter your password here'}
