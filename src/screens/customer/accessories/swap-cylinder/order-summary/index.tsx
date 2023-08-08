@@ -58,6 +58,7 @@ import moment from 'moment';
 import messaging from '@react-native-firebase/messaging';
 import {showMessage} from 'react-native-flash-message';
 import ConnectingVendor from '../../../../../components/connecting-vendor/connecting-vendor';
+import {mainServics} from '../../../../../services';
 export default function OrderSummarySwap({navigation, route}) {
   const {colors} = useTheme();
   const styles = makeStyles(colors);

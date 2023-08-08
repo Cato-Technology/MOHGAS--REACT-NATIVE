@@ -179,7 +179,9 @@ export default function VendorDashBoard({navigation}) {
               </Text>
               <View style={{paddingVertical: 20}}>
                 <Text style={{color: '#fff'}}>Balance</Text>
-                <Text style={{color: '#fff'}}>N123.456.78</Text>
+                <Text style={{color: '#fff'}}>
+                  N{authContext?.userData?.wallet}
+                </Text>
               </View>
               <Text style={{color: '#fff'}}>
                 ■ ■ ■ ■{'   '}■ ■ ■ ■{'   '}■ ■ ■ ■{'   '}1 2 3 4
@@ -307,7 +309,12 @@ export default function VendorDashBoard({navigation}) {
             )}
             keyExtractor={(item, index) => index.toString()}
           />
-          <View
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate(SCREENS.PROFILE_NAVIGATOR_VENDOR, {
+                screen: SCREENS.EDIT_PROFILE,
+              });
+            }}
             style={{
               width: '100%',
               backgroundColor: '#eb473d',
@@ -338,7 +345,7 @@ export default function VendorDashBoard({navigation}) {
                 Update Now?
               </Text>
             </Text>
-          </View>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </View>

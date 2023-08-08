@@ -16,7 +16,7 @@ import Chat from '../../screens/customer/chat';
 
 import Profile from '../../screens/customer/profile';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import Icon2 from 'react-native-vector-icons/Entypo';
+import Icon4 from 'react-native-vector-icons/MaterialIcons';
 import Icon3 from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
@@ -24,6 +24,7 @@ import ProfileNavigator from '../customer-navigator/profile-navigator';
 import HomeNavigatorVendor from './home-navigator-vendor';
 import Support from '../../screens/vendor/support';
 import ProfileNavigatorVendor from './profile-navigator-vendor';
+import SupportNavigator from '../customer-navigator/support-navigator';
 
 const Tab = createBottomTabNavigator();
 
@@ -103,14 +104,27 @@ const BottomTabNavigatorVendor = () => {
         }}
       /> */}
       <Tab.Screen
-        name={SCREENS.SUPPORT}
-        component={Support}
+        // name={SCREENS.SUPPORT}
+        // component={Support}
+        name={SCREENS.SUPPORT_NAVIGATOR}
+        component={SupportNavigator}
         options={{
+          tabBarLabel: ({focused, color, size}) => (
+            <Text
+              style={{
+                color: focused ? '#4ca757' : 'gray',
+                fontSize: 9,
+                marginBottom: 5,
+              }}>
+              SUPPORT
+            </Text>
+          ),
+          tabBarLabelStyle: {color: 'gray', paddingBottom: 4},
           tabBarIcon: ({focused}) => (
-            <MaterialIcons
+            <Icon4
               name="support-agent"
-              size={26}
-              color={focused ? '#455F9B' : 'gray'}
+              size={30}
+              color={focused ? '#4ca757' : 'gray'}
             />
           ),
         }}
