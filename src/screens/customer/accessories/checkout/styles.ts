@@ -166,6 +166,7 @@ export const makeStyles = (colors: any) =>
     metaText: {
       fontSize: 13,
       fontWeight: '200',
+      color: '#000000',
     },
   });
 export default makeStyles;

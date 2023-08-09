@@ -94,9 +94,14 @@ const DrawerNavigatorVendor = () => {
     <Drawer.Navigator
       screenOptions={{
         headerShown: false,
+        drawerStyle: {
+          backgroundColor: '#FFFFFF',
+          width: 240,
+        },
         drawerItemStyle: {
           marginVertical: -4,
           borderRadius: 0,
+          backgroundColor: '#FFFFFF',
         },
       }}
       drawerContent={props => <CustomDrawerContent {...props} />}>

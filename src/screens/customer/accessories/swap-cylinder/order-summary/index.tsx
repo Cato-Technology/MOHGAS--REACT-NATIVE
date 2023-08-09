@@ -80,10 +80,6 @@ export default function OrderSummarySwap({navigation, route}) {
         navigation.navigate(SCREENS.CONFIRM_PAYMENT);
         setVendorRender(false);
       }
-      if (remoteMessage?.data?.status === 'Rejected') {
-        navigation.goBack();
-        //  navigate(remoteMessage.data.click_action);
-      }
     });
     // Check whether an initial notification is available
     messaging()
@@ -93,10 +89,6 @@ export default function OrderSummarySwap({navigation, route}) {
           navigation.navigate(SCREENS.CONFIRM_PAYMENT);
           setVendorRender(false);
         }
-        if (remoteMessage?.data?.status === 'Rejected') {
-          navigation.goBack();
-          //  navigate(remoteMessage.data.click_action);
-        }
       });
     messaging()
       .getInitialNotification()
@@ -104,10 +96,6 @@ export default function OrderSummarySwap({navigation, route}) {
         if (remoteMessage?.data?.status === 'Confirmed') {
           navigation.navigate(SCREENS.CONFIRM_PAYMENT);
           setVendorRender(false);
-          //  navigate(remoteMessage.data.click_action);
-        }
-        if (remoteMessage?.data?.status === 'Rejected') {
-          navigation.goBack();
           //  navigate(remoteMessage.data.click_action);
         }
       });
@@ -126,6 +114,7 @@ export default function OrderSummarySwap({navigation, route}) {
     console.log('done ho gaya');
     setVendorRender(false);
     orderExpired();
+    navigation.pop(2);
 
     // navigation.navigate(SCREENS.ORDER_SUMMARY)
   };
@@ -165,7 +154,6 @@ export default function OrderSummarySwap({navigation, route}) {
       console.log('e', e);
     }
   };
-  console.log('auth?.userData?.user_id', auth?.userData?.user_id);
 
   const handleOrder = async () => {
     navigation.navigate(SCREENS.CONFIRM_PAYMENT, {

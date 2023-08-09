@@ -17,10 +17,12 @@ export const makeStyles = (colors: any) =>
     rdbHeading: {
       fontFamily: 'Rubik-Bold',
       fontSize: 15,
+      color: '#000000',
     },
     rdbSubHeading: {
       fontSize: 15,
       width: '70%',
+      color: '#000000',
     },
     iconCircleView: {
       backgroundColor: '#92d76a',

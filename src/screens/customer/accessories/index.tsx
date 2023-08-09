@@ -262,18 +262,6 @@ export default function Accessories({navigation}) {
               )}
               keyExtractor={(item, index) => index.toString()}
             />
-            <View
-              style={{
-                paddingHorizontal: widthPercentageToDP(3),
-                paddingVertical: heightPercentageToDP(2),
-                zIndex: -1,
-              }}>
-              <GradientButton
-                // onPress={() => handleSubmit()}
-                // disabled={!isValid || loader || !checked}
-                title="Countinue to Checkout"
-              />
-            </View>
           </View>
         </View>
       </ScrollView>
