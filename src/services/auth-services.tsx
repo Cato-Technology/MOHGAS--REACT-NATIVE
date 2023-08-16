@@ -99,6 +99,9 @@ function verifyOtp(data: any) {
       });
   });
 }
+const setPassword = (detail: any) => {
+  return client.post(backend_URLS.NEW_PASSWORD, detail);
+};
 const registerVendor = (detail: any) => {
   return client.post(backend_URLS.REGISTER_VENDOR, detail);
 };
@@ -108,4 +111,5 @@ export const authService = {
   forgotPassword,
   verifyOtp,
   registerVendor,
+  setPassword,
 };

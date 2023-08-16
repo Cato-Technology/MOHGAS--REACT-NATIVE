@@ -68,6 +68,7 @@ export default function OtpVerification({navigation, route}) {
 
   const [loader, setLoader] = useState(false);
 
+  const [otpManual, setOtpManual] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [selectCountryCode, setSelectCountryCode] = useState('');
 
@@ -86,18 +87,27 @@ export default function OtpVerification({navigation, route}) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   );
-  const veryfyOtp = async code => {
+  console.log('route?.params', route?.params);
+
+  const verifyOtp = async code => {
     try {
       setLoader(true);
       let data = new FormData();
-      data.append('order_id', route?.params?.order_id);
-      data.append('otp', code);
+      data.append('user_id', route?.params?.userId);
+      data.append('phone', route?.params?.phNumber);
+      data.append('otp', code || otpManual);
+
+      console.log('data->', data);
 
       const result = await authService.verifyOtp(data);
       console.log('result', result);
+      // navigation.navigate(SCREENS.PASSWORD_RESET_SUCCESS)
+      setLoader(false);
 
-      if (result?.message == 'Wrong OTP') {
-        setLoader(false);
+      if (result?.message == 'OTP Verification success ') {
+        setConfirmed(true);
+      } else {
+        setConfirmed(false);
         showMessage({
           message: result?.message,
           type: 'danger',
@@ -107,44 +117,51 @@ export default function OtpVerification({navigation, route}) {
     } catch (e) {
       setLoader(false);
       console.log('error', e);
+      showMessage({
+        message: e?.errMsg,
+        type: 'danger',
+        icon: 'danger',
+      });
     }
   };
+  const setPasswordApi = async values => {
+    console.log('values', values);
 
-  const handleLogin = async values => {
-    setLoader(true);
     try {
-      console.log('values', values);
+      setLoader(true);
       let data = new FormData();
-      data.append('fullname', values.fullname);
-      data.append('email', values.email);
-      data.append('userType', 'User');
-      data.append('state', 'state');
-      data.append('lga', 'lga');
-      data.append('city', 'city');
-      data.append('street', 'street');
-      data.append('phone_num', selectCountryCode + phoneNumber);
-      data.append('referal_code', values.referal_code);
-      data.append('password', values.password);
+      data.append('user_id', route?.params?.userId);
+      data.append('phone', route?.params?.phNumber);
+      data.append('otp', otpManual);
+      data.append('new_password', values?.password);
 
-      const result = await authService.signUp(data);
-      if (result.message == 'Successfully Registered') {
-        alert('Registered');
-        navigation.navigate(SCREENS.LOGIN);
-        setLoader(false);
+      console.log('dataSet', data);
+
+      const result = await authService.setPassword(data);
+      console.log('result', result);
+      // navigation.navigate(SCREENS.PASSWORD_RESET_SUCCESS)
+      setLoader(false);
+
+      if (result?.message == 'Reset password success ') {
+        navigation.navigate(SCREENS.PASSWORD_RESET_SUCCESS);
       } else {
+        setConfirmed(false);
         showMessage({
-          message: JSON.stringify(result.message),
+          message: result?.message,
           type: 'danger',
           icon: 'warning',
         });
-        setLoader(false);
       }
     } catch (e) {
       setLoader(false);
       console.log('error', e);
+      showMessage({
+        message: e?.errMsg,
+        type: 'danger',
+        icon: 'danger',
+      });
     }
   };
-
   return (
     <View style={styles.container}>
       <ActivityIndicator visible={loader} />
@@ -199,7 +216,8 @@ export default function OtpVerification({navigation, route}) {
                 codeInputFieldStyle={styles.underlineStyleBase}
                 codeInputHighlightStyle={styles.underlineStyleHighLighted}
                 onCodeFilled={code => {
-                  veryfyOtp(code);
+                  verifyOtp(code);
+                  setOtpManual(code);
                 }}
               />
             </View>
@@ -228,7 +246,7 @@ export default function OtpVerification({navigation, route}) {
                   password: '',
                   confirmPassword: '',
                 }}
-                onSubmit={values => handleLogin(values)}
+                onSubmit={values => verifyOtp(values)}
                 validationSchema={signUpSchema}>
                 {({
                   handleSubmit,
@@ -287,13 +305,20 @@ export default function OtpVerification({navigation, route}) {
 
                         justifyContent: 'flex-end',
                       }}>
-                      <GradientButton
-                        onPress={() =>
-                          navigation.navigate(SCREENS.PASSWORD_RESET_SUCCESS)
-                        }
-                        disabled={false}
-                        title={confirmed ? 'Submit' : 'Verify'}
-                      />
+                      {!confirmed ? (
+                        <GradientButton
+                          onPress={() => handleSubmit()}
+                          disabled={!otpManual}
+                          title={'Verify'}
+                        />
+                      ) : (
+                        <GradientButton
+                          onPress={() => setPasswordApi(values)}
+                          disabled={!isValid}
+                          title={'Submit'}
+                        />
+                      )}
+
                       {!confirmed && (
                         <>
                           <Text style={styles.centerText}>Or</Text>

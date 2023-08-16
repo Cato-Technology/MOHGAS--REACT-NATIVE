@@ -60,6 +60,8 @@ import {showMessage} from 'react-native-flash-message';
 import {mainServics} from '../../../../services';
 import Geolocation from '@react-native-community/geolocation';
 import {getAddress} from '../../../../utils/functions/get-address';
+import {useSelector} from 'react-redux';
+import {GlobalState} from '../../../../redux/global/GlobalState';
 let cameraIs = false;
 export default function SwapCylinder({navigation}) {
   const {colors} = useTheme();
@@ -80,11 +82,11 @@ export default function SwapCylinder({navigation}) {
   const [postal, setPostal] = useState();
   const [state, setState] = useState();
   const [data, setData] = useState();
-  const [isLoading, setIsLoading] = useState(true);
-  const [myDirection, setMyDirection] = useState({
-    latitude: 0.0,
-    longitude: 0.0,
-  });
+  const [isLoading, setIsLoading] = useState(false);
+  const locData = useSelector(
+    (state: GlobalState) => state?.global?.locationData,
+  );
+  console.log('locDataSwap', locData);
   const [radioButtons, setRadioButtons] = useState<RadioButtonProps[]>([
     {
       id: '1', // acts as primary key, should be unique and non-empty string
@@ -259,82 +261,9 @@ export default function SwapCylinder({navigation}) {
     }
   };
 
-  useEffect(() => {
-    const requestLocationPermission = async () => {
-      if (Platform.OS === 'ios') {
-        getOneTimeLocation();
-      } else {
-        try {
-          const granted = await PermissionsAndroid.request(
-            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-          );
-          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-            getOneTimeLocation();
-          } else {
-            console.log('permission Denied');
-          }
-        } catch (err) {
-          console.warn(err);
-        }
-      }
-    };
-    setTimeout(() => {
-      requestLocationPermission();
-    }, 1000);
-  }, [navigation]);
-
-  const getOneTimeLocation = () => {
-    console.log('Getting Location ... ');
-    Geolocation.getCurrentPosition(
-      //Will give you the current location
-      async position => {
-        console.log('currentLongitude', position);
-        setIsLoading(false);
-        const currentLongitude = JSON.stringify(position.coords.longitude);
-        const currentLatitude = JSON.stringify(position.coords.latitude);
-
-        setMyDirection({
-          latitude: Number(position.coords.latitude),
-          longitude: Number(position.coords.longitude),
-        });
-        const addressString = await getAddress(
-          position.coords.latitude,
-          position.coords.longitude,
-        );
-        console.log('addressString', addressString);
-
-        setUserAddress(addressString?.address);
-        setCity(addressString?.city);
-        setPostal(addressString?.zipCode);
-        setState(addressString?.state);
-
-        // console.log('currentLatitude ', currentLatitude)
-        // console.log('currentLongitude ', currentLongitude)
-        // let tempCoords = {
-        //     latitude: Number(position.coords.latitude),
-        //     longitude: Number(position.coords.longitude)
-        // }
-        // if (MapRef.current && MapRef.current.animateCamera) {
-        //     MapRef.current.animateCamera({ center: tempCoords, pitch: 2, heading: 20, altitude: 200, zoom: 5 }, 1000)
-        // }
-      },
-      error => {
-        setIsLoading(false);
-        console.log('error ', error);
-      },
-      {
-        enableHighAccuracy: false,
-        timeout: 30000,
-        maximumAge: 1000,
-      },
-    );
-  };
-  console.log('list', list);
-  console.log('direction', myDirection);
-
   const handleSubmitted = async () => {
     setIsLoading(true);
-    console.log('myDir', myDirection);
+    console.log('myDir', locData);
     // console.log('list', list[0]?.base64);
     let rdId = '';
     radioButtons.map(ele => {
@@ -347,8 +276,8 @@ export default function SwapCylinder({navigation}) {
     try {
       let data = new FormData();
 
-      data.append('latitude', myDirection.latitude);
-      data.append('longitude', myDirection.longitude);
+      data.append('latitude', locData.latitude);
+      data.append('longitude', locData.longitude);
       data.append('address', userAddress);
 
       // data.append('latitude', 24.817556456461972);
@@ -407,8 +336,8 @@ export default function SwapCylinder({navigation}) {
   const fetchData = async () => {
     let item = {
       // user_id: auth?.userData?.user_id,
-      latitude: myDirection.latitude,
-      longitude: myDirection.longitude,
+      latitude: locData.latitude,
+      longitude: locData.longitude,
       // latitude: 24.817556456461972,
       // longitude: 67.0560846850276,
       faddress: userAddress,

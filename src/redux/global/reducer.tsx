@@ -2,6 +2,7 @@ import {
   ACCOUNT_REALTED_ISSUES,
   BRANCHES,
   BUSINESS_PROFILE,
+  GEO_LOCATION,
   NOTIFICATION,
   ORDER_SUMMARY,
   PRODUCTS,
@@ -67,6 +68,12 @@ export default function (state = INITIAL_STATE, action: any) {
       return {
         ...state,
         notificationData: action.payload,
+      };
+    }
+    case GEO_LOCATION: {
+      return {
+        ...state,
+        locationData: action.payload,
       };
     }
     default:

@@ -12,6 +12,7 @@ import {
   KeyboardAvoidingView,
   FlatList,
   Button,
+  PermissionsAndroid,
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/FontAwesome5';
@@ -55,6 +56,9 @@ import {OrderState} from '../../../redux/orders/OrderState';
 import {getReduxRecentOrderHistory} from '../../../redux/orders/orders-actions';
 import {capitalizeFirstLetter} from '../../../utils/functions/general-functions';
 import LinearGradient from 'react-native-linear-gradient';
+import Geolocation from '@react-native-community/geolocation';
+import {getAddress} from '../../../utils/functions/get-address';
+import {GEO_LOCATION} from '../../../redux/global/constants';
 export default function DashBoard({navigation, props}) {
   RNMonnify.initialize({
     apiKey: 'MK_TEST_3X874HXYN3',
@@ -68,6 +72,80 @@ export default function DashBoard({navigation, props}) {
   const recentHistory = useSelector(
     (state: OrderState) => state.order.recentOrderHistory,
   );
+
+  const [myDirection, setMyDirection] = useState({
+    latitudeDelta: 0.0922,
+    longitudeDelta: 0.0421,
+  });
+  useEffect(() => {
+    const requestLocationPermission = async () => {
+      if (Platform.OS === 'ios') {
+        getOneTimeLocation();
+      } else {
+        try {
+          const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+          );
+          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+            getOneTimeLocation();
+          } else {
+            console.log('permission Denied');
+          }
+        } catch (err) {
+          console.warn(err);
+        }
+      }
+    };
+    setTimeout(() => {
+      requestLocationPermission();
+    }, 1000);
+  }, [navigation]);
+
+  const getOneTimeLocation = () => {
+    console.log('Getting Location ... ');
+    Geolocation.getCurrentPosition(
+      //Will give you the current location
+      async position => {
+        console.log('currentLongitude', position);
+
+        setMyDirection({
+          latitude: Number(position.coords.latitude),
+          longitude: Number(position.coords.longitude),
+        });
+        dispatch({
+          type: GEO_LOCATION,
+          payload: {
+            latitude: Number(position.coords.latitude),
+            longitude: Number(position.coords.longitude),
+          },
+        });
+        const addressString = await getAddress(
+          position.coords.latitude,
+          position.coords.longitude,
+        );
+        console.log('addressString', addressString);
+
+        // console.log('currentLatitude ', currentLatitude)
+        // console.log('currentLongitude ', currentLongitude)
+        // let tempCoords = {
+        //     latitude: Number(position.coords.latitude),
+        //     longitude: Number(position.coords.longitude)
+        // }
+        // if (MapRef.current && MapRef.current.animateCamera) {
+        //     MapRef.current.animateCamera({ center: tempCoords, pitch: 2, heading: 20, altitude: 200, zoom: 5 }, 1000)
+        // }
+      },
+      error => {
+        console.log('error ', error);
+      },
+      {
+        enableHighAccuracy: false,
+        timeout: 30000,
+        maximumAge: 1000,
+      },
+    );
+  };
+  console.log('myDir', myDirection);
   console.log('recentHistory', recentHistory);
 
   console.log('authContext==>', authContext);

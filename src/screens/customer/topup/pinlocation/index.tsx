@@ -43,6 +43,8 @@ import {mainServics} from '../../../../services';
 import {showMessage} from 'react-native-flash-message';
 import {getAddress} from '../../../../utils/functions/get-address';
 import AuthContext from '../../../../utils/auth-context';
+import {useSelector} from 'react-redux';
+import {GlobalState} from '../../../../redux/global/GlobalState';
 const INITIAL_REGION = {
   latitude: 33.6844,
   longitude: 73.0479,
@@ -59,84 +61,24 @@ export default function PinLocation({navigation}) {
   const [city, setCity] = useState();
   const [postal, setPostal] = useState();
   const [state, setState] = useState();
-  const [isLoading, setIsLoading] = useState(true);
-  const [myLatitude, setMyLatitude] = useState(INITIAL_REGION.latitude);
-  const [myLongitude, setMyLongitude] = useState(INITIAL_REGION.longitude);
+  const [isLoading, setIsLoading] = useState(false);
   const [myDirection, setMyDirection] = useState({
     latitude: 0.0,
     longitude: 0.0,
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
   });
+  const locData = useSelector(
+    (state: GlobalState) => state?.global?.locationData,
+  );
 
-  useEffect(() => {
-    const requestLocationPermission = async () => {
-      if (Platform.OS === 'ios') {
-        getOneTimeLocation();
-      } else {
-        try {
-          const granted = await PermissionsAndroid.request(
-            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-          );
-          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-            getOneTimeLocation();
-          } else {
-            console.log('permission Denied');
-          }
-        } catch (err) {
-          console.warn(err);
-        }
-      }
-    };
-    setTimeout(() => {
-      requestLocationPermission();
-    }, 1000);
-  }, [navigation]);
+  console.log('locDataPin', locData);
 
-  const getOneTimeLocation = () => {
-    console.log('Getting Location ... ');
-    Geolocation.getCurrentPosition(
-      //Will give you the current location
-      async position => {
-        console.log('currentLongitude', position);
-        const currentLongitude = JSON.stringify(position.coords.longitude);
-        const currentLatitude = JSON.stringify(position.coords.latitude);
-        setMyLatitude(Number(position.coords.latitude));
-        setMyLongitude(Number(position.coords.longitude));
-        setMyDirection({
-          latitude: Number(position.coords.latitude),
-          longitude: Number(position.coords.longitude),
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        });
-        const addressString = await getAddress(
-          position.coords.latitude,
-          position.coords.longitude,
-        );
-        console.log('addressString', addressString);
-
-        setUserAddress(addressString?.address);
-        setCity(addressString?.city);
-        setPostal(addressString?.zipCode);
-        setState(addressString?.state);
-        setIsLoading(false);
-      },
-      error => {
-        setIsLoading(false);
-        console.log('error ', error);
-      },
-      {
-        enableHighAccuracy: false,
-        timeout: 30000,
-        maximumAge: 1000,
-      },
-    );
-  };
   const handleSubmitted = async () => {
     let item = {
       user_id: auth?.userData?.user_id,
-      latitude: myDirection.latitude,
-      longitude: myDirection.longitude,
+      latitude: locData.latitude,
+      longitude: locData.longitude,
       // latitude: 24.817556456461972,
       // longitude: 67.0560846850276,
       faddress: userAddress,
@@ -157,8 +99,8 @@ export default function PinLocation({navigation}) {
       <ActivityIndicator visible={isLoading} />
       <MapView
         initialRegion={{
-          latitude: 37.78825,
-          longitude: -122.4324,
+          latitude: locData?.latitude,
+          longitude: locData?.longitude,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}

@@ -91,6 +91,7 @@ export default function Login({navigation}) {
       }
     } catch (e) {
       setLoader(false);
+      setLoginError(true);
       console.log('error', e);
     }
   };

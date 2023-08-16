@@ -19,4 +19,5 @@ export class GlobalState {
   vendorOrderHistory: VendorOrderHistoryResponse[] = [];
   orderSummary: OrderSummaryRes[] = [];
   notificationData: NotificationRes[] = [];
+  locationData: [] = [];
 }

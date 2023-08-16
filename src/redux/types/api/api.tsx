@@ -77,3 +77,4 @@ export interface VendorAccountDetialsResponse {
 export interface VendorOrderHistoryResponse {}
 export interface OrderSummaryRes {}
 export interface NotificationRes {}
+export interface GeoLocationRes {}

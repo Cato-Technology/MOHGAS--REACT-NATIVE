@@ -2,8 +2,8 @@ const backend_URLS = {
   //Auth constants
   LOGIN: '/backend/login',
   SIGNUP: '/backend/register/user',
-  FORGOT_PASSWORD: '/backend/forget_password',
-  VERIFY_OTP: '/backend/verify_otp',
+  FORGOT_PASSWORD: '/backend/register/forget_password',
+  VERIFY_OTP: '/backend/register/otp_verification',
   REGISTER_VENDOR: '/backend/register/vendor',
 
   //Profile constants
@@ -37,6 +37,8 @@ const backend_URLS = {
   GET_STATES: '/backend/settings/states',
   GET_CITIES: '/backend/settings/cities',
   GET_TOPUP_WALLET_DETAILS: '/backend/user/wallet',
+
+  NEW_PASSWORD: '/backend/register/new_password',
 };
 
 export {backend_URLS};

@@ -75,7 +75,7 @@ export default function ForgetPassword({navigation}) {
 
       const result = await authService.forgotPassword(data);
       console.log('result', result);
-
+      setLoader(false);
       if (result?.status == '0') {
         setLoader(false);
         showMessage({
@@ -84,11 +84,11 @@ export default function ForgetPassword({navigation}) {
           icon: 'warning',
         });
       }
-      if (result?.message == 'Otp Received') {
+      if (result?.message == 'OTP Send') {
         setLoader(false);
         navigation.navigate(SCREENS.OTP_VERIFICATION, {
+          userId: result?.data?.user_id,
           phNumber: phoneNumber,
-          userId: result?.user_id,
         });
       }
     } catch (e) {
