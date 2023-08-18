@@ -60,6 +60,7 @@ import {mainServics} from '../../../../services';
 import {getAddress} from '../../../../utils/functions/get-address';
 import Geolocation from '@react-native-community/geolocation';
 import {GlobalState} from '../../../../redux/global/GlobalState';
+import {ORDER_SUMMARY} from '../../../../redux/global/constants';
 export default function ViewProduct({navigation, route}) {
   const {colors} = useTheme();
   const styles = makeStyles(colors);
@@ -116,6 +117,10 @@ export default function ViewProduct({navigation, route}) {
       console.log('resData', resData);
       setIsLoading(false);
       if (resData?.status) {
+        dispatch({
+          type: ORDER_SUMMARY,
+          payload: resData.data,
+        });
         navigation.navigate(SCREENS.CHECKOUT, {
           orderData: resData?.data,
           details: item,
@@ -167,7 +172,7 @@ export default function ViewProduct({navigation, route}) {
 
             <Image
               style={{height: 200, width: '100%'}}
-              source={{uri: item?.business_image}}
+              source={{uri: item?.images[0]?.image_url}}
               resizeMode={'center'}
             />
             <View style={{height: 8}} />

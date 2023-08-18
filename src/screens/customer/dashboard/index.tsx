@@ -59,6 +59,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import Geolocation from '@react-native-community/geolocation';
 import {getAddress} from '../../../utils/functions/get-address';
 import {GEO_LOCATION} from '../../../redux/global/constants';
+import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
 export default function DashBoard({navigation, props}) {
   RNMonnify.initialize({
     apiKey: 'MK_TEST_3X874HXYN3',
@@ -77,6 +78,29 @@ export default function DashBoard({navigation, props}) {
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
   });
+  useEffect(() => {
+    onLocationEnablePressed();
+  }, []);
+  const onLocationEnablePressed = () => {
+    if (Platform.OS === 'android') {
+      RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({
+        interval: 10000,
+        fastInterval: 5000,
+      })
+        .then(data => {
+          console.log('data', data);
+        })
+        .catch(err => {
+          // The user has not accepted to enable the location services or something went wrong during the process
+          // "err" : { "code" : "ERR00|ERR01|ERR02", "message" : "message"}
+          // codes :
+          //  - ERR00 : The user has clicked on Cancel button in the popup
+          //  - ERR01 : If the Settings change are unavailable
+          //  - ERR02 : If the popup has failed to open
+          alert('Error ' + err.message + ', Code : ' + err.code);
+        });
+    }
+  };
   useEffect(() => {
     const requestLocationPermission = async () => {
       if (Platform.OS === 'ios') {

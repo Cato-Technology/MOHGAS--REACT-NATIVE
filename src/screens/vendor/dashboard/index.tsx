@@ -60,6 +60,7 @@ import {
 import {GlobalState} from '../../../redux/global/GlobalState';
 import messaging from '@react-native-firebase/messaging';
 import {navigate} from '../../../utils/functions/RootNavigator';
+import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
 export default function VendorDashBoard({navigation}) {
   const {colors} = useTheme();
   const styles = makeStyles(colors);
@@ -83,6 +84,29 @@ export default function VendorDashBoard({navigation}) {
     };
     loadUserData();
   }, []);
+  useEffect(() => {
+    onLocationEnablePressed();
+  }, []);
+  const onLocationEnablePressed = () => {
+    if (Platform.OS === 'android') {
+      RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({
+        interval: 10000,
+        fastInterval: 5000,
+      })
+        .then(data => {
+          console.log('data', data);
+        })
+        .catch(err => {
+          // The user has not accepted to enable the location services or something went wrong during the process
+          // "err" : { "code" : "ERR00|ERR01|ERR02", "message" : "message"}
+          // codes :
+          //  - ERR00 : The user has clicked on Cancel button in the popup
+          //  - ERR01 : If the Settings change are unavailable
+          //  - ERR02 : If the popup has failed to open
+          alert('Error ' + err.message + ', Code : ' + err.code);
+        });
+    }
+  };
   useEffect(() => {
     // Assume a message-notification contains a "type" property in the data payload of the screen to open
 
@@ -243,7 +267,14 @@ export default function VendorDashBoard({navigation}) {
               </View>
               <View style={{alignItems: 'center'}}>
                 <View style={styles.circleView}>
-                  <AntDesign name="copy1" size={25} color="#fff" />
+                  <AntDesign
+                    name="copy1"
+                    size={25}
+                    color="#fff"
+                    onPress={() =>
+                      navigation.navigate(SCREENS.ORDER_HISTORY_VENDOR)
+                    }
+                  />
                 </View>
                 <Text style={styles.centerViewText}>Order History</Text>
               </View>

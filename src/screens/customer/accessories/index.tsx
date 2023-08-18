@@ -190,7 +190,7 @@ export default function Accessories({navigation}) {
                 <ProductView
                   title={item?.accessories_name}
                   price={`N${item?.price}`}
-                  image={{uri: item?.business_image}}
+                  image={{uri: item?.images[0]?.image_url}}
                   onPress={() =>
                     navigation.navigate(SCREENS.VIEW_PRODUCTS, {item: item})
                   }
