@@ -34,8 +34,9 @@ const backend_URLS = {
   //Accept Reject Order
   ACCEPT_ORDER: '/backend/orders/accepted',
   REJECT_ORDER: '/backend/orders/decline',
-  GET_STATES: '/backend/settings/states',
-  GET_CITIES: '/backend/settings/cities',
+  GET_STATES: '/backend/register/states',
+  GET_CITIES: '/backend/register/cities',
+  GET_LGA: '/backend/register/lga',
   GET_TOPUP_WALLET_DETAILS: '/backend/user/wallet',
 
   NEW_PASSWORD: '/backend/register/new_password',

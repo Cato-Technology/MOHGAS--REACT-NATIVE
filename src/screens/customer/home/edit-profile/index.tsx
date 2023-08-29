@@ -64,6 +64,8 @@ const EditProfile = () => {
   const [cityData, setCityData] = useState([]);
   const [stateValue, setStateValue] = useState(stateData[0]);
   const [cityValue, setCityValue] = useState();
+  const [lgaData, setLgaData] = useState([]);
+  const [lgaValue, setLgaValue] = useState(lgaData[0]);
 
   const [value, setValue] = useState(null);
   console.log('uuser', authContext?.userData);
@@ -77,7 +79,29 @@ const EditProfile = () => {
   useEffect(() => {
     getStateData();
     getCitiesData();
+    getLgaData();
   }, []);
+  const getLgaData = async () => {
+    try {
+      const result = await mainServics.getLga();
+      console.log('resultLga', result);
+      if (result.status) {
+        let arr = [];
+        result?.data?.map(ele => {
+          console.log('ele', ele);
+          arr.push({
+            label: ele.name,
+            value: ele.id,
+          });
+        });
+        setLgaData(arr);
+        setLgaValue(arr[0]);
+        console.log('arr', arr);
+      }
+    } catch (e) {
+      console.log('eer', e);
+    }
+  };
   const getStateData = async () => {
     try {
       const result = await mainServics.getStates();
@@ -267,9 +291,9 @@ const EditProfile = () => {
       data.append('phone_no', values.phone_no);
       data.append('email', values.email);
       data.append('street_name', values.street_name);
-      data.append('lga', 'abc');
-      data.append('state', stateValue?.value);
-      data.append('city', cityValue?.value);
+      data.append('lga_id', lgaValue?.value);
+      data.append('state_id', stateValue?.value);
+      data.append('city_id', cityValue?.value);
 
       console.log('data==>', data);
 
@@ -556,6 +580,43 @@ const EditProfile = () => {
                           value={cityValue}
                           onChange={item => {
                             setCityValue(item.value);
+                          }}
+                          // renderLeftIcon={() => (
+                          //   <AntDesign
+                          //     style={styles.icon2}
+                          //     color="black"
+                          //     name="Safety"
+                          //     size={20}
+                          //   />
+                          // )}
+                        />
+                      </View>
+                      <View style={{paddingHorizontal: 20}}>
+                        <Text
+                          style={{
+                            fontFamily: 'Rubik-Regular',
+                            color: '#000000',
+                            fontSize: 15,
+                            marginTop: 10,
+                          }}>
+                          Select LGA
+                        </Text>
+                        <Dropdown
+                          style={styles.dropdown}
+                          placeholderStyle={styles.placeholderStyle}
+                          selectedTextStyle={styles.selectedTextStyle}
+                          inputSearchStyle={styles.inputSearchStyle}
+                          iconStyle={styles.iconStyle}
+                          data={lgaData}
+                          //search
+                          maxHeight={300}
+                          labelField="label"
+                          valueField="value"
+                          placeholder="Select LGA"
+                          //searchPlaceholder="Search..."
+                          value={lgaValue}
+                          onChange={item => {
+                            setLgaValue(item.value);
                           }}
                           // renderLeftIcon={() => (
                           //   <AntDesign
