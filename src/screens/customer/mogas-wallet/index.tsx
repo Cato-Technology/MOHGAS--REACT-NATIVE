@@ -174,12 +174,7 @@ export default function MohgasWallet({navigation, route}) {
             <View style={{paddingVertical: 40}}>
               <GradientButton
                 onPress={() => {
-                  console.log(authContext?.userData?.bvn_verification_date);
-                  if (authContext?.userData?.bvn_verification_date) {
-                    navigation.navigate(SCREENS.FUND_WALLET);
-                  } else {
-                    navigation.navigate(SCREENS.CREATE_BVN);
-                  }
+                  navigation.navigate(SCREENS.CREATE_BVN);
                 }}
                 disabled={false}
                 title={'Continue'}

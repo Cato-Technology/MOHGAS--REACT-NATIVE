@@ -60,6 +60,7 @@ import Geolocation from '@react-native-community/geolocation';
 import {getAddress} from '../../../utils/functions/get-address';
 import {GEO_LOCATION} from '../../../redux/global/constants';
 import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
+import {RefreshControl} from 'react-native';
 export default function DashBoard({navigation, props}) {
   RNMonnify.initialize({
     apiKey: 'MK_TEST_3X874HXYN3',
@@ -78,6 +79,15 @@ export default function DashBoard({navigation, props}) {
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
   });
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      getProfile();
+      setRefreshing(false);
+    }, 2000);
+  }, []);
   useEffect(() => {
     onLocationEnablePressed();
   }, []);
@@ -214,7 +224,11 @@ export default function DashBoard({navigation, props}) {
         visible={loginError}
       /> */}
 
-      <ScrollView keyboardShouldPersistTaps={'handled'}>
+      <ScrollView
+        keyboardShouldPersistTaps={'handled'}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
         <View
           style={{
             width: '100%',
@@ -416,48 +430,49 @@ export default function DashBoard({navigation, props}) {
             )}
             keyExtractor={(item, index) => index.toString()}
           />
-
-          <View
-            style={{
-              backgroundColor: '#131a28',
-              height: 90,
-              borderRadius: 10,
-              paddingHorizontal: 20,
-
-              width: '100%',
-              justifyContent: 'center',
-              marginTop: 20,
-            }}>
-            <Text
+          {!authContext?.userData?.bvn_verification_date && (
+            <View
               style={{
-                position: 'absolute',
-                right: 10,
-                top: 7,
-                fontFamily: 'Rubik-Bold',
-                color: '#fff',
+                backgroundColor: '#131a28',
+                height: 90,
+                borderRadius: 10,
+                paddingHorizontal: 20,
+
+                width: '100%',
+                justifyContent: 'center',
+                marginTop: 20,
               }}>
-              X
-            </Text>
-            <Text style={styles.hardText}>Open Mohgas Account</Text>
-            <Text style={styles.lightText}>
-              Open a virtual bank instantly with few clicks
-            </Text>
-            <Text
-              style={[
-                styles.lightText,
-                {
-                  fontSize: 9,
-                  textAlign: 'center',
-                  backgroundColor: '#393d48',
-                  width: 70,
-                  padding: 3,
-                  marginTop: 10,
-                },
-              ]}
-              onPress={() => navigation.navigate(SCREENS.MOHGAS_WALLET)}>
-              Get Started
-            </Text>
-          </View>
+              <Text
+                style={{
+                  position: 'absolute',
+                  right: 10,
+                  top: 7,
+                  fontFamily: 'Rubik-Bold',
+                  color: '#fff',
+                }}>
+                X
+              </Text>
+              <Text style={styles.hardText}>Open Mohgas Account</Text>
+              <Text style={styles.lightText}>
+                Open a virtual bank instantly with few clicks
+              </Text>
+              <Text
+                style={[
+                  styles.lightText,
+                  {
+                    fontSize: 9,
+                    textAlign: 'center',
+                    backgroundColor: '#393d48',
+                    width: 70,
+                    padding: 3,
+                    marginTop: 10,
+                  },
+                ]}
+                onPress={() => navigation.navigate(SCREENS.MOHGAS_WALLET)}>
+                Get Started
+              </Text>
+            </View>
+          )}
         </View>
       </ScrollView>
     </View>

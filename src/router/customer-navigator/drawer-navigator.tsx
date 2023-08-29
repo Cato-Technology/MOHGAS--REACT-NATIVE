@@ -14,7 +14,7 @@ import Icon from 'react-native-vector-icons/Feather';
 import Icon2 from 'react-native-vector-icons/Ionicons';
 import Icon3 from 'react-native-vector-icons/Fontisto';
 import Icon4 from 'react-native-vector-icons/MaterialIcons';
-
+import Icon5 from 'react-native-vector-icons/Entypo';
 import {Avatar} from 'react-native-paper';
 import aImage from '../../assets/avatar.jpg';
 import EditUsername from '../../screens/customer/home/edit-username';
@@ -66,6 +66,13 @@ const CustomDrawerContent = props => {
           })
         }
         icon={() => <Icon name="edit" size={20} color="#000000" />}
+      />
+      <DrawerItem
+        label="Fund Wallet"
+        labelStyle={{color: '#000000'}}
+        style={{marginVertical: -4, borderRadius: 0}}
+        onPress={() => props.navigation.navigate(SCREENS.FUND_WALLET)}
+        icon={() => <Icon5 name="credit-card" size={20} color="#000000" />}
       />
       <DrawerItem
         label="Logout"

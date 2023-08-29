@@ -44,7 +44,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import AuthContext from '../../../utils/auth-context';
 import {useTheme} from '@react-navigation/native';
 import GradientButton from '../../../components/buttons/gradient-button';
-import {authService} from '../../../services';
+import {authService, mainServics} from '../../../services';
 import ErrorModal from '../../../components/error-modal';
 import Logo from '../../../assets/images/logo.png';
 import {NAME} from '../../../utils/regix';
@@ -52,6 +52,7 @@ import {showMessage} from 'react-native-flash-message';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import ImagePicker from 'react-native-image-crop-picker';
 import Images from '../../../assets/images';
+import {Dropdown} from 'react-native-element-dropdown';
 export default function SignUpCustomer({navigation}) {
   const {colors} = useTheme();
   const styles = makeStyles(colors);
@@ -66,6 +67,10 @@ export default function SignUpCustomer({navigation}) {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [selectCountryCode, setSelectCountryCode] = useState('');
   const [numberCondition, setNumberCondition] = useState({min: 8, max: 11});
+  const [stateData, setStateData] = useState([]);
+  const [cityData, setCityData] = useState([]);
+  const [stateValue, setStateValue] = useState(stateData[0]);
+  const [cityValue, setCityValue] = useState();
   let cameraIs = false;
   const signUpSchema = useMemo(
     () =>
@@ -92,7 +97,77 @@ export default function SignUpCustomer({navigation}) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   );
+  useEffect(() => {
+    getStateData();
+    getCitiesData();
+  }, []);
+  const getStateData = async () => {
+    try {
+      const result = await mainServics.getStates();
+      console.log('resultStates', result);
+      if (result.status) {
+        let arr = [];
+        result?.data?.map(ele => {
+          console.log('ele', ele);
+          arr.push({
+            label: ele.name,
+            value: ele.id,
+            country_id: ele?.country_id,
+            country_code: ele?.country_code,
+            fips_code: ele?.fips_code,
+            iso2: ele?.iso2,
+            type: ele?.type,
+            latitude: ele?.latitude,
+            longitude: ele?.longitude,
+            created_at: ele?.created_at,
+            updated_at: ele?.updated_at,
+            flag: ele?.flag,
+            wikiDataId: ele?.wikiDataId,
+            price_per_kg: ele?.price_per_kg,
+            service_charge: ele?.service_charge,
+            delivery_cost_per_km: ele?.delivery_cost_per_km,
+          });
+        });
+        setStateData(arr);
+        setStateValue(arr[0]);
+        console.log('arr', arr);
+      }
+    } catch (e) {
+      console.log('eer', e);
+    }
+  };
+  const getCitiesData = async id => {
+    try {
+      const result = await mainServics.getCities(id);
+      console.log('resultCities', result);
+      if (result.status) {
+        let arr = [];
+        result?.data?.map(ele => {
+          console.log('ele', ele);
+          arr.push({
+            label: ele.name,
+            value: ele.id,
 
+            state_id: ele?.state_id,
+            state_code: ele?.state_code,
+            country_id: ele?.country_id,
+            country_code: ele?.country_code,
+            latitude: ele?.latitude,
+            longitude: ele?.longitude,
+            created_at: ele?.created_at,
+            updated_at: ele?.updated_at,
+            flag: ele?.flag,
+            wikiDataId: ele?.wikiDataId,
+          });
+        });
+        setCityData(arr);
+        setCityValue(arr[0]);
+        console.log('arr', arr);
+      }
+    } catch (e) {
+      console.log('eer', e);
+    }
+  };
   const handleLogin = async values => {
     setLoader(true);
     try {
@@ -415,6 +490,82 @@ export default function SignUpCustomer({navigation}) {
                         error={touched.referal_code ? errors.referal_code : ''}
                         onBlur={() => setFieldTouched('referal_code')}
                       />
+                      <View style={{paddingHorizontal: 20}}>
+                        <Text
+                          style={{
+                            fontFamily: 'Rubik-Regular',
+                            color: '#000000',
+                            fontSize: 15,
+                            marginTop: 10,
+                          }}>
+                          Select State
+                        </Text>
+                        <Dropdown
+                          style={styles.dropdown}
+                          placeholderStyle={styles.placeholderStyle}
+                          selectedTextStyle={styles.selectedTextStyle}
+                          inputSearchStyle={styles.inputSearchStyle}
+                          iconStyle={styles.iconStyle}
+                          data={stateData}
+                          //search
+                          maxHeight={300}
+                          labelField="label"
+                          valueField="value"
+                          placeholder="Select State"
+                          //searchPlaceholder="Search..."
+                          value={stateValue}
+                          onChange={item => {
+                            setStateValue(item.value);
+                            getCitiesData(item.value);
+                          }}
+                          // renderLeftIcon={() => (
+                          //   <AntDesign
+                          //     style={styles.icon2}
+                          //     color="black"
+                          //     name="Safety"
+                          //     size={20}
+                          //   />
+                          // )}
+                        />
+                      </View>
+
+                      <View style={{paddingHorizontal: 20}}>
+                        <Text
+                          style={{
+                            fontFamily: 'Rubik-Regular',
+                            color: '#000000',
+                            fontSize: 15,
+                            marginTop: 10,
+                          }}>
+                          Select City
+                        </Text>
+                        <Dropdown
+                          style={styles.dropdown}
+                          placeholderStyle={styles.placeholderStyle}
+                          selectedTextStyle={styles.selectedTextStyle}
+                          inputSearchStyle={styles.inputSearchStyle}
+                          iconStyle={styles.iconStyle}
+                          data={cityData}
+                          //search
+                          maxHeight={300}
+                          labelField="label"
+                          valueField="value"
+                          placeholder="Select City"
+                          //searchPlaceholder="Search..."
+                          value={cityValue}
+                          onChange={item => {
+                            setCityValue(item.value);
+                          }}
+                          // renderLeftIcon={() => (
+                          //   <AntDesign
+                          //     style={styles.icon2}
+                          //     color="black"
+                          //     name="Safety"
+                          //     size={20}
+                          //   />
+                          // )}
+                        />
+                      </View>
                       <InputWithLabel
                         label={'Password'}
                         placeholder={'Enter your password here'}
