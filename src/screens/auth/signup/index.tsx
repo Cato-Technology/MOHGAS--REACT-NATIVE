@@ -202,7 +202,7 @@ export default function SignUpCustomer({navigation}) {
 
       let data = new FormData();
       data.append('fullname', values.fullname);
-      data.append('phone_num', selectCountryCode + phoneNumber);
+      data.append('phone_num', phoneNumber);
       data.append('email', values.email);
       data.append('state_id', stateValue?.value);
       data.append('city_id', cityValue?.value);

@@ -10,6 +10,7 @@ import OtpVerification from '../screens/auth/otp-verification';
 import PasswordResetSuccess from '../screens/auth/pwd-reset-success';
 import SignUpVendor from '../screens/auth/signup-vendor';
 import PersonalInformation from '../screens/auth/signup-vendor/personal-info';
+import PhoneVerify from '../screens/auth/ph-verify';
 
 const Stack = createNativeStackNavigator();
 
@@ -24,6 +25,7 @@ const AuthNavigator = () => {
       <Stack.Screen name={SCREENS.LOGIN} component={Login} />
       <Stack.Screen name={SCREENS.SIGNUP_CUSTOMER} component={SignUpCustomer} />
       <Stack.Screen name={SCREENS.SIGNUP_VENDOR} component={SignUpVendor} />
+      <Stack.Screen name={SCREENS.PHONE_VERIFY} component={PhoneVerify} />
       <Stack.Screen
         name={SCREENS.SIGNUP_PERSONAL_VENDOR}
         component={PersonalInformation}

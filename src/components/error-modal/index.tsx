@@ -20,11 +20,10 @@ export default function ErrorModal({visible = false, onPress}: Props) {
   return (
     <View style={styles.overLay}>
       <View style={styles.view}>
-        <Text style={styles.heading}>Please try again</Text>
+        <Text style={styles.heading}>Account not verified!</Text>
         <Text style={styles.text}>
-          The information provided does not match our records. Kindly check and
-          try again. If this is your first time with us, please sign up. Thank
-          you.
+          This account hasn't been verified, please verify your phone and email
+          address to complete login process
         </Text>
         <View style={{marginTop: 20}}>
           <GradientButton

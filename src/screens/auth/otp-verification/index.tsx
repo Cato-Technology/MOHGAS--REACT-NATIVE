@@ -54,6 +54,8 @@ import {showMessage} from 'react-native-flash-message';
 
 export default function OtpVerification({navigation, route}) {
   console.log('route', route?.params?.item?.business_id);
+  let item = route.params.item;
+  console.log('ii', item);
 
   const {colors} = useTheme();
   const styles = makeStyles(colors);
@@ -71,6 +73,7 @@ export default function OtpVerification({navigation, route}) {
   const [otpManual, setOtpManual] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [selectCountryCode, setSelectCountryCode] = useState('');
+  console.log('item', item);
 
   const signUpSchema = useMemo(
     () =>
@@ -95,7 +98,7 @@ export default function OtpVerification({navigation, route}) {
       let data = new FormData();
       data.append('user_id', route?.params?.userId);
       data.append('phone', route?.params?.phNumber);
-      data.append('otp', code || otpManual);
+      data.append('otp', otpManual || code);
 
       console.log('data->', data);
 
@@ -118,7 +121,7 @@ export default function OtpVerification({navigation, route}) {
       setLoader(false);
       console.log('error', e);
       showMessage({
-        message: e?.errMsg,
+        message: e?.errMsg?.message,
         type: 'danger',
         icon: 'danger',
       });

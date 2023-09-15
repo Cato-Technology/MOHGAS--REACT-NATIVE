@@ -50,7 +50,8 @@ import ErrorModal from '../../../components/error-modal';
 import Logo from '../../../assets/images/logo.png';
 import {NAME} from '../../../utils/regix';
 
-export default function ForgetPassword({navigation}) {
+export default function ForgetPassword({navigation, route}) {
+  let item = route?.params?.item;
   const {colors} = useTheme();
   const styles = makeStyles(colors);
   const auth = React.useContext(AuthContext);
@@ -86,10 +87,17 @@ export default function ForgetPassword({navigation}) {
       }
       if (result?.message == 'OTP Send') {
         setLoader(false);
-        navigation.navigate(SCREENS.OTP_VERIFICATION, {
-          userId: result?.data?.user_id,
-          phNumber: phoneNumber,
-        });
+        if (item === 'Verify your phone number') {
+          navigation.navigate(SCREENS.PHONE_VERIFY, {
+            userId: result?.data?.user_id,
+            phNumber: phoneNumber,
+          });
+        } else {
+          navigation.navigate(SCREENS.OTP_VERIFICATION, {
+            userId: result?.data?.user_id,
+            phNumber: phoneNumber,
+          });
+        }
       }
     } catch (e) {
       setLoader(false);
@@ -119,11 +127,11 @@ export default function ForgetPassword({navigation}) {
             <View style={{marginTop: 140, paddingHorizontal: 25}}>
               <Text
                 style={{
-                  color: '#000000',
+                  color: 'red',
                   fontSize: RFValue(14),
                   fontFamily: 'Rubik-Bold',
                 }}>
-                Forgot Password
+                {item ? item : 'Forgot Password'}
               </Text>
             </View>
           </View>
@@ -148,28 +156,30 @@ export default function ForgetPassword({navigation}) {
               <GradientButton
                 onPress={() => forgotPassowd()}
                 disabled={loader || !phoneNumber}
-                title="Continue"
+                title={item ? 'Get Otp Code' : 'Continue'}
               />
-              <Text style={styles.tcTextStyle}>
-                Suddenly remembered it?{' '}
-                <Pressable onPress={() => navigation.navigate(SCREENS.LOGIN)}>
-                  {({pressed}) => (
-                    <Text
-                      style={[
-                        {
-                          textDecorationLine: pressed ? 'underline' : 'none',
-                          color: '#4ca757',
-                          fontFamily: 'Rubik-Bold',
-                          fontSize: 15,
-                          top: hp(0.32),
-                          // fontFamily: fonts.mulishRegular,
-                        },
-                      ]}>
-                      Login
-                    </Text>
-                  )}
-                </Pressable>
-              </Text>
+              {!item && (
+                <Text style={styles.tcTextStyle}>
+                  Suddenly remembered it?{' '}
+                  <Pressable onPress={() => navigation.navigate(SCREENS.LOGIN)}>
+                    {({pressed}) => (
+                      <Text
+                        style={[
+                          {
+                            textDecorationLine: pressed ? 'underline' : 'none',
+                            color: '#4ca757',
+                            fontFamily: 'Rubik-Bold',
+                            fontSize: 15,
+                            top: hp(0.32),
+                            // fontFamily: fonts.mulishRegular,
+                          },
+                        ]}>
+                        Login
+                      </Text>
+                    )}
+                  </Pressable>
+                </Text>
+              )}
             </View>
           </View>
         </ScrollView>

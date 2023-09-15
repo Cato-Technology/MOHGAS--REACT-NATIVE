@@ -43,6 +43,7 @@ import GradientButton from '../../../components/buttons/gradient-button';
 import {authService} from '../../../services';
 import ErrorModal from '../../../components/error-modal';
 import Logo from '../../../assets/images/logo.png';
+import {showMessage} from 'react-native-flash-message';
 export default function Login({navigation}) {
   const {colors} = useTheme();
   const styles = makeStyles(colors);
@@ -91,8 +92,18 @@ export default function Login({navigation}) {
       }
     } catch (e) {
       setLoader(false);
-      setLoginError(true);
+
       console.log('error', e);
+      if (e?.status == 400) {
+        showMessage({
+          message: e?.errMsg?.message,
+          type: 'danger',
+          icon: 'danger',
+        });
+      }
+      if (e?.status == 401) {
+        setLoginError(true);
+      }
     }
   };
 
@@ -100,7 +111,12 @@ export default function Login({navigation}) {
     <View style={styles.container}>
       <ActivityIndicator visible={loader} />
       <ErrorModal
-        onPress={() => setLoginError(!loginError)}
+        onPress={() => {
+          navigation.navigate(SCREENS.FORGET_PASSWORLD, {
+            item: 'Verify your phone number',
+          });
+          setLoginError(!loginError);
+        }}
         visible={loginError}
       />
       <KeyboardAvoidingView
