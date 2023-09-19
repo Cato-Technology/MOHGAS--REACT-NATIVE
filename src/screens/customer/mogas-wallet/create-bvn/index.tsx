@@ -54,7 +54,7 @@ import AuthContext from '../../../../utils/auth-context';
 import {useTheme} from '@react-navigation/native';
 import GradientButton from '../../../../components/buttons/gradient-button';
 import HeaderBottom from '../../../../components/header-bottom';
-import {mainServics} from '../../../../services';
+import {mainServics, profileService} from '../../../../services';
 import {showMessage} from 'react-native-flash-message';
 let sucessData = {
   title: 'Account Created',
@@ -68,7 +68,35 @@ export default function CreateBvn({navigation}) {
   const [bvn, setBvn] = useState(0);
   const [checked, setChecked] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const upDateProfile = async () => {
+    try {
+      let dataUpdate = new FormData();
+      dataUpdate.append('user_id', authContext?.userData?.user_id);
+      const resultUpdate = await profileService.getProfile(dataUpdate);
+      console.log('resultUpdate', resultUpdate);
+      if (resultUpdate) {
+        const updatedUserData = {
+          ...authContext?.userData,
+          ...resultUpdate?.response,
+        };
+        console.log('updatedUserData', updatedUserData);
 
+        try {
+          const jsonValue = JSON.stringify(updatedUserData);
+          await AsyncStorage.setItem('userData', jsonValue);
+        } catch (e) {
+          console.error('Failed to save user data to storage');
+        }
+
+        authContext.setUserData(updatedUserData);
+        setIsLoading(false);
+        navigation.navigate(SCREENS.DASHBOARD);
+      }
+    } catch (e) {
+      setIsLoading(false);
+      console.log('error', e);
+    }
+  };
   const handleBvn = async () => {
     // navigation.navigate(SCREENS.CONFIRM_PAYMENT)}
     setIsLoading(true);
@@ -80,8 +108,17 @@ export default function CreateBvn({navigation}) {
       const resData = await mainServics.createBvn(fdata);
       console.log('resData', resData);
       setIsLoading(false);
-      if (resData?.requestSuccessful) {
-        navigation.navigate(SCREENS.FUND_WALLET);
+      if (
+        resData?.message ==
+        'Verifiy bvn success. Success created reserved account'
+      ) {
+        upDateProfile();
+
+        showMessage({
+          message: resData?.message,
+          type: 'success',
+          icon: 'success',
+        });
       } else if (!resData?.requestSuccessful) {
         showMessage({
           message: resData?.responseMessage,

@@ -177,7 +177,7 @@ const EditProfile = () => {
           .matches(NAME, 'Name should only contain latin letters')
           .required('Full name is Required'),
 
-        phone_no: Yup.number().required('Phone number is Required'),
+        phone_no: Yup.string().required('Phone number is Required'),
         street_name: Yup.string().required('Street Address Required'),
 
         email: Yup.string()
@@ -288,7 +288,7 @@ const EditProfile = () => {
 
       data.append('dateOfBirth', moment(date).format('YYYY-MM-DD'));
       data.append('fullname', values.fullname);
-      data.append('phone_no', values.phone_no);
+      data.append('phone_no', values.phone_no.toString());
       data.append('email', values.email);
       data.append('street_name', values.street_name);
       data.append('lga_id', lgaValue?.value);
@@ -409,7 +409,7 @@ const EditProfile = () => {
                 initialValues={{
                   fullname: authContext?.userData?.full_name,
                   email: authContext?.userData?.email,
-                  phone_no: authContext?.userData?.phone_no,
+                  phone_no: authContext?.userData?.phone_no.toString(),
                   street_name: authContext?.userData?.street_name,
                 }}
                 onSubmit={values => handleUpdateUser(values)}
@@ -466,7 +466,7 @@ const EditProfile = () => {
                           fontSize: 15,
                         }}
                         onChange={handleChange('phone_no')}
-                        value={values.phone_no}
+                        value={values.phone_no + ''}
                         error={touched.phone_no ? errors.phone_no : ''}
                         onBlur={() => setFieldTouched('phone_no')}
                       />
@@ -540,7 +540,7 @@ const EditProfile = () => {
                           //searchPlaceholder="Search..."
                           value={stateValue}
                           onChange={item => {
-                            setStateValue(item.value);
+                            setStateValue(item);
                             getCitiesData(item.value);
                           }}
                           // renderLeftIcon={() => (
@@ -579,7 +579,7 @@ const EditProfile = () => {
                           //searchPlaceholder="Search..."
                           value={cityValue}
                           onChange={item => {
-                            setCityValue(item.value);
+                            setCityValue(item);
                           }}
                           // renderLeftIcon={() => (
                           //   <AntDesign
@@ -616,7 +616,7 @@ const EditProfile = () => {
                           //searchPlaceholder="Search..."
                           value={lgaValue}
                           onChange={item => {
-                            setLgaValue(item.value);
+                            setLgaValue(item);
                           }}
                           // renderLeftIcon={() => (
                           //   <AntDesign
