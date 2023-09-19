@@ -196,7 +196,7 @@ export default function SignUpVendor({navigation}) {
                   {console.log('errors', errors)}
                   <View>
                     <InputWithLabel
-                      label="Business Nane"
+                      label="Business Name"
                       labelStyle={{
                         // fontFamily: fonts.mulishSemiBold,
                         color: colors.yellowHeading,

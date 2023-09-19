@@ -71,7 +71,7 @@ export default function SignUpCustomer({navigation}) {
   const [cityData, setCityData] = useState([]);
   const [lgaData, setLgaData] = useState([]);
   const [stateValue, setStateValue] = useState(stateData[0]);
-  const [cityValue, setCityValue] = useState();
+  const [cityValue, setCityValue] = useState(cityData[0]);
   const [lgaValue, setLgaValue] = useState(lgaData[0]);
   let cameraIs = false;
   const signUpSchema = useMemo(
@@ -161,6 +161,8 @@ export default function SignUpCustomer({navigation}) {
     }
   };
   const getCitiesData = async id => {
+    console.log('idCCC', id);
+
     try {
       const result = await mainServics.getCities(id);
       console.log('resultCities', result);
@@ -186,12 +188,14 @@ export default function SignUpCustomer({navigation}) {
         });
         setCityData(arr);
         setCityValue(arr[0]);
-        console.log('arr', arr);
+        console.log('arrcity', arr[0]);
       }
     } catch (e) {
       console.log('eer', e);
     }
   };
+  console.log('stateValue', stateValue);
+
   const handleLogin = async values => {
     setLoader(true);
     try {
@@ -205,6 +209,7 @@ export default function SignUpCustomer({navigation}) {
       data.append('phone_num', phoneNumber);
       data.append('email', values.email);
       data.append('state_id', stateValue?.value);
+      data.append('country_id', stateValue?.country_id);
       data.append('city_id', cityValue?.value);
       data.append('lga_id', lgaValue?.value);
       data.append('street', 'street');
@@ -233,8 +238,10 @@ export default function SignUpCustomer({navigation}) {
       console.log('result', result);
 
       if (result.status) {
-        alert('Registered');
-        navigation.navigate(SCREENS.LOGIN);
+        navigation.navigate(SCREENS.PHONE_VERIFY, {
+          userId: result?.data?.user_id,
+          phNumber: result?.data?.phone_num,
+        });
         setLoader(false);
       } else {
         showMessage({
@@ -539,7 +546,7 @@ export default function SignUpCustomer({navigation}) {
                           //searchPlaceholder="Search..."
                           value={stateValue}
                           onChange={item => {
-                            setStateValue(item.value);
+                            setStateValue(item);
                             getCitiesData(item.value);
                           }}
                           // renderLeftIcon={() => (

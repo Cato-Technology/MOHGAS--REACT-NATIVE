@@ -76,12 +76,58 @@ function forgotPassword(data: any) {
       });
   });
 }
+function sendOtpVerification(data: any) {
+  console.log('data', data);
+
+  return new Promise<UserResponse>((resolve, reject) => {
+    client
+      .post(backend_URLS.SEND_ACC_VERIFY, data)
+      .then(async response => {
+        try {
+          console.log('res', response);
+
+          //  await setAuthAsyncStorage(response.data);
+          resolve(response);
+        } catch (e) {
+          console.log(e);
+          reject(e);
+        }
+      })
+      .catch(async err => {
+        console.log('User SIFNUP service error block SIFNUP.', err);
+        reject(err);
+      });
+  });
+}
 function verifyOtp(data: any) {
   console.log('data', data);
 
   return new Promise<UserResponse>((resolve, reject) => {
     client
       .post(backend_URLS.VERIFY_OTP, data)
+      .then(async response => {
+        try {
+          console.log('res', response);
+
+          //  await setAuthAsyncStorage(response.data);
+          resolve(response);
+        } catch (e) {
+          console.log(e);
+          reject(e);
+        }
+      })
+      .catch(async err => {
+        console.log('User SIFNUP service error block SIFNUP.', err);
+        reject(err);
+      });
+  });
+}
+function verifyOtpAccount(data: any) {
+  console.log('data', data);
+
+  return new Promise<UserResponse>((resolve, reject) => {
+    client
+      .post(backend_URLS.VERIFY_OTP_ACCOUNT, data)
       .then(async response => {
         try {
           console.log('res', response);
@@ -112,4 +158,6 @@ export const authService = {
   verifyOtp,
   registerVendor,
   setPassword,
+  sendOtpVerification,
+  verifyOtpAccount,
 };

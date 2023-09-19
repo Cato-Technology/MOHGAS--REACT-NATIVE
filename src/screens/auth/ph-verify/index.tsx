@@ -95,12 +95,12 @@ export default function PhoneVerify({navigation, route}) {
 
       console.log('data->', data);
 
-      const result = await authService.verifyOtp(data);
+      const result = await authService.verifyOtpAccount(data);
       console.log('result', result);
       // navigation.navigate(SCREENS.PASSWORD_RESET_SUCCESS)
       setLoader(false);
 
-      if (result?.message == 'OTP Verification success ') {
+      if (result?.message == 'Verify registration success !') {
         navigation.navigate(SCREENS.LOGIN);
       } else {
         showMessage({
@@ -147,7 +147,7 @@ export default function PhoneVerify({navigation, route}) {
                   fontSize: RFValue(14),
                   fontFamily: 'Rubik-Bold',
                 }}>
-                Verify Phonefd
+                Verify Phone
               </Text>
             </View>
           </View>

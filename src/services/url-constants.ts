@@ -4,7 +4,10 @@ const backend_URLS = {
   SIGNUP: '/backend/register/user',
   FORGOT_PASSWORD: '/backend/register/forget_password',
   VERIFY_OTP: '/backend/register/otp_verification',
+  VERIFY_OTP_ACCOUNT: '/backend/register/verification',
   REGISTER_VENDOR: '/backend/register/vendor',
+
+  SEND_ACC_VERIFY: '/backend/register/new_otp',
 
   //Profile constants
   UPDATE_USER: '/backend/user',

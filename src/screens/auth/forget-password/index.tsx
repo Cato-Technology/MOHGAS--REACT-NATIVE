@@ -104,6 +104,24 @@ export default function ForgetPassword({navigation, route}) {
       console.log('error', e);
     }
   };
+  const sendVerifyOtp = async () => {
+    try {
+      // setLoader(true);
+      let data = new FormData();
+      data.append('phone', phoneNumber);
+
+      const result = await authService.sendOtpVerification(data);
+      console.log('resultvvv', result);
+      if (result.status) {
+        navigation.navigate(SCREENS.PHONE_VERIFY, {
+          userId: result?.data?.user_id,
+          phNumber: phoneNumber,
+        });
+      }
+    } catch (e) {
+      console.log('error', e);
+    }
+  };
   return (
     <View style={styles.container}>
       <ActivityIndicator visible={loader} />
@@ -154,7 +172,13 @@ export default function ForgetPassword({navigation, route}) {
                 marginTop: 30,
               }}>
               <GradientButton
-                onPress={() => forgotPassowd()}
+                onPress={() => {
+                  if (item == 'Verify your phone number') {
+                    sendVerifyOtp();
+                  } else {
+                    forgotPassowd();
+                  }
+                }}
                 disabled={loader || !phoneNumber}
                 title={item ? 'Get Otp Code' : 'Continue'}
               />
