@@ -20,7 +20,7 @@ export default StyleSheet.create({
   },
   textInputStyle: {
     paddingLeft: 10,
-    color: colors.black,
+    color: '#000000',
     fontSize: 15,
     width: '60%',
     fontFamily: 'Rubik-Regular',

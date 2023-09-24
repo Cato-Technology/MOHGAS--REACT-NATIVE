@@ -143,11 +143,11 @@ export const makeStyles = (colors: any) =>
     },
     placeholderStyle: {
       fontSize: 16,
-
-      color: colors.lightGrey,
+      color: '#000000',
     },
     selectedTextStyle: {
       fontSize: 16,
+      color: '#000000',
     },
     iconStyle: {
       width: 20,

@@ -51,7 +51,7 @@ export default function (props: Props) {
         theme={{
           ...DEFAULT_THEME,
           backgroundColor: colors.white,
-          onBackgroundTextColor: colors.black,
+          onBackgroundTextColor: '#000000',
           fontSize: 15,
           fontFamily: 'Rubik-Regular',
         }}

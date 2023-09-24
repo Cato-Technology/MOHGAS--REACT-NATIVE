@@ -249,13 +249,23 @@ export default function DashBoard({navigation, props}) {
                 name="menu"
                 onPress={() => navigation.openDrawer()}
                 size={25}
-                color="#000000"
+                color={'#000000'}
               />
-              <Text style={{fontFamily: 'Rubik-Bold', fontSize: 15}}>
+              <Text
+                style={{
+                  fontFamily: 'Rubik-Bold',
+                  fontSize: 15,
+                  color: '#000000',
+                }}>
                 Wellcome
               </Text>
 
-              <Text style={{fontFamily: 'Rubik-Bold', fontSize: 25}}>
+              <Text
+                style={{
+                  fontFamily: 'Rubik-Bold',
+                  fontSize: 25,
+                  color: '#000000',
+                }}>
                 {authContext?.userData?.full_name}
               </Text>
 

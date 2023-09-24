@@ -10,20 +10,20 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 const App = () => {
   const isDarkMode = useColorScheme() === 'light';
-  useEffect(() => {
-    requestUserPermission();
-  }, []);
-  async function requestUserPermission() {
-    const authStatus = await messaging().requestPermission();
-    const enabled =
-      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-    if (enabled) {
-      const fcmTokenn = await messaging().getToken();
-      console.log('fcm', fcmTokenn);
-      await AsyncStorage.setItem('fcm', fcmTokenn);
-    }
-  }
+  // useEffect(() => {
+  //   requestUserPermission();
+  // }, []);
+  // async function requestUserPermission() {
+  //   const authStatus = await messaging().requestPermission();
+  //   const enabled =
+  //     authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+  //     authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+  //   if (enabled) {
+  //     const fcmTokenn = await messaging().getToken();
+  //     console.log('fcm', fcmTokenn);
+  //     await AsyncStorage.setItem('fcm', fcmTokenn);
+  //   }
+  // }
   messaging().setBackgroundMessageHandler(async remoteMessage => {
     console.log('remoteMessage', remoteMessage);
   });

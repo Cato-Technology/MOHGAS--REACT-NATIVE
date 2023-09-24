@@ -77,7 +77,7 @@ export default function OrderSummary({navigation, route}) {
 
     messaging().onMessage(async remoteMessage => {
       console.log('Notification caused app to openDash==>', remoteMessage);
-      if (remoteMessage?.data?.status === 'Accepted') {
+      if (remoteMessage?.data?.status === 'Confirmed') {
         navigation.navigate(SCREENS.CONFIRM_PAYMENT);
         setVendorRender(false);
       }
@@ -90,7 +90,7 @@ export default function OrderSummary({navigation, route}) {
     messaging()
       .getInitialNotification()
       .then(remoteMessage => {
-        if (remoteMessage?.data?.status === 'Accepted') {
+        if (remoteMessage?.data?.status === 'Confirmed') {
           navigation.navigate(SCREENS.CONFIRM_PAYMENT);
           setVendorRender(false);
         }
@@ -102,7 +102,7 @@ export default function OrderSummary({navigation, route}) {
     messaging()
       .getInitialNotification()
       .then(remoteMessage => {
-        if (remoteMessage?.data?.status === 'Accepted') {
+        if (remoteMessage?.data?.status === 'Confirmed') {
           navigation.navigate(SCREENS.CONFIRM_PAYMENT);
           setVendorRender(false);
           //  navigate(remoteMessage.data.click_action);

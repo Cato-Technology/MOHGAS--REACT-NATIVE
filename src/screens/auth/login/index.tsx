@@ -12,9 +12,7 @@ import {
   KeyboardAvoidingView,
 } from 'react-native';
 
-import Icon from 'react-native-vector-icons/FontAwesome';
-import Icon2 from 'react-native-vector-icons/Zocial';
-import Icon3 from 'react-native-vector-icons/Entypo';
+import messaging from '@react-native-firebase/messaging';
 
 import {
   // ErrorModal,
@@ -54,12 +52,28 @@ export default function Login({navigation}) {
   const [loginError, setLoginError] = useState(false);
   const [checked, setChecked] = useState(false);
   const [loader, setLoader] = useState(false);
+  const [fcm, setFcm] = useState('');
 
+  useEffect(() => {
+    requestUserPermission();
+  }, []);
+  async function requestUserPermission() {
+    const authStatus = await messaging().requestPermission();
+    const enabled =
+      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+    if (enabled) {
+      const fcmTokenn = await messaging().getToken();
+      console.log('fcmLogin', fcmTokenn);
+      setFcm(fcmTokenn);
+      // await AsyncStorage.setItem('fcmLogin', fcmTokenn);
+    }
+  }
   const handleLogin = async () => {
     try {
       setLoader(true);
-      const fcm = await AsyncStorage.getItem('fcm');
-      console.log('fcmAsync', fcm);
+      // const fcm = await AsyncStorage.getItem('fcm');
+      // console.log('fcmAsync', fcm);
 
       let data = new FormData();
       data.append('email', userName);

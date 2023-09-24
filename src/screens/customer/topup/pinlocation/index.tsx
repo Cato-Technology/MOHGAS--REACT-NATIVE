@@ -62,15 +62,16 @@ export default function PinLocation({navigation}) {
   const [postal, setPostal] = useState();
   const [state, setState] = useState();
   const [isLoading, setIsLoading] = useState(false);
+  const locData = useSelector(
+    (state: GlobalState) => state?.global?.locationData,
+  );
+
   const [myDirection, setMyDirection] = useState({
     latitude: 0.0,
     longitude: 0.0,
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
   });
-  const locData = useSelector(
-    (state: GlobalState) => state?.global?.locationData,
-  );
 
   console.log('locDataPin', locData);
 

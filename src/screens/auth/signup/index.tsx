@@ -101,12 +101,10 @@ export default function SignUpCustomer({navigation}) {
   );
   useEffect(() => {
     getStateData();
-    getCitiesData();
-    getLgaData();
   }, []);
-  const getLgaData = async () => {
+  const getLgaData = async id => {
     try {
-      const result = await mainServics.getLga();
+      const result = await mainServics.getLga(id);
       console.log('resultLga', result);
       if (result.status) {
         let arr = [];
@@ -189,6 +187,7 @@ export default function SignUpCustomer({navigation}) {
         setCityData(arr);
         setCityValue(arr[0]);
         console.log('arrcity', arr[0]);
+        getLgaData(arr[0]?.value);
       }
     } catch (e) {
       console.log('eer', e);
@@ -533,6 +532,7 @@ export default function SignUpCustomer({navigation}) {
                         </Text>
                         <Dropdown
                           style={styles.dropdown}
+                          itemTextStyle={{color: '#000000'}}
                           placeholderStyle={styles.placeholderStyle}
                           selectedTextStyle={styles.selectedTextStyle}
                           inputSearchStyle={styles.inputSearchStyle}
@@ -560,80 +560,87 @@ export default function SignUpCustomer({navigation}) {
                         />
                       </View>
 
-                      <View style={{paddingHorizontal: 20}}>
-                        <Text
-                          style={{
-                            fontFamily: 'Rubik-Regular',
-                            color: '#000000',
-                            fontSize: 15,
-                            marginTop: 10,
-                          }}>
-                          Select City
-                        </Text>
-                        <Dropdown
-                          style={styles.dropdown}
-                          placeholderStyle={styles.placeholderStyle}
-                          selectedTextStyle={styles.selectedTextStyle}
-                          inputSearchStyle={styles.inputSearchStyle}
-                          iconStyle={styles.iconStyle}
-                          data={cityData}
-                          //search
-                          maxHeight={300}
-                          labelField="label"
-                          valueField="value"
-                          placeholder="Select City"
-                          //searchPlaceholder="Search..."
-                          value={cityValue}
-                          onChange={item => {
-                            setCityValue(item.value);
-                          }}
-                          // renderLeftIcon={() => (
-                          //   <AntDesign
-                          //     style={styles.icon2}
-                          //     color="black"
-                          //     name="Safety"
-                          //     size={20}
-                          //   />
-                          // )}
-                        />
-                      </View>
-                      <View style={{paddingHorizontal: 20}}>
-                        <Text
-                          style={{
-                            fontFamily: 'Rubik-Regular',
-                            color: '#000000',
-                            fontSize: 15,
-                            marginTop: 10,
-                          }}>
-                          Select LGA
-                        </Text>
-                        <Dropdown
-                          style={styles.dropdown}
-                          placeholderStyle={styles.placeholderStyle}
-                          selectedTextStyle={styles.selectedTextStyle}
-                          inputSearchStyle={styles.inputSearchStyle}
-                          iconStyle={styles.iconStyle}
-                          data={lgaData}
-                          //search
-                          maxHeight={300}
-                          labelField="label"
-                          valueField="value"
-                          placeholder="Select LGA"
-                          //searchPlaceholder="Search..."
-                          value={lgaValue}
-                          onChange={item => {
-                            setLgaValue(item.value);
-                          }}
-                          // renderLeftIcon={() => (
-                          //   <AntDesign
-                          //     style={styles.icon2}
-                          //     color="black"
-                          //     name="Safety"
-                          //     size={20}
-                          //   />
-                          // )}
-                        />
-                      </View>
+                      {cityData.length > 0 && (
+                        <View style={{paddingHorizontal: 20}}>
+                          <Text
+                            style={{
+                              fontFamily: 'Rubik-Regular',
+                              color: '#000000',
+                              fontSize: 15,
+                              marginTop: 10,
+                            }}>
+                            Select City
+                          </Text>
+                          <Dropdown
+                            itemTextStyle={{color: '#000000'}}
+                            style={styles.dropdown}
+                            placeholderStyle={styles.placeholderStyle}
+                            selectedTextStyle={styles.selectedTextStyle}
+                            inputSearchStyle={styles.inputSearchStyle}
+                            iconStyle={styles.iconStyle}
+                            data={cityData}
+                            //search
+                            maxHeight={300}
+                            labelField="label"
+                            valueField="value"
+                            placeholder="Select City"
+                            //searchPlaceholder="Search..."
+                            value={cityValue}
+                            onChange={item => {
+                              setCityValue(item.value);
+                              getLgaData(item.value);
+                            }}
+                            // renderLeftIcon={() => (
+                            //   <AntDesign
+                            //     style={styles.icon2}
+                            //     color="black"
+                            //     name="Safety"
+                            //     size={20}
+                            //   />
+                            // )}
+                          />
+                        </View>
+                      )}
+                      {lgaData.length > 0 && (
+                        <View style={{paddingHorizontal: 20}}>
+                          <Text
+                            style={{
+                              fontFamily: 'Rubik-Regular',
+                              color: '#000000',
+                              fontSize: 15,
+                              marginTop: 10,
+                            }}>
+                            Select LGA
+                          </Text>
+                          <Dropdown
+                            style={styles.dropdown}
+                            itemTextStyle={{color: '#000000'}}
+                            placeholderStyle={styles.placeholderStyle}
+                            selectedTextStyle={styles.selectedTextStyle}
+                            inputSearchStyle={styles.inputSearchStyle}
+                            iconStyle={styles.iconStyle}
+                            data={lgaData}
+                            //search
+                            maxHeight={300}
+                            labelField="label"
+                            valueField="value"
+                            placeholder="Select LGA"
+                            //searchPlaceholder="Search..."
+                            value={lgaValue}
+                            onChange={item => {
+                              setLgaValue(item.value);
+                            }}
+                            // renderLeftIcon={() => (
+                            //   <AntDesign
+                            //     style={styles.icon2}
+                            //     color="black"
+                            //     name="Safety"
+                            //     size={20}
+                            //   />
+                            // )}
+                          />
+                        </View>
+                      )}
                       <InputWithLabel
                         label={'Password'}
                         placeholder={'Enter your password here'}
