@@ -78,12 +78,10 @@ const EditProfile = () => {
   }, []);
   useEffect(() => {
     getStateData();
-    getCitiesData();
-    getLgaData();
   }, []);
-  const getLgaData = async () => {
+  const getLgaData = async id => {
     try {
-      const result = await mainServics.getLga();
+      const result = await mainServics.getLga(id);
       console.log('resultLga', result);
       if (result.status) {
         let arr = [];
@@ -542,6 +540,7 @@ const EditProfile = () => {
                           onChange={item => {
                             setStateValue(item);
                             getCitiesData(item.value);
+                            getLgaData(item.value);
                           }}
                           // renderLeftIcon={() => (
                           //   <AntDesign
@@ -554,80 +553,84 @@ const EditProfile = () => {
                         />
                       </View>
 
-                      <View style={{paddingHorizontal: 20}}>
-                        <Text
-                          style={{
-                            fontFamily: 'Rubik-Regular',
-                            color: '#000000',
-                            fontSize: 15,
-                            marginTop: 5,
-                          }}>
-                          Select City
-                        </Text>
-                        <Dropdown
-                          style={styles.dropdown}
-                          placeholderStyle={styles.placeholderStyle}
-                          selectedTextStyle={styles.selectedTextStyle}
-                          inputSearchStyle={styles.inputSearchStyle}
-                          iconStyle={styles.iconStyle}
-                          data={cityData}
-                          //search
-                          maxHeight={300}
-                          labelField="label"
-                          valueField="value"
-                          placeholder="Select City"
-                          //searchPlaceholder="Search..."
-                          value={cityValue}
-                          onChange={item => {
-                            setCityValue(item);
-                          }}
-                          // renderLeftIcon={() => (
-                          //   <AntDesign
-                          //     style={styles.icon2}
-                          //     color="black"
-                          //     name="Safety"
-                          //     size={20}
-                          //   />
-                          // )}
-                        />
-                      </View>
-                      <View style={{paddingHorizontal: 20}}>
-                        <Text
-                          style={{
-                            fontFamily: 'Rubik-Regular',
-                            color: '#000000',
-                            fontSize: 15,
-                            marginTop: 10,
-                          }}>
-                          Select LGA
-                        </Text>
-                        <Dropdown
-                          style={styles.dropdown}
-                          placeholderStyle={styles.placeholderStyle}
-                          selectedTextStyle={styles.selectedTextStyle}
-                          inputSearchStyle={styles.inputSearchStyle}
-                          iconStyle={styles.iconStyle}
-                          data={lgaData}
-                          //search
-                          maxHeight={300}
-                          labelField="label"
-                          valueField="value"
-                          placeholder="Select LGA"
-                          //searchPlaceholder="Search..."
-                          value={lgaValue}
-                          onChange={item => {
-                            setLgaValue(item);
-                          }}
-                          // renderLeftIcon={() => (
-                          //   <AntDesign
-                          //     style={styles.icon2}
-                          //     color="black"
-                          //     name="Safety"
-                          //     size={20}
-                          //   />
-                          // )}
-                        />
-                      </View>
+                      {cityData.length > 0 && (
+                        <View style={{paddingHorizontal: 20}}>
+                          <Text
+                            style={{
+                              fontFamily: 'Rubik-Regular',
+                              color: '#000000',
+                              fontSize: 15,
+                              marginTop: 5,
+                            }}>
+                            Select City
+                          </Text>
+                          <Dropdown
+                            style={styles.dropdown}
+                            placeholderStyle={styles.placeholderStyle}
+                            selectedTextStyle={styles.selectedTextStyle}
+                            inputSearchStyle={styles.inputSearchStyle}
+                            iconStyle={styles.iconStyle}
+                            data={cityData}
+                            //search
+                            maxHeight={300}
+                            labelField="label"
+                            valueField="value"
+                            placeholder="Select City"
+                            //searchPlaceholder="Search..."
+                            value={cityValue}
+                            onChange={item => {
+                              setCityValue(item);
+                            }}
+                            // renderLeftIcon={() => (
+                            //   <AntDesign
+                            //     style={styles.icon2}
+                            //     color="black"
+                            //     name="Safety"
+                            //     size={20}
+                            //   />
+                            // )}
+                          />
+                        </View>
+                      )}
+                      {lgaData.length > 0 && (
+                        <View style={{paddingHorizontal: 20}}>
+                          <Text
+                            style={{
+                              fontFamily: 'Rubik-Regular',
+                              color: '#000000',
+                              fontSize: 15,
+                              marginTop: 10,
+                            }}>
+                            Select LGA
+                          </Text>
+                          <Dropdown
+                            style={styles.dropdown}
+                            placeholderStyle={styles.placeholderStyle}
+                            selectedTextStyle={styles.selectedTextStyle}
+                            inputSearchStyle={styles.inputSearchStyle}
+                            iconStyle={styles.iconStyle}
+                            data={lgaData}
+                            //search
+                            maxHeight={300}
+                            labelField="label"
+                            valueField="value"
+                            placeholder="Select LGA"
+                            //searchPlaceholder="Search..."
+                            value={lgaValue}
+                            onChange={item => {
+                              setLgaValue(item);
+                            }}
+                            // renderLeftIcon={() => (
+                            //   <AntDesign
+                            //     style={styles.icon2}
+                            //     color="black"
+                            //     name="Safety"
+                            //     size={20}
+                            //   />
+                            // )}
+                          />
+                        </View>
+                      )}
                     </View>
 
                     <View

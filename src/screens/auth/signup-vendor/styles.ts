@@ -120,5 +120,28 @@ export const makeStyles = (colors: any) =>
       color: '#000000',
       paddingVertical: 10,
     },
+    dropdown: {
+      marginTop: 9,
+      height: 50,
+      backgroundColor: '#f9f9f9',
+      borderRadius: 6,
+      paddingHorizontal: 10,
+    },
+    placeholderStyle: {
+      fontSize: 16,
+      color: '#000000',
+    },
+    selectedTextStyle: {
+      fontSize: 16,
+      color: '#000000',
+    },
+    iconStyle: {
+      width: 20,
+      height: 20,
+    },
+    inputSearchStyle: {
+      height: 40,
+      fontSize: 16,
+    },
   });
 export default makeStyles;

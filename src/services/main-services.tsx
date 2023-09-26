@@ -92,7 +92,7 @@ const rejectOrder = (detail: any) => {
   return client.post(backend_URLS.REJECT_ORDER, detail);
 };
 const getLga = id => {
-  return client.get(backend_URLS.GET_LGA + `?city_id=${id}`);
+  return client.get(backend_URLS.GET_LGA + `?state_id=${id}`);
 };
 const getStates = () => {
   return client.get(backend_URLS.GET_STATES);

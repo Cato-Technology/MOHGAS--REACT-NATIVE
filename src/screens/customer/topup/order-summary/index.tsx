@@ -190,6 +190,8 @@ export default function OrderSummary({navigation, route}) {
 
       data.append('data[size]', orderSummary?.product_details?.size);
       data.append('data[distance]', vandorData?.distance);
+      data.append('data[order_id]', vandorData?.order_id);
+
       data.append(
         'data[distance_time]',
         vandorData?.distance_time ? vandorData?.distance_time : '-',

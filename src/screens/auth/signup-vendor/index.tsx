@@ -44,20 +44,24 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import AuthContext from '../../../utils/auth-context';
 import {useTheme} from '@react-navigation/native';
 import GradientButton from '../../../components/buttons/gradient-button';
-import {authService} from '../../../services';
+import {authService, mainServics} from '../../../services';
 import ErrorModal from '../../../components/error-modal';
 import Logo from '../../../assets/images/logo.png';
 import {NAME} from '../../../utils/regix';
 import {showMessage} from 'react-native-flash-message';
+import {Dropdown} from 'react-native-element-dropdown';
 
 export default function SignUpVendor({navigation}) {
   const {colors} = useTheme();
   const styles = makeStyles(colors);
   const auth = React.useContext(AuthContext);
   const authContext = React.useContext(AuthContext);
-  const [userName, setUserName] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [stateData, setStateData] = useState([]);
+  const [cityData, setCityData] = useState([]);
+  const [lgaData, setLgaData] = useState([]);
+  const [stateValue, setStateValue] = useState(stateData[0]);
+  const [cityValue, setCityValue] = useState(cityData[0]);
+  const [lgaValue, setLgaValue] = useState(lgaData[0]);
 
   const [loginError, setLoginError] = useState(false);
   const [checked, setChecked] = useState(false);
@@ -86,17 +90,115 @@ export default function SignUpVendor({navigation}) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   );
+  useEffect(() => {
+    getStateData();
+  }, []);
+  const getLgaData = async id => {
+    try {
+      const result = await mainServics.getLga(id);
+      console.log('resultLga', result);
+      if (result.status) {
+        let arr = [];
+        result?.data?.map(ele => {
+          console.log('ele', ele);
+          arr.push({
+            label: ele.name,
+            value: ele.id,
+          });
+        });
+        setLgaData(arr);
+        setLgaValue(arr[0]);
+        console.log('arr', arr);
+      }
+    } catch (e) {
+      console.log('eer', e);
+    }
+  };
+  const getStateData = async () => {
+    try {
+      const result = await mainServics.getStates();
+      console.log('resultStates', result);
+      if (result.status) {
+        let arr = [];
+        result?.data?.map(ele => {
+          console.log('ele', ele);
+          arr.push({
+            label: ele.name,
+            value: ele.id,
+            country_id: ele?.country_id,
+            country_code: ele?.country_code,
+            fips_code: ele?.fips_code,
+            iso2: ele?.iso2,
+            type: ele?.type,
+            latitude: ele?.latitude,
+            longitude: ele?.longitude,
+            created_at: ele?.created_at,
+            updated_at: ele?.updated_at,
+            flag: ele?.flag,
+            wikiDataId: ele?.wikiDataId,
+            price_per_kg: ele?.price_per_kg,
+            service_charge: ele?.service_charge,
+            delivery_cost_per_km: ele?.delivery_cost_per_km,
+          });
+        });
+        setStateData(arr);
+        setStateValue(arr[0]);
+        getLgaData(arr[0]?.value);
+        console.log('arr', arr);
+      }
+    } catch (e) {
+      console.log('eer', e);
+    }
+  };
+  const getCitiesData = async id => {
+    console.log('idCCC', id);
 
+    try {
+      const result = await mainServics.getCities(id);
+      console.log('resultCities', result);
+      if (result.status) {
+        let arr = [];
+        result?.data?.map(ele => {
+          console.log('ele', ele);
+          arr.push({
+            label: ele.name,
+            value: ele.id,
+
+            state_id: ele?.state_id,
+            state_code: ele?.state_code,
+            country_id: ele?.country_id,
+            country_code: ele?.country_code,
+            latitude: ele?.latitude,
+            longitude: ele?.longitude,
+            created_at: ele?.created_at,
+            updated_at: ele?.updated_at,
+            flag: ele?.flag,
+            wikiDataId: ele?.wikiDataId,
+          });
+        });
+        setCityData(arr);
+        setCityValue(arr[0]);
+        console.log('arrcity', arr[0]);
+      }
+    } catch (e) {
+      console.log('eer', e);
+    }
+  };
   const handleNext = async values => {
     console.log('values', values);
     console.log('pggg', selectCountryCode + phoneNumber);
     let tData = {
       ...values,
-      ...{business_phone: selectCountryCode + phoneNumber},
+      ...{business_phone: phoneNumber},
+      ...{state_id: stateValue?.value},
+      ...{country_id: stateValue?.country_id},
+      ...{city_id: cityValue?.value},
+      ...{lga_id: lgaValue?.value},
     };
     console.log('tData', tData);
 
     navigation.navigate(SCREENS.SIGNUP_PERSONAL_VENDOR, {tData});
+
     // setLoader(true);
     // try {
     //   console.log('values', values);
@@ -266,6 +368,127 @@ export default function SignUpVendor({navigation}) {
                       ))}
 
                     <View style={{height: 20}} />
+                    <View style={{paddingHorizontal: 20}}>
+                      <Text
+                        style={{
+                          fontFamily: 'Rubik-Regular',
+                          color: '#000000',
+                          fontSize: 15,
+                          marginTop: 10,
+                        }}>
+                        Select State
+                      </Text>
+                      <Dropdown
+                        style={styles.dropdown}
+                        itemTextStyle={{color: '#000000'}}
+                        placeholderStyle={styles.placeholderStyle}
+                        selectedTextStyle={styles.selectedTextStyle}
+                        inputSearchStyle={styles.inputSearchStyle}
+                        iconStyle={styles.iconStyle}
+                        data={stateData}
+                        //search
+                        maxHeight={300}
+                        labelField="label"
+                        valueField="value"
+                        placeholder="Select State"
+                        //searchPlaceholder="Search..."
+                        value={stateValue}
+                        onChange={item => {
+                          setStateValue(item);
+                          getCitiesData(item.value);
+                          getLgaData(item.value);
+                        }}
+                        // renderLeftIcon={() => (
+                        //   <AntDesign
+                        //     style={styles.icon2}
+                        //     color="black"
+                        //     name="Safety"
+                        //     size={20}
+                        //   />
+                        // )}
+                      />
+                    </View>
+
+                    {cityData.length > 0 && (
+                      <View style={{paddingHorizontal: 20}}>
+                        <Text
+                          style={{
+                            fontFamily: 'Rubik-Regular',
+                            color: '#000000',
+                            fontSize: 15,
+                            marginTop: 10,
+                          }}>
+                          Select City
+                        </Text>
+                        <Dropdown
+                          itemTextStyle={{color: '#000000'}}
+                          style={styles.dropdown}
+                          placeholderStyle={styles.placeholderStyle}
+                          selectedTextStyle={styles.selectedTextStyle}
+                          inputSearchStyle={styles.inputSearchStyle}
+                          iconStyle={styles.iconStyle}
+                          data={cityData}
+                          //search
+                          maxHeight={300}
+                          labelField="label"
+                          valueField="value"
+                          placeholder="Select City"
+                          //searchPlaceholder="Search..."
+                          value={cityValue}
+                          onChange={item => {
+                            setCityValue(item.value);
+                          }}
+                          // renderLeftIcon={() => (
+                          //   <AntDesign
+                          //     style={styles.icon2}
+                          //     color="black"
+                          //     name="Safety"
+                          //     size={20}
+                          //   />
+                          // )}
+                        />
+                      </View>
+                    )}
+                    {lgaData.length > 0 && (
+                      <View style={{paddingHorizontal: 20}}>
+                        <Text
+                          style={{
+                            fontFamily: 'Rubik-Regular',
+                            color: '#000000',
+                            fontSize: 15,
+                            marginTop: 10,
+                          }}>
+                          Select LGA
+                        </Text>
+                        <Dropdown
+                          style={styles.dropdown}
+                          itemTextStyle={{color: '#000000'}}
+                          placeholderStyle={styles.placeholderStyle}
+                          selectedTextStyle={styles.selectedTextStyle}
+                          inputSearchStyle={styles.inputSearchStyle}
+                          iconStyle={styles.iconStyle}
+                          data={lgaData}
+                          //search
+                          maxHeight={300}
+                          labelField="label"
+                          valueField="value"
+                          placeholder="Select LGA"
+                          //searchPlaceholder="Search..."
+                          value={lgaValue}
+                          onChange={item => {
+                            setLgaValue(item.value);
+                          }}
+                          // renderLeftIcon={() => (
+                          //   <AntDesign
+                          //     style={styles.icon2}
+                          //     color="black"
+                          //     name="Safety"
+                          //     size={20}
+                          //   />
+                          // )}
+                        />
+                      </View>
+                    )}
 
                     <InputWithLabel
                       label="Business Address"

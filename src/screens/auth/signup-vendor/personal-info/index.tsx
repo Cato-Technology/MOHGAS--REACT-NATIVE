@@ -102,6 +102,10 @@ export default function PersonalInformation({navigation, route}) {
       data.append('business_phone', tData?.business_phone);
       data.append('business_address', tData?.business_address);
       data.append('full_name', values?.full_name);
+      data.append('state_id', tData?.value);
+      data.append('country_id', tData?.country_id);
+      data.append('city_id', tData?.value);
+      data.append('lga_id', tData?.value);
       data.append('referral_code', values?.referral_code);
       data.append('password', values?.password);
       console.log('formData', data);
@@ -110,7 +114,12 @@ export default function PersonalInformation({navigation, route}) {
       console.log('result', result);
 
       if (result.status) {
-        navigation.navigate(SCREENS.OTP_VERIFICATION, {item: result.data});
+        // navigation.navigate(SCREENS.OTP_VERIFICATION, {item: result.data});
+        navigation.navigate(SCREENS.PHONE_VERIFY, {
+          userId: result?.data?.user_id,
+          phNumber: result?.data?.phone_num,
+          item: result.data,
+        });
         // navigation.navigate(SCREENS.LOGIN);
         setLoader(false);
       } else {

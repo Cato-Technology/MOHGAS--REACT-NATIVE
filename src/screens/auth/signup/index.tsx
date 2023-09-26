@@ -152,6 +152,7 @@ export default function SignUpCustomer({navigation}) {
         });
         setStateData(arr);
         setStateValue(arr[0]);
+        getLgaData(arr[0]?.value);
         console.log('arr', arr);
       }
     } catch (e) {
@@ -187,7 +188,6 @@ export default function SignUpCustomer({navigation}) {
         setCityData(arr);
         setCityValue(arr[0]);
         console.log('arrcity', arr[0]);
-        getLgaData(arr[0]?.value);
       }
     } catch (e) {
       console.log('eer', e);
@@ -548,6 +548,7 @@ export default function SignUpCustomer({navigation}) {
                           onChange={item => {
                             setStateValue(item);
                             getCitiesData(item.value);
+                            getLgaData(item.value);
                           }}
                           // renderLeftIcon={() => (
                           //   <AntDesign
@@ -588,7 +589,6 @@ export default function SignUpCustomer({navigation}) {
                             value={cityValue}
                             onChange={item => {
                               setCityValue(item.value);
-                              getLgaData(item.value);
                             }}
                             // renderLeftIcon={() => (
                             //   <AntDesign
