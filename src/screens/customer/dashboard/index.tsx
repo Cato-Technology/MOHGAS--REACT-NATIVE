@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Keyboard,
   Platform,
@@ -23,7 +23,7 @@ import Icon5 from 'react-native-vector-icons/MaterialIcons';
 import Icon6 from 'react-native-vector-icons/AntDesign';
 import card from '../../../assets/card.png';
 import aImage from '../../../assets/avatar.jpg';
-import {Avatar} from 'react-native-paper';
+import { Avatar } from 'react-native-paper';
 import RNMonnify from '@monnify/react-native-sdk';
 import {
   // ErrorModal,
@@ -33,11 +33,11 @@ import {
   InputWithLabel,
   DetailCard,
 } from '../../../components';
-import {profileService} from '../../../services';
+import { profileService } from '../../../services';
 import SCREENS from '../../../utils/constants';
 
 import makeStyles from './styles';
-import {RFValue} from 'react-native-responsive-fontsize';
+import { RFValue } from 'react-native-responsive-fontsize';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -49,25 +49,25 @@ export const PASS_REGIX =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AuthContext from '../../../utils/auth-context';
-import {useTheme} from '@react-navigation/native';
+import { useTheme } from '@react-navigation/native';
 import GradientButton from '../../../components/buttons/gradient-button';
-import {useDispatch, useSelector} from 'react-redux';
-import {OrderState} from '../../../redux/orders/OrderState';
-import {getReduxRecentOrderHistory} from '../../../redux/orders/orders-actions';
-import {capitalizeFirstLetter} from '../../../utils/functions/general-functions';
+import { useDispatch, useSelector } from 'react-redux';
+import { OrderState } from '../../../redux/orders/OrderState';
+import { getReduxRecentOrderHistory } from '../../../redux/orders/orders-actions';
+import { capitalizeFirstLetter } from '../../../utils/functions/general-functions';
 import LinearGradient from 'react-native-linear-gradient';
 import Geolocation from '@react-native-community/geolocation';
-import {getAddress} from '../../../utils/functions/get-address';
-import {GEO_LOCATION} from '../../../redux/global/constants';
+import { getAddress } from '../../../utils/functions/get-address';
+import { GEO_LOCATION } from '../../../redux/global/constants';
 import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
-import {RefreshControl} from 'react-native';
-export default function DashBoard({navigation, props}) {
+import { RefreshControl } from 'react-native';
+export default function DashBoard({ navigation, props }) {
   RNMonnify.initialize({
     apiKey: 'MK_TEST_3X874HXYN3',
     contractCode: '6871168621',
     applicationMode: 'TEST',
   });
-  const {colors} = useTheme();
+  const { colors } = useTheme();
   const styles = makeStyles(colors);
   const authContext = React.useContext(AuthContext);
   const dispatch = useDispatch();
@@ -173,7 +173,7 @@ export default function DashBoard({navigation, props}) {
         console.log('error ', error);
       },
       {
-        enableHighAccuracy: false,
+        enableHighAccuracy: true,
         timeout: 30000,
         maximumAge: 1000,
       },
@@ -244,7 +244,7 @@ export default function DashBoard({navigation, props}) {
               justifyContent: 'space-between',
               alignItems: 'center',
             }}>
-            <View style={{marginTop: 20}}>
+            <View style={{ marginTop: 20 }}>
               <Icon3
                 name="menu"
                 onPress={() => navigation.openDrawer()}
@@ -270,44 +270,44 @@ export default function DashBoard({navigation, props}) {
               </Text>
 
               <Text
-                style={{fontFamily: 'Rubik-Bold', color: 'gray', fontSize: 10}}>
+                style={{ fontFamily: 'Rubik-Bold', color: 'gray', fontSize: 10 }}>
                 <Icon4 name="crown" size={10} color="gray" /> Premium Member
               </Text>
             </View>
             <Avatar.Image
               size={45}
-              source={{uri: authContext?.userData?.image}}
+              source={{ uri: authContext?.userData?.image }}
             />
           </View>
           <View style={styles.cardContainer}>
             <LinearGradient
-              start={{x: 0, y: 0}}
-              end={{x: 1, y: 0}}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
               colors={['#50a93c', '#407226']}
               style={styles.gradientView}
             />
             <View>
-              <Text style={{color: '#fff', fontFamily: 'Rubik-Bold'}}>
+              <Text style={{ color: '#fff', fontFamily: 'Rubik-Bold' }}>
                 Mohgas Wallet
               </Text>
-              <View style={{paddingVertical: 20}}>
-                <Text style={{color: '#fff', fontFamily: 'Rubik-Regular'}}>
+              <View style={{ paddingVertical: 20 }}>
+                <Text style={{ color: '#fff', fontFamily: 'Rubik-Regular' }}>
                   Balance
                 </Text>
-                <Text style={{color: '#fff', fontFamily: 'Rubik-Regular'}}>
+                <Text style={{ color: '#fff', fontFamily: 'Rubik-Regular' }}>
                   N{authContext?.userData?.wallet}
                 </Text>
               </View>
-              <Text style={{color: '#fff', fontFamily: 'Rubik-Regular'}}>
+              <Text style={{ color: '#fff', fontFamily: 'Rubik-Regular' }}>
                 ■ ■ ■ ■{'   '}■ ■ ■ ■{'   '}■ ■ ■ ■{'   '}1 2 3 4
               </Text>
-              <Text style={{color: '#fff', marginTop: 10}}>
+              <Text style={{ color: '#fff', marginTop: 10 }}>
                 {' '}
                 {authContext?.userData?.full_name}
               </Text>
             </View>
           </View>
-          <View style={{width: '100%', alignItems: 'center'}}>
+          <View style={{ width: '100%', alignItems: 'center' }}>
             <View
               style={{
                 flexDirection: 'row',
@@ -317,7 +317,7 @@ export default function DashBoard({navigation, props}) {
                 paddingHorizontal: 30,
               }}>
               <TouchableOpacity
-                style={{alignItems: 'center'}}
+                style={{ alignItems: 'center' }}
                 onPress={() => {
                   // RNMonnify.initializePayment({
                   //   amount: 1200.5,
@@ -348,21 +348,21 @@ export default function DashBoard({navigation, props}) {
 
               <TouchableOpacity
                 onPress={() => navigation.navigate(SCREENS.SWAP_CYLINDER)}
-                style={{alignItems: 'center'}}>
+                style={{ alignItems: 'center' }}>
                 <View style={styles.circleView}>
                   <Icon3
                     name="swap"
                     size={25}
                     color="#fff"
                     style={{
-                      transform: [{rotate: '0deg'}],
+                      transform: [{ rotate: '0deg' }],
                     }}
                   />
                 </View>
                 <Text style={styles.centerViewText}>Swap</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={{alignItems: 'center'}}
+                style={{ alignItems: 'center' }}
                 onPress={() => navigation.navigate(SCREENS.ACCESSORIES)}>
                 <View style={styles.circleView}>
                   <Icon2 name="line-scan" size={25} color="#fff" />
@@ -370,7 +370,7 @@ export default function DashBoard({navigation, props}) {
                 <Text style={styles.centerViewText}>Accessories</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={{alignItems: 'center'}}
+                style={{ alignItems: 'center' }}
                 onPress={() => navigation.navigate(SCREENS.CUSTOMER_SUPPORT)}>
                 <View style={styles.circleView}>
                   <Icon5 name="support-agent" size={25} color="#fff" />
@@ -381,7 +381,7 @@ export default function DashBoard({navigation, props}) {
           </View>
         </View>
 
-        <View style={{paddingHorizontal: 20, paddingBottom: 30}}>
+        <View style={{ paddingHorizontal: 20, paddingBottom: 30 }}>
           <TouchableOpacity
             onPress={() =>
               navigation.navigate(SCREENS.ORDERS_NAVIGATOR_CUSTOMER, {
@@ -393,20 +393,19 @@ export default function DashBoard({navigation, props}) {
               flexDirection: 'row',
               justifyContent: 'space-between',
             }}>
-            <Text style={{fontFamily: 'Rubik-Regular'}}>
+            <Text style={{ fontFamily: 'Rubik-Regular' }}>
               Recent Transcations
             </Text>
-            <Text style={{color: 'gray', fontFamily: 'Rubik-Regular'}}>
+            <Text style={{ color: 'gray', fontFamily: 'Rubik-Regular' }}>
               View All <Icon6 name="arrowright" size={10} color="gray" />{' '}
             </Text>
           </TouchableOpacity>
           <FlatList
             data={recentHistory?.slice(0, 3)}
-            renderItem={({item, index}) => (
+            renderItem={({ item, index }) => (
               <DetailCard
-                title={`${capitalizeFirstLetter(item.order_type)} - ${
-                  item.weight
-                }`}
+                title={`${capitalizeFirstLetter(item.order_type)} - ${item.weight
+                  }`}
                 subTitle={item.order_date}
                 price={item.price}
                 srNo={item.status}
@@ -419,7 +418,7 @@ export default function DashBoard({navigation, props}) {
                       size={22}
                       color="#4ca757"
                       style={{
-                        transform: [{rotate: '0deg'}],
+                        transform: [{ rotate: '0deg' }],
                       }}
                     />
                   )
@@ -427,12 +426,12 @@ export default function DashBoard({navigation, props}) {
                 onPressDelete={() => {
                   console.log('item', item._id);
                 }}
-                // onPressEdit={() =>
-                //   navigation.navigate(SCREENS.ADDPAYMENTMETHOD, {
-                //     edit: true,
-                //     item: item,
-                //   })
-                // }
+              // onPressEdit={() =>
+              //   navigation.navigate(SCREENS.ADDPAYMENTMETHOD, {
+              //     edit: true,
+              //     item: item,
+              //   })
+              // }
               />
             )}
             ListEmptyComponent={() => (

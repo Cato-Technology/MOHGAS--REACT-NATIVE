@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Keyboard,
   Platform,
@@ -23,7 +23,7 @@ import Icon5 from 'react-native-vector-icons/MaterialIcons';
 import Icon6 from 'react-native-vector-icons/AntDesign';
 import card from '../../../assets/card.png';
 import aImage from '../../../assets/avatar.jpg';
-import {Avatar} from 'react-native-paper';
+import { Avatar } from 'react-native-paper';
 
 import {
   // ErrorModal,
@@ -37,7 +37,7 @@ import {
 import SCREENS from '../../../utils/constants';
 
 import makeStyles from './styles';
-import {RFValue} from 'react-native-responsive-fontsize';
+import { RFValue } from 'react-native-responsive-fontsize';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -49,20 +49,20 @@ export const PASS_REGIX =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AuthContext from '../../../utils/auth-context';
-import {useTheme} from '@react-navigation/native';
+import { useTheme } from '@react-navigation/native';
 import GradientButton from '../../../components/buttons/gradient-button';
 import LinearGradient from 'react-native-linear-gradient';
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   getVendorAccountDetials,
   getVendorBusinessProfileR,
 } from '../../../redux/global/actions';
-import {GlobalState} from '../../../redux/global/GlobalState';
+import { GlobalState } from '../../../redux/global/GlobalState';
 import messaging from '@react-native-firebase/messaging';
-import {navigate} from '../../../utils/functions/RootNavigator';
+import { navigate } from '../../../utils/functions/RootNavigator';
 import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
-export default function VendorDashBoard({navigation}) {
-  const {colors} = useTheme();
+export default function VendorDashBoard({ navigation }) {
+  const { colors } = useTheme();
   const styles = makeStyles(colors);
   const dispatch = useDispatch();
   const authContext = React.useContext(AuthContext);
@@ -168,7 +168,7 @@ export default function VendorDashBoard({navigation}) {
               justifyContent: 'space-between',
               alignItems: 'center',
             }}>
-            <View style={{marginTop: 20}}>
+            <View style={{ marginTop: 20 }}>
               <Icon3
                 name="menu"
                 onPress={() => navigation.openDrawer()}
@@ -181,7 +181,7 @@ export default function VendorDashBoard({navigation}) {
                   fontSize: 15,
                   color: '#000000',
                 }}>
-                Wellcome
+                Welcome
               </Text>
               <Text
                 style={{
@@ -193,42 +193,42 @@ export default function VendorDashBoard({navigation}) {
               </Text>
 
               <Text
-                style={{fontFamily: 'Rubik-Bold', color: 'gray', fontSize: 10}}>
+                style={{ fontFamily: 'Rubik-Bold', color: 'gray', fontSize: 10 }}>
                 <Icon4 name="crown" size={10} color="gray" /> Premium Member
               </Text>
             </View>
             <Avatar.Image
               size={45}
-              source={{uri: authContext?.userData?.image}}
+              source={{ uri: authContext?.userData?.image }}
             />
           </View>
           <View style={styles.cardContainer}>
             <LinearGradient
-              start={{x: 0, y: 0}}
-              end={{x: 1, y: 0}}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
               colors={['#526ba3', '#657aa5']}
               style={styles.gradientView}
             />
             <View>
-              <Text style={{color: '#fff', fontFamily: 'Rubik-Bold'}}>
+              <Text style={{ color: '#fff', fontFamily: 'Rubik-Bold' }}>
                 Mohgas Wallet
               </Text>
-              <View style={{paddingVertical: 20}}>
-                <Text style={{color: '#fff'}}>Balance</Text>
-                <Text style={{color: '#fff'}}>
+              <View style={{ paddingVertical: 20 }}>
+                <Text style={{ color: '#fff' }}>Balance</Text>
+                <Text style={{ color: '#fff' }}>
                   N{authContext?.userData?.wallet}
                 </Text>
               </View>
-              <Text style={{color: '#fff'}}>
+              <Text style={{ color: '#fff' }}>
                 ■ ■ ■ ■{'   '}■ ■ ■ ■{'   '}■ ■ ■ ■{'   '}1 2 3 4
               </Text>
-              <Text style={{color: '#fff', marginTop: 10}}>
+              <Text style={{ color: '#fff', marginTop: 10 }}>
                 {' '}
                 {authContext?.userData?.full_name}
               </Text>
             </View>
           </View>
-          <View style={{width: '100%', alignItems: 'center'}}>
+          <View style={{ width: '100%', alignItems: 'center' }}>
             <View
               style={{
                 flexDirection: 'row',
@@ -237,7 +237,7 @@ export default function VendorDashBoard({navigation}) {
                 paddingTop: 30,
                 paddingHorizontal: 20,
               }}>
-              <View style={{alignItems: 'center'}}>
+              <View style={{ alignItems: 'center' }}>
                 <View style={styles.circleView}>
                   <Icon3
                     name="plus"
@@ -248,13 +248,13 @@ export default function VendorDashBoard({navigation}) {
                 </View>
                 <Text style={styles.centerViewText}>Product</Text>
               </View>
-              <View style={{alignItems: 'center'}}>
+              <View style={{ alignItems: 'center' }}>
                 <View style={styles.circleView}>
                   <Icon name="money" size={25} color="#fff" />
                 </View>
                 <Text style={styles.centerViewText}>Prices</Text>
               </View>
-              <View style={{alignItems: 'center'}}>
+              <View style={{ alignItems: 'center' }}>
                 <View style={styles.circleView}>
                   <FontAwesome5
                     name="map-marker-alt"
@@ -265,7 +265,7 @@ export default function VendorDashBoard({navigation}) {
                 </View>
                 <Text style={styles.centerViewText}>Branches</Text>
               </View>
-              <View style={{alignItems: 'center'}}>
+              <View style={{ alignItems: 'center' }}>
                 <View style={styles.circleView}>
                   <AntDesign
                     name="copy1"
@@ -306,12 +306,12 @@ export default function VendorDashBoard({navigation}) {
                 justifyContent: 'space-between',
                 marginTop: 5,
               }}>
-              <View style={{width: '40%', marginLeft: 10}}>
+              <View style={{ width: '40%', marginLeft: 10 }}>
                 <Text style={styles.lightText}>Sales Today</Text>
                 <Text style={styles.hardText}>N123.456.78</Text>
               </View>
-              <View style={{backgroundColor: '#fff', height: 40, width: 0.5}} />
-              <View style={{width: '40%'}}>
+              <View style={{ backgroundColor: '#fff', height: 40, width: 0.5 }} />
+              <View style={{ width: '40%' }}>
                 <Text style={styles.lightText}>Orders Completed</Text>
                 <Text style={styles.hardText}>88/249</Text>
               </View>
@@ -319,7 +319,7 @@ export default function VendorDashBoard({navigation}) {
           </View>
         </View>
 
-        <View style={{paddingHorizontal: 20, marginTop: 10}}>
+        <View style={{ paddingHorizontal: 20, marginTop: 10 }}>
           <TouchableOpacity
             onPress={() => navigation.navigate(SCREENS.ORDER_HISTORY_VENDOR)}
             style={{
@@ -328,15 +328,15 @@ export default function VendorDashBoard({navigation}) {
               justifyContent: 'space-between',
             }}>
             <Text>Recent Orders</Text>
-            <Text style={{color: 'gray'}}>
+            <Text style={{ color: 'gray' }}>
               View All <Icon6 name="arrowright" size={10} color="gray" />{' '}
             </Text>
           </TouchableOpacity>
           <FlatList
             data={[1, 2]}
-            renderItem={({item, index}) => (
+            renderItem={({ item, index }) => (
               <DetailCard
-                style={{backgroundColor: '#f9f5fc'}}
+                style={{ backgroundColor: '#f9f5fc' }}
                 title={'Top Up - LPG 25kg'}
                 subTitle={'Today - 02.15 PM'}
                 price={'N12.34'}
@@ -383,7 +383,7 @@ export default function VendorDashBoard({navigation}) {
               <Text
                 style={[
                   styles.hardText,
-                  {fontSize: 12, color: '#000', fontWeight: '700'},
+                  { fontSize: 12, color: '#000', fontWeight: '700' },
                 ]}>
                 Update Now?
               </Text>

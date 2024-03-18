@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Keyboard,
   Platform,
@@ -20,7 +20,7 @@ import Icon3 from 'react-native-vector-icons/Entypo';
 import Icon4 from 'react-native-vector-icons/FontAwesome5';
 import Icon5 from 'react-native-vector-icons/MaterialIcons';
 import aImage from '../../../../assets/avatar.jpg';
-import {Avatar} from 'react-native-paper';
+import { Avatar } from 'react-native-paper';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
 import {
@@ -35,7 +35,7 @@ import {
 import SCREENS from '../../../../utils/constants';
 
 import makeStyles from './styles';
-import {RFValue} from 'react-native-responsive-fontsize';
+import { RFValue } from 'react-native-responsive-fontsize';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -49,17 +49,17 @@ export const PASS_REGIX =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AuthContext from '../../../../utils/auth-context';
-import {useTheme} from '@react-navigation/native';
+import { useTheme } from '@react-navigation/native';
 import GradientButton from '../../../../components/buttons/gradient-button';
 import HeaderBottom from '../../../../components/header-bottom';
 import VendorCard from '../../../../components/vendor-card';
-import {showMessage} from 'react-native-flash-message';
-import {mainServics} from '../../../../services';
-import {useDispatch} from 'react-redux';
-import {ORDER_SUMMARY} from '../../../../redux/global/constants';
+import { showMessage } from 'react-native-flash-message';
+import { mainServics } from '../../../../services';
+import { useDispatch } from 'react-redux';
+import { ORDER_SUMMARY } from '../../../../redux/global/constants';
 
-export default function ConnectVendor({navigation, route}) {
-  const {colors} = useTheme();
+export default function ConnectVendor({ navigation, route }) {
+  const { colors } = useTheme();
   const styles = makeStyles(colors);
 
   const [isLoading, setIsLoading] = useState(false);
@@ -193,11 +193,11 @@ export default function ConnectVendor({navigation, route}) {
               <AntDesign name="setting" size={25} color={colors.text} />
             }
           />
-          <View style={{width: '100%', paddingHorizontal: 20}}>
+          <View style={{ width: '100%', paddingHorizontal: 20 }}>
             <HeaderBottom
               title="New Order"
               subTitle={'Request for Refill'}
-              contentStyle={{marginTop: 50}}
+              contentStyle={{ marginTop: 50 }}
               rightIcon={
                 <View
                   style={{
@@ -218,22 +218,22 @@ export default function ConnectVendor({navigation, route}) {
               }}
               // onChange={handleChange('email')}
               value={'100 Main Street fake, City, Country'}
-              // error={touched.email ? errors.email : ''}
-              // onBlur={() => setFieldTouched('email')}
+            // error={touched.email ? errors.email : ''}
+            // onBlur={() => setFieldTouched('email')}
             />
-            <Text style={{width: '100%', textAlign: 'right', color: '#ecb241'}}>
+            <Text style={{ width: '100%', textAlign: 'right', color: '#ecb241' }}>
               Change
             </Text>
           </View>
           {data && (
             <>
-              <Text style={{width: '90%', color: '#000', fontSize: 16}}>
+              <Text style={{ width: '90%', color: '#000', fontSize: 16 }}>
                 Select a Vendor
               </Text>
               <FlatList
                 data={data}
-                renderItem={({item}) => (
-                  <View style={{paddingHorizontal: 20}}>
+                renderItem={({ item }) => (
+                  <View style={{ paddingHorizontal: 20 }}>
                     <VendorCard
                       onPress={() => setItemVendor(item)}
                       backgroundColor={
@@ -264,8 +264,8 @@ export default function ConnectVendor({navigation, route}) {
             paddingHorizontal: 10,
             alignItems: 'center',
           }}>
-          <View style={{width: '100%', paddingHorizontal: 20}}>
-            <View style={{height: 20}} />
+          <View style={{ width: '100%', paddingHorizontal: 20 }}>
+            <View style={{ height: 20 }} />
             {itemVendor?.refill_size && (
               <Text
                 style={{
@@ -277,7 +277,7 @@ export default function ConnectVendor({navigation, route}) {
               </Text>
             )}
 
-            <View style={{flexDirection: 'row', marginTop: 10}}>
+            <View style={{ flexDirection: 'row', marginTop: 10 }}>
               {/* <Text style={styles.tagText}>6KG</Text>
               <Text style={styles.tagText}>12KG</Text>
               <Text
@@ -319,8 +319,8 @@ export default function ConnectVendor({navigation, route}) {
                   setWeightInput(txt);
                 }}
                 placeholder={'0'}
-                // error={touched.email ? errors.email : ''}
-                // onBlur={() => setFieldTouched('email')}
+              // error={touched.email ? errors.email : ''}
+              // onBlur={() => setFieldTouched('email')}
               />
             )}
             <View
