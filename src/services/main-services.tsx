@@ -106,6 +106,10 @@ const getWalletTopupDetails = (detail: any) => {
   return client.post(backend_URLS.GET_TOPUP_WALLET_DETAILS, detail);
 };
 
+const fundWallet = (detail:any) => {
+  return client.post(backend_URLS.FUND_WALLET, detail);
+}
+
 export const mainServics = {
   getWalletTopupDetails,
   getCities,
@@ -135,4 +139,5 @@ export const mainServics = {
   acceptOrder,
   rejectOrder,
   getLga,
+  fundWallet,
 };

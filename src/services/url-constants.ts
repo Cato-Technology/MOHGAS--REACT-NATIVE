@@ -15,7 +15,9 @@ const backend_URLS = {
 
   //order history contants
   ORDER_HISTORY: '/backend/user_order_history',
-  RECENT_HISTORY: '/backend/user/dashboard',
+  // RECENT_HISTORY: '/backend/user/dashboard',
+  RECENT_HISTORY: '/backend/user/full_order_history?user_id=17',
+
 
   // Topup gas
   NEAR_BY_GAS_REFILL: '/backend/orders/nearest_vendors',
@@ -43,6 +45,9 @@ const backend_URLS = {
   GET_TOPUP_WALLET_DETAILS: '/backend/user/wallet',
 
   NEW_PASSWORD: '/backend/register/new_password',
+
+  //fund
+  FUND_WALLET: '/backend/paymentController/pay'
 };
 
 export {backend_URLS};

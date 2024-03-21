@@ -31,7 +31,7 @@ function updateProfile(data: any) {
   });
 }
 function getProfile(data: any) {
-  console.log('data==>', data);
+  // console.log('data==>', data);
 
   return new Promise<UserResponse>((resolve, reject) => {
     client
