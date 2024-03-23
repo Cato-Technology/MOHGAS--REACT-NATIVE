@@ -404,10 +404,10 @@ export default function DashBoard({ navigation, props }) {
             data={recentHistory?.slice(0, 3)}
             renderItem={({ item, index }) => (
               <DetailCard
-                title={`${capitalizeFirstLetter(item.order_type)} - ${item.weight
+                title={`${capitalizeFirstLetter(item.order_type)} - ${item.delivery_cost
                   }`}
-                subTitle={item.order_date}
-                price={item.price}
+                subTitle={item.created_date}
+                price={item.sub_total}
                 srNo={item.status}
                 icon={
                   item.order_type == 'refill' ? (

@@ -1,7 +1,7 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 
 // import colors from 'assets/colors';
-import {RFValue} from 'react-native-responsive-fontsize';
+import { RFValue } from 'react-native-responsive-fontsize';
 import {
   heightPercentageToDP,
   widthPercentageToDP,
@@ -50,7 +50,7 @@ export const makeStyles = (colors: any) =>
       fontSize: RFValue(15),
       color: colors.black,
     },
-    dash: {height: 0.5, backgroundColor: colors.blue, width: '40%'},
+    dash: { height: 0.5, backgroundColor: colors.blue, width: '40%' },
     orView: {
       flexDirection: 'row',
       alignItems: 'center',
@@ -216,5 +216,20 @@ export const makeStyles = (colors: any) =>
       color: colors.heading,
       fontSize: 18,
     },
+    webviewStyle: {
+      width: widthPercentageToDP(80),
+      height: heightPercentageToDP(60)
+    },
+    scrollView: { 
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: "red" 
+    },
+    keyboardAvoider: { 
+      width: widthPercentageToDP(80),
+      backgroundColor: 'green',
+      alignSelf: 'center'
+    }
   });
 export default makeStyles;

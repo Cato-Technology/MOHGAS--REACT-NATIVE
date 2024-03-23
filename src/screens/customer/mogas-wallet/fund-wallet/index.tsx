@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Keyboard,
   Platform,
@@ -14,15 +14,17 @@ import {
   SafeAreaView,
   ImageBackground,
   PermissionsAndroid,
+  Modal,
 } from 'react-native';
+import { WebView } from 'react-native-webview';
 
 import Feather from 'react-native-vector-icons/Feather';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialIcons';
 import card from '../../../../assets/card.png';
 import aImage from '../../../../assets/avatar.jpg';
-import RadioGroup, {RadioButtonProps} from 'react-native-radio-buttons-group';
+import RadioGroup, { RadioButtonProps } from 'react-native-radio-buttons-group';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {PERMISSIONS, check, request} from 'react-native-permissions';
+import { PERMISSIONS, check, request } from 'react-native-permissions';
 import {
   // ErrorModal,
   ActivityIndicator,
@@ -36,7 +38,7 @@ import {
 import SCREENS from '../../../../utils/constants';
 
 import makeStyles from './styles';
-import {RFValue} from 'react-native-responsive-fontsize';
+import { RFValue } from 'react-native-responsive-fontsize';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -50,12 +52,12 @@ export const PASS_REGIX =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AuthContext from '../../../../utils/auth-context';
-import {useTheme} from '@react-navigation/native';
+import { useTheme } from '@react-navigation/native';
 import GradientButton from '../../../../components/buttons/gradient-button';
 import HeaderBottom from '../../../../components/header-bottom';
 import RNMonnify from '@monnify/react-native-sdk';
-import {mainServics} from '../../../../services';
-import {showMessage} from 'react-native-flash-message';
+import { mainServics } from '../../../../services';
+import { showMessage } from 'react-native-flash-message';
 let cameraIs = false;
 let cbData = [
   {
@@ -75,14 +77,17 @@ let sucessData = {
   title: 'Transcation Sucessfull',
   desc: 'Your transcation was sucessful and wallet balance updated accordingly',
 };
-export default function FundWallet({navigation}) {
-  const {colors} = useTheme();
+export default function FundWallet({ navigation }) {
+  const { colors } = useTheme();
   const styles = makeStyles(colors);
   const [isFlipped, setIsFlipped] = useState(false);
   const authContext = React.useContext(AuthContext);
   const [ammount, setAmmount] = React.useState(0);
   const [checkValue, setCheckValue] = React.useState();
   const [isLoading, setIsLoading] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [htmlContent, setHtmlContent] = useState(``);
+
 
   const hanldeCb = txt => {
     console.log('txt', txt);
@@ -99,6 +104,7 @@ export default function FundWallet({navigation}) {
     });
   };
   const getWalletDetails = async () => {
+    console.log('fullname=======================', authContext?.userData);
     try {
       setIsLoading(true);
       let fdata = new FormData();
@@ -154,6 +160,29 @@ export default function FundWallet({navigation}) {
       });
   };
 
+  const handleFlutterWavePayment = async () => {
+    setIsLoading(true);
+
+    const { user_id, email, full_name, phone_no }: any = authContext?.userData;
+
+    let fwData = {
+      "id": user_id,
+      "email": email,
+      "phone_no": phone_no,
+      "full_name": full_name,
+      "amount": ammount
+    }
+
+    const res = await mainServics.fundWallet(fwData);
+
+    console.log(fwData);
+    console.log('response============', res);
+    setHtmlContent(res);
+    setIsLoading(false);
+    setModalVisible(true);
+
+  }
+
   return (
     <View style={styles.container}>
       <ActivityIndicator visible={isLoading} />
@@ -177,11 +206,11 @@ export default function FundWallet({navigation}) {
               <AntDesign name="setting" size={25} color={colors.text} />
             }
           />
-          <View style={{width: '100%', paddingHorizontal: 20}}>
+          <View style={{ width: '100%', paddingHorizontal: 20 }}>
             <HeaderBottom
               title="Wallet"
               subTitle={'Funding your Mohgas wallet to Enable Quick Purchase'}
-              contentStyle={{marginTop: 40}}
+              contentStyle={{ marginTop: 40 }}
             />
             <InputWithLabel
               label="Ammount"
@@ -194,8 +223,8 @@ export default function FundWallet({navigation}) {
               onChange={txt => setAmmount(txt)}
               placeholder={'eg. 0.0'}
               keyboardType={'number-pad'}
-              // error={touched.email ? errors.email : ''}
-              // onBlur={() => setFieldTouched('email')}
+            // error={touched.email ? errors.email : ''}
+            // onBlur={() => setFieldTouched('email')}
             />
             <Text
               style={{
@@ -216,13 +245,13 @@ export default function FundWallet({navigation}) {
                   }}>
                   Select Payment Method
                 </Text>
-                <Text style={{fontSize: RFValue(9), fontWeight: '200'}}>
+                <Text style={{ fontSize: RFValue(9), fontWeight: '200' }}>
                   Choose how you want to fund you wallet.
                 </Text>
                 <FlatList
                   data={cbData}
                   extraData={isFlipped}
-                  renderItem={({item, index}) => (
+                  renderItem={({ item, index }) => (
                     <View
                       style={{
                         width: '90%',
@@ -252,7 +281,7 @@ export default function FundWallet({navigation}) {
             paddingHorizontal: 10,
             alignItems: 'center',
           }}>
-          <View style={{width: '100%', paddingHorizontal: 20}}>
+          <View style={{ width: '100%', paddingHorizontal: 20 }}>
             <View
               style={{
                 paddingHorizontal: widthPercentageToDP(3),
@@ -262,7 +291,7 @@ export default function FundWallet({navigation}) {
               }}>
               <GradientButton
                 onPress={
-                  () => getWalletDetails()
+                  () => handleFlutterWavePayment()
 
                   // navigation.navigate(SCREENS.CONFIRM_PAYMENT, {
                   //   ammount: ammount,
@@ -276,6 +305,37 @@ export default function FundWallet({navigation}) {
           </View>
         </View>
       </ScrollView>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(false);
+        }}>
+        <KeyboardAvoidingView behavior="padding" style={styles.keyboardAvoider}>
+          <ScrollView
+            contentContainerStyle={styles.scrollView}>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: 'rgba(0,0,0,0.5)',
+                paddingHorizontal: 20,
+              }}>
+              <WebView
+                originWhitelist={['*']}
+                source={{ html: htmlContent}}
+                javaScriptEnabled={true}
+                domStorageEnabled={true}
+                startInLoadingState={true}
+                style={styles.webviewStyle}
+              />
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </Modal>
     </View>
   );
 }
