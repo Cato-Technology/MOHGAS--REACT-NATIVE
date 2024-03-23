@@ -59,6 +59,7 @@ export default function AddDeliveryAddress({ navigation, route }) {
   const [loginError, setLoginError] = useState(false);
   const [checked, setChecked] = useState(false);
   const render = route?.params?.render;
+  const mapaddress = route?.params?.faddress;
 
   const handleApi = async () => {
     navigation.navigate(SCREENS.PIN_LOCATION);
@@ -103,6 +104,7 @@ export default function AddDeliveryAddress({ navigation, route }) {
               </View>
             }
           />
+
           <InputWithLabel
             label="Set Delivery Address"
             labelStyle={{
@@ -110,6 +112,7 @@ export default function AddDeliveryAddress({ navigation, route }) {
               color: colors.yellowHeading,
               fontSize: 15,
             }}
+            value={mapaddress}
             onChange={txt => setAddress(txt)}
             placeholder={'100 Main Street fake, City, Country'}
           // error={touched.email ? errors.email : ''}
