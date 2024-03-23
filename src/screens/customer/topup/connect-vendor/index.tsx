@@ -67,7 +67,7 @@ export default function ConnectVendor({ navigation, route }) {
   const [weightInput, setWeightInput] = useState('');
   const [data, setData] = useState();
   const [itemVendor, setItemVendor] = useState();
-  console.log('route', route.params);
+  const [address, setAddress] = useState(route?.params?.item?.faddress);
 
   useEffect(() => {
     getData();
@@ -217,7 +217,7 @@ export default function ConnectVendor({ navigation, route }) {
                 fontSize: 15,
               }}
               // onChange={handleChange('email')}
-              value={'100 Main Street fake, City, Country'}
+              value={address}
             // error={touched.email ? errors.email : ''}
             // onBlur={() => setFieldTouched('email')}
             />

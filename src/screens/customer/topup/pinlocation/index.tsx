@@ -60,7 +60,7 @@ export default function PinLocation({ navigation }) {
   const styles = makeStyles(colors);
   const [modalVisible, setModalVisible] = useState(false);
   const [text, setText] = useState('');
-  const [userAddress, setUserAddress] = useState();
+  const [userAddress, setUserAddress] = useState('');
   const [city, setCity] = useState();
   const [postal, setPostal] = useState();
   const [state, setState] = useState();
@@ -94,15 +94,15 @@ export default function PinLocation({ navigation }) {
     //  navigation.navigate(SCREENS.CONNECT_VENDOR);
   };
 
-  const searchPlaces = async () => {
+  // const searchPlaces = async () => {
 
-    let searchText = `${userAddress && userAddress}, ${city && city} ${state && state}`;
-    if (!searchText.trim().length) return;
+  //   let searchText = `${userAddress && userAddress}, ${city && city} ${state && state}`;
+  //   if (!searchText.trim().length) return;
 
-    const googleApisUrl = "https://maps.googleapis.com/maps/api/place/textsearch/json";
+  //   const googleApisUrl = "https://maps.googleapis.com/maps/api/place/textsearch/json";
 
-    console.log(searchText);
-  }
+  //   console.log(searchText);
+  // }
 
   const moveTo = async (position: LatLng) => {
     const camera = await mapRef.current?.getCamera();
@@ -120,9 +120,9 @@ export default function PinLocation({ navigation }) {
           placeholder='Search'
           styles={{ textInput: styles.searchInput }}
           onPress={(data, details = null) => {
-            // 'details' is provided when fetchDetails = true
-            // console.log(data);
-            console.log(details?.geometry.location.lat);
+            setUserAddress(data.description);
+            // console.log(details);
+            // console.log(details?.geometry.location);
             const position = {
               latitude: details?.geometry.location.lat || locData?.latitude,
               longitude: details?.geometry.location.lng || locData?.longitude
