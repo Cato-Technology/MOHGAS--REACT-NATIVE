@@ -104,7 +104,7 @@ export default function FundWallet({ navigation }) {
     });
   };
   const getWalletDetails = async () => {
-    console.log('fullname=======================', authContext?.userData);
+    // console.log('fullname=======================', authContext?.userData);
     try {
       setIsLoading(true);
       let fdata = new FormData();
@@ -115,7 +115,7 @@ export default function FundWallet({ navigation }) {
       fdata.append('amount', ammount);
 
       const resData = await mainServics.getWalletTopupDetails(fdata);
-      console.log('resWallet', resData);
+      // console.log('resWallet', resData);
       setIsLoading(false);
       if (
         resData?.status &&
@@ -175,8 +175,8 @@ export default function FundWallet({ navigation }) {
 
     const res = await mainServics.fundWallet(fwData);
 
-    console.log(fwData);
-    console.log('response============', res);
+    // console.log(fwData);
+    // console.log('response============', res);
     setHtmlContent(res);
     setIsLoading(false);
     setModalVisible(true);
