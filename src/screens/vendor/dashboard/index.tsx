@@ -24,6 +24,8 @@ import Icon6 from 'react-native-vector-icons/AntDesign';
 import card from '../../../assets/card.png';
 import aImage from '../../../assets/avatar.jpg';
 import { Avatar } from 'react-native-paper';
+import { capitalizeFirstLetter } from '../../../utils/functions/general-functions';
+
 
 import {
   // ErrorModal,
@@ -61,6 +63,15 @@ import { GlobalState } from '../../../redux/global/GlobalState';
 import messaging from '@react-native-firebase/messaging';
 import { navigate } from '../../../utils/functions/RootNavigator';
 import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
+import moment from 'moment';
+import {orderServices } from '../../../services';
+import { showMessage } from 'react-native-flash-message';
+
+
+
+
+
+
 export default function VendorDashBoard({ navigation }) {
   const { colors } = useTheme();
   const styles = makeStyles(colors);
@@ -70,6 +81,8 @@ export default function VendorDashBoard({ navigation }) {
   const businessData = useSelector(
     (state: GlobalState) => state?.global?.businessProfileData,
   );
+  const [orderHistory, setOrderHistory] = useState();
+
 
   React.useEffect(() => {
     // Load the user data from storage when the app starts
@@ -142,7 +155,28 @@ export default function VendorDashBoard({ navigation }) {
   useEffect(() => {
     dispatch(getVendorBusinessProfileR());
     dispatch(getVendorAccountDetials());
+    let data = { vendor_id: authContext?.userData?.user_id }
+    getData(data);
   }, [dispatch]);
+
+  const getData = async (data: any) => {
+    try {
+      // const res = mainServics.getVendorOrderHistory(data);
+      const res = await orderServices.orderHistory(data);
+      console.log("-------------------", res);
+
+      setOrderHistory(res?.order_history);
+
+    } catch (e) {
+      showMessage({
+        message: JSON.stringify(e),
+        type: 'danger',
+        icon: 'danger',
+      });
+      console.log('e', e);
+    }
+    //  navigation.navigate(SCREENS.CONNECT_VENDOR);
+  };
 
   return (
     <View style={styles.container}>
@@ -332,26 +366,29 @@ export default function VendorDashBoard({ navigation }) {
               View All <Icon6 name="arrowright" size={10} color="gray" />{' '}
             </Text>
           </TouchableOpacity>
-          <FlatList
-            data={[1, 2]}
-            renderItem={({ item, index }) => (
-              <DetailCard
-                style={{ backgroundColor: '#f9f5fc' }}
-                title={'Top Up - LPG 25kg'}
-                subTitle={'Today - 02.15 PM'}
-                price={'N12.34'}
-                srNo={'#MGS74TY'}
-                icon={<Icon3 name="arrow-up" size={25} color="#455F9B" />}
-                onPressDelete={() => {
-                  console.log('item', item._id);
-                }}
-              />
-            )}
-            ListEmptyComponent={() => (
-              <Text style={styles.noDataText}>No Data</Text>
-            )}
-            keyExtractor={(item, index) => index.toString()}
-          />
+                <FlatList
+              data={orderHistory}
+              renderItem={({ item, index }) => (
+                <DetailCard
+                  title={`${capitalizeFirstLetter(item?.order_type)} - ${item?.invoice
+                    }`}
+                  subTitle={
+                    item?.created_date
+                      ? moment(item?.created_date).format('MMMM,DD,YYYY')
+                      : '--'
+                  }
+                  style={{ backgroundColor: '#eaf5fc' }}
+                  price={`N${item?.grand_total}`}
+                  srNo={capitalizeFirstLetter(item?.status)}
+                  icon={<Icon3 name="arrow-up" size={25} color="#455F9B" />}
+                  data={item}
+                />
+              )}
+              ListEmptyComponent={() => (
+                <Text style={styles.noDataText}>No Data</Text>
+              )}
+              keyExtractor={(item, index) => index.toString()}
+            />
           <TouchableOpacity
             onPress={() => {
               navigation.navigate(SCREENS.PROFILE_NAVIGATOR_VENDOR, {

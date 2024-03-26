@@ -41,7 +41,7 @@ const backend_URLS = {
   //Accept Reject Order
   ACCEPT_ORDER: '/backend/orders/accepted',
   REJECT_ORDER: '/backend/orders/decline',
-  COMPLETE_ORDER: '/backend/orders/decline',
+  COMPLETE_ORDER: '/backend/orders/mark_order_as_complete',
   GET_STATES: '/backend/register/states',
   GET_CITIES: '/backend/register/cities',
   GET_LGA: '/backend/register/lga',

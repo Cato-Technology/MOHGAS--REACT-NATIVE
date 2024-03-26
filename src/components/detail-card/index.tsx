@@ -23,6 +23,7 @@ type Props = {
   showOptions?: boolean;
   actionOne?: any;
   actionTwo?: any;
+  actionThree?: any;
   data?: any
 };
 
@@ -38,6 +39,7 @@ const BranchCard = ({
   showOptions,
   actionOne,
   actionTwo,
+  actionThree,
   data
 }: Props) => {
   const navigations = useNavigation();
@@ -49,7 +51,7 @@ const BranchCard = ({
   return (
     <TouchableOpacity style={styles.boxContent} onPress={() => {
       showOptions && setDown(!dropdown)
-      }}>
+    }}>
       <View style={styles.main}>
         <View
           style={{
@@ -82,7 +84,7 @@ const BranchCard = ({
       </View>
 
       {/* dropdown with options */}
-      { dropdown &&
+      {dropdown &&
         <View style={styles.dropdown}>
           <PromptButton
             title={"accept"}
@@ -93,6 +95,12 @@ const BranchCard = ({
             title={"decline"}
             onPress={actionTwo}
             btnColor={"red"}
+          />
+
+          <PromptButton
+            title={"Complete"}
+            onPress={actionThree}
+            btnColor={"purple"}
           />
         </View>
       }
