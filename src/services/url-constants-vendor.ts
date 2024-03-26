@@ -4,7 +4,7 @@ const API_URLS_VENDOR = {
   VENDOR_PRODUCTS: '/backend/vendor/products',
   PROFILE: '/backend/vendor/profile',
   VENDOR_BANK_ACCOUNT: '/backend/vendor/bank_account',
-  VENDOR_ORDER_HISTORY: '/backend/vendor/orders',
+  VENDOR_ORDER_HISTORY: '/backend/vendor/order_history',
   CREATE_BVN: '/backend/monni/bvn_details_match',
 };
 

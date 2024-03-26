@@ -167,6 +167,7 @@ export const getVendorOrderHistory =
       .getVendorOrderHistory()
       .then(async res => {
         await dispatch(addVendorOrderHistory(res.data));
+        console.log('vendor Orders', res, "====")
         dispatch({
           type: HIDE_LOADER,
         });

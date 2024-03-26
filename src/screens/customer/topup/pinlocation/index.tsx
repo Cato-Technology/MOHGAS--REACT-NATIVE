@@ -121,8 +121,10 @@ export default function PinLocation({ navigation }) {
           styles={{ textInput: styles.searchInput }}
           onPress={(data, details = null) => {
             setUserAddress(data.description);
-            // console.log(details);
-            // console.log(details?.geometry.location);
+            const addrComp = details?.vicinity.split(',');
+            setCity(addrComp[addrComp?.length - 1].trim());
+            console.log(details);
+            // console.log(data);
             const position = {
               latitude: details?.geometry.location.lat || locData?.latitude,
               longitude: details?.geometry.location.lng || locData?.longitude
@@ -132,7 +134,7 @@ export default function PinLocation({ navigation }) {
           }}
           query={{
             key: 'AIzaSyD26sAjzThLmmzzLWJrHRxwtphkYmo90vw',
-            language: 'en',
+            language: 'address',
           }}
           fetchDetails
         />

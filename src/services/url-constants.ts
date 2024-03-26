@@ -22,6 +22,8 @@ const backend_URLS = {
   // Topup gas
   NEAR_BY_GAS_REFILL: '/backend/orders/nearest_vendors',
 
+  GET_ONLINE_BRANCH_BY_CITY: '/backend/user/getOnlineBranchesByCity',
+
   // Swap Cylinder
   SWAP_CYLINDER: '/backend/orders/swap',
   nearByGasAgencyAsPerRequiredSize: '/backend/nearByGasAgencyAsPerRequiredSize',
@@ -39,6 +41,7 @@ const backend_URLS = {
   //Accept Reject Order
   ACCEPT_ORDER: '/backend/orders/accepted',
   REJECT_ORDER: '/backend/orders/decline',
+  COMPLETE_ORDER: '/backend/orders/decline',
   GET_STATES: '/backend/register/states',
   GET_CITIES: '/backend/register/cities',
   GET_LGA: '/backend/register/lga',

@@ -68,6 +68,7 @@ export default function ConnectVendor({ navigation, route }) {
   const [data, setData] = useState();
   const [itemVendor, setItemVendor] = useState();
   const [address, setAddress] = useState(route?.params?.item?.faddress);
+  const [city, setCity] = useState(route?.params?.item?.city);
 
   useEffect(() => {
     getData();
@@ -78,13 +79,14 @@ export default function ConnectVendor({ navigation, route }) {
       setIsLoading(true);
       let item = route?.params?.item;
 
-      const resData = await mainServics.nearByGasAgencyRefill(
-        '9.138435493506822',
-        '7.367293098773452',
-        'REFILL',
-        // item.latitude,
-        // item.longitude,
-      );
+      // const resData = await mainServics.nearByGasAgencyRefill(
+      //   '9.138435493506822',
+      //   '7.367293098773452',
+      //   'REFILL',
+      //   // item.latitude,
+      //   // item.longitude,
+      // );
+      const resData = await mainServics.getOnlineVendorsByCity(city.toLowerCase());
       console.log('resDataGet', resData);
       if (resData?.status) {
         setData(resData?.data);
@@ -128,16 +130,17 @@ export default function ConnectVendor({ navigation, route }) {
       console.log('data=>', item);
       let fdata = new FormData();
       fdata.append('order_type', 'REFILL');
-      fdata.append('product_id', parseInt(weightData?.product_id));
+      fdata.append('product_id', parseInt('1'));
       fdata.append('qty', 1);
-      fdata.append('price', parseInt(weightData?.price));
-      fdata.append('branch_id', parseInt(itemVendor?.branch_id));
+      fdata.append('price', parseInt(itemVendor?.price_per_kg));
+      fdata.append('branch_id', parseInt(itemVendor?.id));
       fdata.append('latitude', item.latitude);
       fdata.append('longitude', item.longitude);
       fdata.append('address', item.faddress);
       fdata.append('city', item.city);
       fdata.append('postal', item.postal);
       fdata.append('state', item.state);
+      fdata.append('swap_type', 1)
       console.log('ffff=>', fdata);
 
       const resData = await mainServics.gasOrder(fdata);
@@ -240,15 +243,15 @@ export default function ConnectVendor({ navigation, route }) {
                         itemVendor == item ? '#dee8d2' : '#f5f5f5'
                       }
                       image={item.vendor_image_url}
-                      title={item?.vendor_name}
-                      orders={item?.orders}
-                      rating={item?.rating}
-                      price={item?.price}
-                      distance={parseFloat(item?.distance).toFixed(2) + 'KM'}
+                      title={item?.branch_name}
+                      orders={item?.branch_phone}
+                      rating={item?.def}
+                      price={item?.price_per_kg}
+                      email={item?.email}
                       time={
                         item?.distance_time ? item?.distance_time : '-' + 'mins'
                       }
-                      pricePerKg={'Price Per Kg - ' + item?.avg_price_per_kg}
+                      pricePerKg={'Price Per Kg - ' + item?.price_per_kg}
                     />
                   </View>
                 )}
@@ -258,8 +261,10 @@ export default function ConnectVendor({ navigation, route }) {
             </>
           )}
         </View>
+  
         <View
           style={{
+            height: '100%',
             width: '100%',
             paddingHorizontal: 10,
             alignItems: 'center',
@@ -334,7 +339,7 @@ export default function ConnectVendor({ navigation, route }) {
                 onPress={() => {
                   handleOrder();
                 }}
-                disabled={!weightData || !itemVendor}
+                disabled={!itemVendor}
                 title="Countinue"
               />
             </View>

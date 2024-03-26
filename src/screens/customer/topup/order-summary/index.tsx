@@ -260,7 +260,7 @@ export default function OrderSummary({navigation, route}) {
           <View style={{width: '100%', paddingHorizontal: 20}}>
             <HeaderBottom
               title="Order Summary"
-              subTitle={'Review what you have done Emekai'}
+              subTitle={'Review what you have done'}
               contentStyle={{marginTop: 50}}
               rightIcon={
                 <View

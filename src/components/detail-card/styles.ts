@@ -16,7 +16,15 @@ export const makeStyles = (colors: any) =>
       flexDirection: 'row',
       justifyContent: 'space-between',
     },
+    boxContent: {
 
+    },
+    dropdown: {
+      // backgroundColor: "red",
+      flexDirection: 'row',
+      justifyContent: 'space-evenly',
+      alignItems: 'center'
+    },
     entityText: {
       color: '#000000',
       marginTop: 2,
@@ -27,6 +35,7 @@ export const makeStyles = (colors: any) =>
       marginTop: 2,
 
       fontFamily: 'Rubik-Regular',
+      fontSize: 12
     },
     detailText: {
       color: 'gray',

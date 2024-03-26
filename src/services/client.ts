@@ -51,7 +51,7 @@ request.interceptors.response.use(onSuccess, onError);
 request.interceptors.request.use(
   async config => {
     const userToken = await AsyncStorage.getItem('token');
-    console.log('userTokenInter', userToken);
+    // console.log('userTokenInter', userToken);
 
     config.headers['token'] = `${userToken}`;
     //  config.headers.Authorization = 'user';

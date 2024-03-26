@@ -39,6 +39,9 @@ const swapCylinder = (detail: any) => {
 const nearByGasAgencyAsPerRequiredSize = (detail: any) => {
   return client.post(backend_URLS.nearByGasAgencyAsPerRequiredSize, detail);
 };
+const getOnlineVendorsByCity = (city: string) => {
+  return client.get(`${backend_URLS.GET_ONLINE_BRANCH_BY_CITY}/${city}`);
+};
 const getAccessoriesAsPerNearestAgencies = (lat, lon) => {
   return client.get(
     backend_URLS.GET_NEAREST_ACCESSORIES + `?latitude=${lat}&longitude=${lon}`,
@@ -71,8 +74,10 @@ const upDateVendorBankAccount = (detail: any) => {
 const getVendorBankAccount = () => {
   return client.get(API_URLS_VENDOR.VENDOR_BANK_ACCOUNT);
 };
-const getVendorOrderHistory = () => {
-  return client.get(API_URLS_VENDOR.VENDOR_ORDER_HISTORY);
+const getVendorOrderHistory = (detail: any) => {
+  const res = client.post(API_URLS_VENDOR.VENDOR_ORDER_HISTORY, detail);
+
+  console.log("===============", res, detail);
 };
 const createBvn = (detail: any) => {
   return client.post(API_URLS_VENDOR.CREATE_BVN, detail);
@@ -140,4 +145,5 @@ export const mainServics = {
   rejectOrder,
   getLga,
   fundWallet,
+  getOnlineVendorsByCity
 };

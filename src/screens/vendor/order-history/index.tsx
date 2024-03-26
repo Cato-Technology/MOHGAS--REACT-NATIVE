@@ -20,6 +20,7 @@ import Icon3 from 'react-native-vector-icons/Entypo';
 import Icon4 from 'react-native-vector-icons/FontAwesome5';
 import Icon5 from 'react-native-vector-icons/MaterialIcons';
 import Icon6 from 'react-native-vector-icons/AntDesign';
+import { showMessage } from 'react-native-flash-message';
 import {Avatar} from 'react-native-paper';
 
 import {
@@ -55,24 +56,67 @@ import {capitalizeFirstLetter} from '../../../utils/functions/general-functions'
 import {getVendorOrderHistory} from '../../../redux/global/actions';
 import {GlobalState} from '../../../redux/global/GlobalState';
 import moment from 'moment';
+import { mainServics, orderServices } from '../../../services';
+// import  from '../../../services'
 export default function OrderHistoryVendor({navigation}) {
   const {colors} = useTheme();
   const styles = makeStyles(colors);
   const authContext = React.useContext(AuthContext);
   const dispatch = useDispatch();
+  const [orderHistory, setOrderHistory] = useState();
 
-  const orderHistory = useSelector(
-    (state: GlobalState) => state?.global?.vendorOrderHistory,
-  );
-  console.log('orderHistory', orderHistory);
-  console.log('authContext', authContext?.userData?.user_id);
+  // const orderHistory = useSelector(
+  //   (state: GlobalState) => state?.global?.vendorOrderHistory,
+  // );
+  // console.log('orderHistory', orderHistory);
+  // console.log('authContext', authContext?.userData?.user_id);
 
   useEffect(() => {
-    let data = new FormData();
-    data.append('user_id', authContext?.userData?.user_id);
-    dispatch(getVendorOrderHistory());
+    let data = {vendor_id: authContext?.userData?.user_id}
+    // const res = orderServices.orderHistory(data);
+    getData(data);
+    // dispatch(getVendorOrderHistory(data));
   }, [dispatch]);
 
+  const getData = async (data: any) => {
+    try{
+      // const res = mainServics.getVendorOrderHistory(data);
+      const res = await orderServices.orderHistory(data);
+      console.log("-------------------", res);
+
+      setOrderHistory(res?.order_history);
+
+    } catch (e) {
+      showMessage({
+        message: JSON.stringify(e),
+        type: 'danger',
+        icon: 'danger',
+      });
+      console.log('e', e);
+    }
+    //  navigation.navigate(SCREENS.CONNECT_VENDOR);
+  };
+
+  const orderActionSelect= async (action: number, orderId: string) => {
+   const data = { order_id: orderId};
+    if(action==1) {
+      console.log(action, orderId);
+      const res = await orderServices.orderAction( data, action); 
+      showMessage({
+        message: res?.message,
+        type: 'danger',
+        icon: 'success',
+      })
+    }else if(action==2){
+      console.log( action , orderId);
+      const res = await orderServices.orderAction( data, action); 
+      showMessage({
+        message: res?.message,
+        type: 'danger',
+        icon: 'warning',
+      })
+    }
+  }
   return (
     <View style={styles.container}>
       <ActivityIndicator visible={false} />
@@ -121,20 +165,24 @@ export default function OrderHistoryVendor({navigation}) {
               renderItem={({item, index}) => (
                 <DetailCard
                   title={`${capitalizeFirstLetter(item?.order_type)} - ${
-                    item?.cylinder_size
+                    item?.invoice
                   }`}
                   subTitle={
-                    item?.createdate
-                      ? moment(item?.createdate).format('MMMM,DD,YYYY')
+                    item?.created_date
+                      ? moment(item?.created_date).format('MMMM,DD,YYYY')
                       : '--'
                   }
                   style={{backgroundColor: '#eaf5fc'}}
-                  price={`N${item?.price}`}
+                  showOptions={true}
+                  price={`N${item?.grand_total}`}
                   srNo={capitalizeFirstLetter(item?.status)}
                   icon={<Icon3 name="arrow-up" size={25} color="#455F9B" />}
                   onPressDelete={() => {
                     console.log('item?', item?._id);
                   }}
+                  data={item}
+                  actionOne={() => {orderActionSelect(1, item?.id)}}
+                  actionTwo={() => {orderActionSelect(2, item?.id)}}
                   // onPressEdit={() =>
                   //   navigation.navigate(SCREENS.ADDPAYMENTMETHOD, {
                   //     edit: true,
