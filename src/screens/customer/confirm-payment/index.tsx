@@ -236,7 +236,7 @@ export default function ConfirmPayment({navigation, route}) {
                 fontSize: 16,
                 marginTop: 10,
               }}>
-              Ammount Due N {orderSummary?.payment_params?.amount}
+              Amount Due N {orderSummary?.payment_params?.amount}
             </Text>
             <Text
               style={{

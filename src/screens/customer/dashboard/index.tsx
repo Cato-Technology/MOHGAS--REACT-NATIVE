@@ -257,7 +257,7 @@ export default function DashBoard({ navigation, props }) {
                   fontSize: 15,
                   color: '#000000',
                 }}>
-                Wellcome
+                Welcome
               </Text>
 
               <Text

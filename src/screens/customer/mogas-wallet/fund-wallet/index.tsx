@@ -175,8 +175,8 @@ export default function FundWallet({ navigation }) {
 
     const res = await mainServics.fundWallet(fwData);
 
-    // console.log(fwData);
-    // console.log('response============', res);
+    console.log(fwData);
+    console.log('response============', res);
     setHtmlContent(res);
     setIsLoading(false);
     setModalVisible(true);
@@ -213,7 +213,7 @@ export default function FundWallet({ navigation }) {
               contentStyle={{ marginTop: 40 }}
             />
             <InputWithLabel
-              label="Ammount"
+              label="Amount"
               labelStyle={{
                 //   fontFamily: fonts.mulishSemiBold,
 
@@ -313,27 +313,35 @@ export default function FundWallet({ navigation }) {
         onRequestClose={() => {
           setModalVisible(false);
         }}>
+
         <KeyboardAvoidingView behavior="padding" style={styles.keyboardAvoider}>
-          <ScrollView
-            contentContainerStyle={styles.scrollView}>
-            <View
-              style={{
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-                backgroundColor: 'rgba(0,0,0,0.5)',
-                paddingHorizontal: 20,
-              }}>
-              <WebView
-                originWhitelist={['*']}
-                source={{ html: htmlContent}}
-                javaScriptEnabled={true}
-                domStorageEnabled={true}
-                startInLoadingState={true}
-                style={styles.webviewStyle}
-              />
-            </View>
-          </ScrollView>
+          {/* <Text>wgwr÷ghiwnrtghoi</Text> */}
+          {/* <ScrollView
+            contentContainerStyle={styles.scrollView}> */}
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+              // backgroundColor: 'red',
+              // paddingHorizontal: 20,
+            }}>
+            {/* <Text>osbvoabsikv</Text> */}
+            <WebView
+              originWhitelist={['*']}
+              source={{ html: htmlContent }}
+              javaScriptEnabled={true}
+              domStorageEnabled={true}
+              startInLoadingState={true}
+              style={styles.webviewStyle}
+            />
+            <GradientButton
+              onPress={() => setModalVisible(false) }
+              disabled={false}
+              title="Finish"
+            />
+          </View>
+          {/* </ScrollView> */}
         </KeyboardAvoidingView>
       </Modal>
     </View>

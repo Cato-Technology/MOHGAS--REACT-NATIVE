@@ -218,17 +218,21 @@ export const makeStyles = (colors: any) =>
     },
     webviewStyle: {
       width: widthPercentageToDP(80),
-      height: heightPercentageToDP(60)
+      height: heightPercentageToDP(60),
+      // backgroundColor: 'purple'
     },
     scrollView: { 
       flex: 1,
+      height: heightPercentageToDP(150),
+      width: widthPercentageToDP(100),
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: "red" 
+      // backgroundColor: "red" 
     },
     keyboardAvoider: { 
       width: widthPercentageToDP(80),
-      backgroundColor: 'green',
+      height: heightPercentageToDP(80),
+      // backgroundColor: 'green',
       alignSelf: 'center'
     }
   });
