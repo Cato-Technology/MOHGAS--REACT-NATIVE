@@ -91,7 +91,7 @@ export default function OrderHistoryVendor({ navigation }) {
         type: 'danger',
         icon: 'danger',
       });
-      console.log('e', e);
+      console.log('----e', e);
     }
     //  navigation.navigate(SCREENS.CONNECT_VENDOR);
   };

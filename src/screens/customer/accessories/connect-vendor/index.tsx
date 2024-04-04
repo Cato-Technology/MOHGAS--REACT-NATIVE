@@ -167,7 +167,7 @@ export default function ConnectVendorSwap({navigation, route}) {
         type: 'danger',
         icon: 'danger',
       });
-      console.log('e', e);
+      console.log('e=========', e);
       setIsLoading(false);
     }
   };

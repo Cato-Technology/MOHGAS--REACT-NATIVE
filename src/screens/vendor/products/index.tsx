@@ -116,7 +116,12 @@ export default function Products({navigation}) {
               }
             />
 
-            <FlatList
+<Text style={{textAlign: 'center', alignSelf: 'center'}}>
+                  This feature is actively being worked on and will be made
+                  available in next release
+                </Text>
+
+            {/* <FlatList
               data={productData}
               renderItem={({item, index}) => (
                 <ProductCard
@@ -151,7 +156,7 @@ export default function Products({navigation}) {
                 <Text style={styles.noDataText}>No Data</Text>
               )}
               keyExtractor={(item, index) => index.toString()}
-            />
+            /> */}
           </View>
         </View>
       </ScrollView>

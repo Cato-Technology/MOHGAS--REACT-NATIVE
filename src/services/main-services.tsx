@@ -115,6 +115,14 @@ const fundWallet = (detail:any) => {
   return client.post(backend_URLS.FUND_WALLET, detail);
 }
 
+const getWalletBalance = (id:string) => {
+  return client.get(`${backend_URLS.GET_WALLET_BALANCE}?user_id=${id}`)
+}
+
+const requestWithdrawal = (details: any) => {
+  return client.post(`${backend_URLS.REQUEST_WITHDRAWAL}`, details)
+}
+
 export const mainServics = {
   getWalletTopupDetails,
   getCities,
@@ -145,5 +153,7 @@ export const mainServics = {
   rejectOrder,
   getLga,
   fundWallet,
-  getOnlineVendorsByCity
+  getOnlineVendorsByCity,
+  getWalletBalance,
+  requestWithdrawal,
 };

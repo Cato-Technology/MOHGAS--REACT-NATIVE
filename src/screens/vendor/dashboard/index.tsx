@@ -64,7 +64,7 @@ import messaging from '@react-native-firebase/messaging';
 import { navigate } from '../../../utils/functions/RootNavigator';
 import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
 import moment from 'moment';
-import {orderServices } from '../../../services';
+import {orderServices, mainServics } from '../../../services';
 import { showMessage } from 'react-native-flash-message';
 
 
@@ -82,6 +82,7 @@ export default function VendorDashBoard({ navigation }) {
     (state: GlobalState) => state?.global?.businessProfileData,
   );
   const [orderHistory, setOrderHistory] = useState();
+  const [balance, setBalance] = useState();
 
 
   React.useEffect(() => {
@@ -157,6 +158,7 @@ export default function VendorDashBoard({ navigation }) {
     dispatch(getVendorAccountDetials());
     let data = { vendor_id: authContext?.userData?.user_id }
     getData(data);
+    getWallet(data.vendor_id);
   }, [dispatch]);
 
   const getData = async (data: any) => {
@@ -168,15 +170,24 @@ export default function VendorDashBoard({ navigation }) {
       setOrderHistory(res?.order_history);
 
     } catch (e) {
-      showMessage({
-        message: JSON.stringify(e),
-        type: 'danger',
-        icon: 'danger',
-      });
-      console.log('e', e);
+      // showMessage({
+      //   message: JSON.stringify(e),
+      //   type: 'danger',
+      //   icon: 'danger',
+      // });
+      console.log('e--', e);
     }
     //  navigation.navigate(SCREENS.CONNECT_VENDOR);
   };
+
+  const getWallet = async (id: string) => {
+    try {
+      const getWallet = await mainServics.getWalletBalance(id);
+      setBalance(getWallet?.data?.wallet);
+    } catch (e) {
+      console.log('error', e);
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -250,7 +261,7 @@ export default function VendorDashBoard({ navigation }) {
               <View style={{ paddingVertical: 20 }}>
                 <Text style={{ color: '#fff' }}>Balance</Text>
                 <Text style={{ color: '#fff' }}>
-                  N{authContext?.userData?.wallet}
+                ₦ {balance}
                 </Text>
               </View>
               <Text style={{ color: '#fff' }}>
@@ -314,7 +325,7 @@ export default function VendorDashBoard({ navigation }) {
               </View>
             </View>
           </View>
-          <View
+          {/* <View
             style={{
               width: '90%',
               backgroundColor: '#131a28',
@@ -350,7 +361,7 @@ export default function VendorDashBoard({ navigation }) {
                 <Text style={styles.hardText}>88/249</Text>
               </View>
             </View>
-          </View>
+          </View> */}
         </View>
 
         <View style={{ paddingHorizontal: 20, marginTop: 10 }}>
@@ -389,7 +400,7 @@ export default function VendorDashBoard({ navigation }) {
               )}
               keyExtractor={(item, index) => index.toString()}
             />
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() => {
               navigation.navigate(SCREENS.PROFILE_NAVIGATOR_VENDOR, {
                 screen: SCREENS.EDIT_PROFILE,
@@ -425,7 +436,7 @@ export default function VendorDashBoard({ navigation }) {
                 Update Now?
               </Text>
             </Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </ScrollView>
     </View>

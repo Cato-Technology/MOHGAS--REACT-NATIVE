@@ -50,7 +50,10 @@ const backend_URLS = {
   NEW_PASSWORD: '/backend/register/new_password',
 
   //fund
-  FUND_WALLET: '/backend/paymentController/pay'
+  FUND_WALLET: '/backend/paymentController/pay',
+
+  GET_WALLET_BALANCE: '/backend/user/getUserWallet',
+  REQUEST_WITHDRAWAL: '/backend/vendor/processWithdrawal',
 };
 
 export {backend_URLS};

@@ -57,6 +57,7 @@ import { showMessage } from 'react-native-flash-message';
 import { mainServics } from '../../../../services';
 import { useDispatch } from 'react-redux';
 import { ORDER_SUMMARY } from '../../../../redux/global/constants';
+import { number } from 'yup';
 
 export default function ConnectVendor({ navigation, route }) {
   const { colors } = useTheme();
@@ -68,6 +69,7 @@ export default function ConnectVendor({ navigation, route }) {
   const [data, setData] = useState();
   const [itemVendor, setItemVendor] = useState();
   const [address, setAddress] = useState(route?.params?.item?.faddress);
+  const [refillSize, setRefillSize] = useState('');
   const [city, setCity] = useState(route?.params?.item?.city);
 
   useEffect(() => {
@@ -131,7 +133,7 @@ export default function ConnectVendor({ navigation, route }) {
       let fdata = new FormData();
       fdata.append('order_type', 'REFILL');
       fdata.append('product_id', parseInt('1'));
-      fdata.append('qty', 1);
+      fdata.append('qty', parseInt(refillSize));
       fdata.append('price', parseInt(itemVendor?.price_per_kg));
       fdata.append('branch_id', parseInt(itemVendor?.id));
       fdata.append('latitude', item.latitude);
@@ -227,6 +229,16 @@ export default function ConnectVendor({ navigation, route }) {
             <Text style={{ width: '100%', textAlign: 'right', color: '#ecb241' }}>
               Change
             </Text>
+            <InputWithLabel
+              label="Refill size (KG)"
+              labelStyle={{
+                color: colors.yellowHeading,
+                fontSize: 15,
+              }}
+              onChange={(value) => setRefillSize(value) }
+              value={refillSize}
+              keyboardType="numeric"
+            />
           </View>
           {data && (
             <>

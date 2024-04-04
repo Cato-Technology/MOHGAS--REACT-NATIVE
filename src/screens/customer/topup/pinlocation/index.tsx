@@ -65,7 +65,7 @@ export default function PinLocation({ navigation }) {
   const [postal, setPostal] = useState();
   const [state, setState] = useState();
   const [isLoading, setIsLoading] = useState(false);
-  const locData = useSelector(
+  const [hasLocationPermission, setHasLocationPermission] = useState(false);  const locData = useSelector(
     (state: GlobalState) => state?.global?.locationData,
   );
 
@@ -73,6 +73,45 @@ export default function PinLocation({ navigation }) {
   const mapRef = useRef<MapView>(null);
 
   console.log('locDataPin', locData);
+
+  useEffect(() => {
+    checkLocationPermission()
+  }, [navigation]);
+
+  const checkLocationPermission = async () => {
+    try {
+      const granted = await PermissionsAndroid.check(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+      );
+      setHasLocationPermission(granted);
+      console.log("permission", PermissionsAndroid.RESULTS.GRANTED, granted)
+      if (!true) {
+        showMessage({
+          message: JSON.stringify("please grant location permission to be able to use maps"),
+          type: 'warning',
+          icon: 'warning',
+        });
+      }
+    } catch (error) {
+      console.error('Error checking location permission:', error);
+    }
+  };
+
+  const requestLocationPermission = async () => {
+    try {
+      const result = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+      );
+      if (result === PermissionsAndroid.RESULTS.GRANTED) {
+        setHasLocationPermission(true);
+      } else {
+        setHasLocationPermission(false);
+      }
+    } catch (error) {
+      console.error('Error requesting location permission:', error);
+    }
+  };
+
 
   const handleSubmitted = async () => {
     let item = {
@@ -139,7 +178,7 @@ export default function PinLocation({ navigation }) {
           fetchDetails
         />
       </View>
-      <MapView
+   {   hasLocationPermission ? <MapView
         ref={mapRef}
         initialRegion={{
           latitude: locData?.latitude,
@@ -177,6 +216,10 @@ export default function PinLocation({ navigation }) {
           pinColor={'red'}
         />
       </MapView>
+      :
+      <Text style={{alignSelf: 'center', textAlignVertical: 'center', marginTop: 300, marginHorizontal: 40}}>For you to be able to pick location using maps 
+        you need to grant location permissions to the app
+        by going to the settings section</Text>}
       <Modal
         animationType="slide"
         transparent={true}
@@ -332,13 +375,22 @@ export default function PinLocation({ navigation }) {
           position: 'absolute',
           bottom: 10,
         }}>
-        <GradientButton
+{        hasLocationPermission ? <GradientButton
+          disabled={!hasLocationPermission}
           onPress={() => {
             // getOneTimeLocation();
             handleSubmitted();
           }}
-          title="Countinue"
+          title="Continue"
         />
+      :
+      <GradientButton
+          onPress={() => {
+            requestLocationPermission();
+          }}
+          title="Request Permission"
+        />
+      }
       </View>
     </View>
   );

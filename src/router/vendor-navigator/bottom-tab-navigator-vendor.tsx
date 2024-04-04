@@ -103,7 +103,7 @@ const BottomTabNavigatorVendor = () => {
           ),
         }}
       /> */}
-      <Tab.Screen
+      {/* <Tab.Screen
         // name={SCREENS.SUPPORT}
         // component={Support}
         name={SCREENS.SUPPORT_NAVIGATOR}
@@ -128,7 +128,7 @@ const BottomTabNavigatorVendor = () => {
             />
           ),
         }}
-      />
+      /> */}
       {/* <Tab.Screen
         name={SCREENS.MAIL}
         component={Mail}

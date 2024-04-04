@@ -33,7 +33,7 @@ import {
   InputWithLabel,
   DetailCard,
 } from '../../../components';
-import { profileService } from '../../../services';
+import { mainServics, profileService } from '../../../services';
 import SCREENS from '../../../utils/constants';
 
 import makeStyles from './styles';
@@ -80,11 +80,13 @@ export default function DashBoard({ navigation, props }) {
     longitudeDelta: 0.0421,
   });
   const [refreshing, setRefreshing] = React.useState(false);
+  const [balance, setBalance] = useState();
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     setTimeout(() => {
       getProfile();
+      getWallet();
       setRefreshing(false);
     }, 2000);
   }, []);
@@ -107,7 +109,7 @@ export default function DashBoard({ navigation, props }) {
           //  - ERR00 : The user has clicked on Cancel button in the popup
           //  - ERR01 : If the Settings change are unavailable
           //  - ERR02 : If the popup has failed to open
-          alert('Error ' + err.message + ', Code : ' + err.code);
+          alert('Error1 ' + err.message + ', Code : ' + err.code);
         });
     }
   };
@@ -170,7 +172,7 @@ export default function DashBoard({ navigation, props }) {
         // }
       },
       error => {
-        console.log('error ', error);
+        console.log('error1 ', error);
       },
       {
         enableHighAccuracy: true,
@@ -183,6 +185,15 @@ export default function DashBoard({ navigation, props }) {
   console.log('recentHistory', recentHistory);
 
   console.log('authContext==>', authContext);
+
+  const getWallet = async () => {
+    try {
+      const getWallet = await mainServics.getWalletBalance(authContext?.userData?.user_id);
+      setBalance(getWallet?.data?.wallet);
+    } catch (e) {
+      console.log('error', e);
+    }
+  }
 
   const getProfile = async () => {
     try {
@@ -205,7 +216,7 @@ export default function DashBoard({ navigation, props }) {
         authContext.setUserData(updatedUserData);
       }
     } catch (e) {
-      console.log('error', r);
+      console.log('error', e);
     }
   };
   useEffect(() => {
@@ -214,6 +225,7 @@ export default function DashBoard({ navigation, props }) {
 
   useEffect(() => {
     getProfile();
+    getWallet();
   }, []);
 
   return (
@@ -295,7 +307,7 @@ export default function DashBoard({ navigation, props }) {
                   Balance
                 </Text>
                 <Text style={{ color: '#fff', fontFamily: 'Rubik-Regular' }}>
-                  N{authContext?.userData?.wallet}
+                  ₦ {balance}
                 </Text>
               </View>
               <Text style={{ color: '#fff', fontFamily: 'Rubik-Regular' }}>
@@ -336,7 +348,7 @@ export default function DashBoard({ navigation, props }) {
                   //     console.log(error.message);
                   //     console.log(error.code);
                   //   });
-                  navigation.navigate(SCREENS.ADD_DELIVERY_ADDRESS, {
+                  navigation.navigate(SCREENS.PIN_LOCATION, {
                     render: 'refill',
                   });
                 }}>
@@ -394,7 +406,7 @@ export default function DashBoard({ navigation, props }) {
               justifyContent: 'space-between',
             }}>
             <Text style={{ fontFamily: 'Rubik-Regular' }}>
-              Recent Transcations
+              Recent Orders
             </Text>
             <Text style={{ color: 'gray', fontFamily: 'Rubik-Regular' }}>
               View All <Icon6 name="arrowright" size={10} color="gray" />{' '}
@@ -407,7 +419,7 @@ export default function DashBoard({ navigation, props }) {
                 title={`${capitalizeFirstLetter(item.order_type)} - ${item.delivery_cost
                   }`}
                 subTitle={item.created_date}
-                price={item.sub_total}
+                price={item.grand_total}
                 srNo={item.status}
                 icon={
                   item.order_type == 'refill' ? (
@@ -439,7 +451,7 @@ export default function DashBoard({ navigation, props }) {
             )}
             keyExtractor={(item, index) => index.toString()}
           />
-          {!authContext?.userData?.bvn_verification_date && (
+          {/* {!authContext?.userData?.bvn_verification_date && (
             <View
               style={{
                 backgroundColor: '#131a28',
@@ -481,7 +493,7 @@ export default function DashBoard({ navigation, props }) {
                 Get Started
               </Text>
             </View>
-          )}
+          )} */}
         </View>
       </ScrollView>
     </View>

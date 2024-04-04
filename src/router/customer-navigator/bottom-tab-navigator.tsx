@@ -98,7 +98,7 @@ const BottomTabNavigator = () => {
           ),
         }}
       /> */}
-      <Tab.Screen
+      {/* <Tab.Screen
         name={SCREENS.SUPPORT_NAVIGATOR}
         component={SupportNavigator}
         options={{
@@ -121,7 +121,7 @@ const BottomTabNavigator = () => {
             />
           ),
         }}
-      />
+      /> */}
       <Tab.Screen
         name={SCREENS.ORDERS_NAVIGATOR_CUSTOMER}
         component={OrdersNavigator}

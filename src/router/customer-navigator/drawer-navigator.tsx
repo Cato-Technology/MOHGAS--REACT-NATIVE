@@ -101,7 +101,7 @@ const DrawerNavigator = () => {
         component={BottomTabNavigator}
       />
 
-      <Drawer.Screen
+      {/* <Drawer.Screen
         name={SCREENS.EDIT_USERNAME}
         component={EditUsername}
         options={{
@@ -124,8 +124,8 @@ const DrawerNavigator = () => {
             return <Icon3 name="email" size={20} color="#000000" />;
           },
         }}
-      />
-      <Drawer.Screen
+      /> */}
+      {/* <Drawer.Screen
         name={SCREENS.PASSWORD}
         component={ForgetPassword}
         options={{
@@ -138,7 +138,7 @@ const DrawerNavigator = () => {
             );
           },
         }}
-      />
+      /> */}
     </Drawer.Navigator>
   );
 };

@@ -28,8 +28,8 @@ const onError = function (error: any) {
     // console.error('Headers:', error.response.headers);
   }
   return Promise.reject({
-    errMsg: !error?.response ? 'Network Issue!' : error?.response?.data,
-    status: error?.response?.status || 'not status',
+    errMsg: !error?.response ? 'Network Issuee!' : error?.response?.data,
+    // status: error?.response?.status || 'not status',
   });
 };
 request.interceptors.response.use(

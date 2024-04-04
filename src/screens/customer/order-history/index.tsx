@@ -123,7 +123,7 @@ export default function OrderHistory({ navigation }) {
                   title={`${capitalizeFirstLetter(item.order_type)} - ${item.delivery_cost
                     }`}
                   subTitle={item.created_date}
-                  price={item.sub_total}
+                  price={item.grand_total}
                   srNo={item.status}
                   icon={
                     item.order_type == 'refill' ? (
