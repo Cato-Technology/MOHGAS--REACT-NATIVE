@@ -1,23 +1,23 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useContext, useEffect, useState} from 'react';
 import {
-  Keyboard,
-  Platform,
-  ScrollView,
+  // Keyboard,
+  // Platform,
+  // ScrollView,
   Text,
   TouchableOpacity,
   View,
-  Image,
-  Pressable,
-  KeyboardAvoidingView,
+  // Image,
+  // Pressable,
+  // KeyboardAvoidingView,
 } from 'react-native';
 
 import {
   // ErrorModal,
   ActivityIndicator,
   // PhoneNumber,
-  CheckBox,
-  InputWithLabel,
+  // CheckBox,
+  // InputWithLabel,
 } from '../../components';
 
 import SCREENS from '../../utils/constants';
@@ -108,7 +108,7 @@ export default function SuccessScreen({navigation, route}) {
 
             <View style={{marginTop: '15%'}}>
               <GradientButton
-                onPress={() => navigation.navigate(SCREENS.DASHBOARD)}
+                onPress={() => navigation.navigate(SCREENS.VENDOR_DASHBOARD)}
                 disabled={false}
                 title={'Back to Dashboard'}
               />
@@ -176,15 +176,15 @@ export default function SuccessScreen({navigation, route}) {
             }}>
             <SuccessImage width={50} height={50} />
             <Text style={[styles.heading, {fontSize: RFValue(16)}]}>
-              Bank Account Updated
+              Withdrawal Request Successful
             </Text>
-            <Text style={styles.detailText}>Bank Name: {item?.bank}</Text>
+            {/* <Text style={styles.detailText}>Bank Name: {item?.bank}</Text>
             <Text style={styles.detailText}>
               Account Title: {item?.account_title}
             </Text>
             <Text style={styles.detailText}>
               Account Number: {item?.account_number}
-            </Text>
+            </Text> */}
 
             <View style={{marginTop: '15%'}}>
               <GradientButton

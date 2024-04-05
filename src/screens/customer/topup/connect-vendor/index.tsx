@@ -69,7 +69,7 @@ export default function ConnectVendor({ navigation, route }) {
   const [data, setData] = useState();
   const [itemVendor, setItemVendor] = useState();
   const [address, setAddress] = useState(route?.params?.item?.faddress);
-  const [refillSize, setRefillSize] = useState('');
+  const [refillSize, setRefillSize] = useState();
   const [city, setCity] = useState(route?.params?.item?.city);
 
   useEffect(() => {
@@ -167,7 +167,7 @@ export default function ConnectVendor({ navigation, route }) {
       }
     } catch (e) {
       showMessage({
-        message: JSON.stringify(e),
+        message: e.errMsg.message,
         type: 'danger',
         icon: 'danger',
       });
@@ -235,7 +235,7 @@ export default function ConnectVendor({ navigation, route }) {
                 color: colors.yellowHeading,
                 fontSize: 15,
               }}
-              onChange={(value) => setRefillSize(value) }
+              onChange={(value) => setRefillSize(value.replace(/[^0-9]/g, ''))}
               value={refillSize}
               keyboardType="numeric"
             />
@@ -351,7 +351,7 @@ export default function ConnectVendor({ navigation, route }) {
                 onPress={() => {
                   handleOrder();
                 }}
-                disabled={!itemVendor}
+                disabled={!itemVendor || !refillSize}
                 title="Countinue"
               />
             </View>

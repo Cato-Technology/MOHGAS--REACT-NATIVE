@@ -30,7 +30,8 @@ export const makeStyles = (colors: any) =>
     },
     searchInput: {
       borderColor: colors.primaryGreen,
-      borderWidth: 1
+      borderWidth: 1,
+      color: "black"
     }
   });
 export default makeStyles;

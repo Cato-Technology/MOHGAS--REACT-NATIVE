@@ -65,29 +65,35 @@ export default function PinLocation({ navigation }) {
   const [postal, setPostal] = useState();
   const [state, setState] = useState();
   const [isLoading, setIsLoading] = useState(false);
-  const [hasLocationPermission, setHasLocationPermission] = useState(false);  const locData = useSelector(
+  const [hasLocationPermission, setHasLocationPermission] = useState(false);
+  const locData = useSelector(
     (state: GlobalState) => state?.global?.locationData,
   );
 
-  const [myDirection, setMyDirection] = useState(locData);
+  const [myDirection, setMyDirection] = useState();
   const mapRef = useRef<MapView>(null);
 
   console.log('locDataPin', locData);
 
   useEffect(() => {
-    checkLocationPermission()
-  }, [navigation]);
+    if (navigation && locData.length !== 0) {
+      setMyDirection(locData);
+      console.log('useEffect triggered due to navigation change.');
+      checkLocationPermission();
+    }
+  }, [locData]);
 
   const checkLocationPermission = async () => {
     try {
       const granted = await PermissionsAndroid.check(
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
       );
+      console.log("permission", PermissionsAndroid.RESULTS.GRANTED, granted);
       setHasLocationPermission(granted);
-      console.log("permission", PermissionsAndroid.RESULTS.GRANTED, granted)
-      if (!true) {
+      console.log("permission set");
+      if (!granted) {
         showMessage({
-          message: JSON.stringify("please grant location permission to be able to use maps"),
+          message: "Please grant location permission to use maps",
           type: 'warning',
           icon: 'warning',
         });
@@ -96,6 +102,7 @@ export default function PinLocation({ navigation }) {
       console.error('Error checking location permission:', error);
     }
   };
+
 
   const requestLocationPermission = async () => {
     try {
@@ -110,6 +117,14 @@ export default function PinLocation({ navigation }) {
     } catch (error) {
       console.error('Error requesting location permission:', error);
     }
+  };
+
+  const [mapRegion, setMapRegion] = useState(null);
+
+  const handleRegionChangeComplete = (region) => {
+    setMapRegion(region);
+
+    console.log(region, '============================')
   };
 
 
@@ -178,143 +193,51 @@ export default function PinLocation({ navigation }) {
           fetchDetails
         />
       </View>
-   {   hasLocationPermission ? <MapView
-        ref={mapRef}
-        initialRegion={{
-          latitude: locData?.latitude,
-          longitude: locData?.longitude,
-          latitudeDelta: 0.0122,
-          longitudeDelta: 0.0121,
-        }}
-        provider={PROVIDER_GOOGLE}
-        showsCompass={true}
-        showsUserLocation={true}
-        showsMyLocationButton={false}
-
-        style={{
-          width: '100%',
-          height: '100%',
-          alignItems: 'center',
-          position: 'absolute',
-        }}>
-
-        <Marker
-          draggable={true}
-          key={1}
-          title={'My Postion'}
-          coordinate={myDirection}
-          // coordinate={{ "latitude": 37.421098333333335, "longitude": -122.08400000000002 }}
-          onDragEnd={e => {
-            console.log('dragEnd', e.nativeEvent.coordinate);
-            setMyDirection({
-              latitude: Number(e.nativeEvent.coordinate.latitude),
-              longitude: Number(e.nativeEvent.coordinate.longitude),
-              // latitude: locData?.latitude,
-              // longitude: locData?.longitude,
-            });
+      {
+        hasLocationPermission ? <MapView
+          ref={mapRef}
+          initialRegion={{
+            latitude: locData?.latitude,
+            longitude: locData?.longitude,
+            latitudeDelta: 0.0122,
+            longitudeDelta: 0.0121,
           }}
-          pinColor={'red'}
-        />
-      </MapView>
-      :
-      <Text style={{alignSelf: 'center', textAlignVertical: 'center', marginTop: 300, marginHorizontal: 40}}>For you to be able to pick location using maps 
-        you need to grant location permissions to the app
-        by going to the settings section</Text>}
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(false);
-        }}>
-        <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
-          <ScrollView
-            contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}>
-            <View
-              style={{
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-                backgroundColor: 'rgba(0,0,0,0.5)',
-                paddingHorizontal: 20,
-              }}>
-              <View
-                style={{
-                  backgroundColor: '#fff',
-                  padding: 20,
-                  borderRadius: 10,
-                }}>
-                <MaterialCommunityIcons
-                  name={'close'}
-                  size={28}
-                  color={'#000'}
-                  style={{ position: 'absolute', right: 20, top: 20 }}
-                  onPress={() => setModalVisible(false)}
-                />
-                <InputWithLabel
-                  label="Address"
-                  labelStyle={{
-                    //   fontFamily: fonts.mulishSemiBold,
-                    color: colors.yellowHeading,
-                    fontSize: 15,
-                  }}
-                  onChange={txt => setUserAddress(txt)}
-                  placeholder={'Street 2, 9887'}
-                // error={touched.email ? errors.email : ''}
-                // onBlur={() => setFieldTouched('email')}
-                />
-                <InputWithLabel
-                  label="City"
-                  labelStyle={{
-                    //   fontFamily: fonts.mulishSemiBold,
-                    color: colors.yellowHeading,
-                    fontSize: 15,
-                  }}
-                  onChange={txt => setCity(txt)}
-                  placeholder={'Islambad'}
-                // error={touched.email ? errors.email : ''}
-                // onBlur={() => setFieldTouched('email')}
-                />
-                <InputWithLabel
-                  label="State"
-                  labelStyle={{
-                    //   fontFamily: fonts.mulishSemiBold,
-                    color: colors.yellowHeading,
-                    fontSize: 15,
-                  }}
-                  onChange={txt => setState(txt)}
-                  placeholder={'Nigeria'}
-                // error={touched.email ? errors.email : ''}
-                // onBlur={() => setFieldTouched('email')}
-                />
-                <InputWithLabel
-                  label="Postal Code"
-                  labelStyle={{
-                    //   fontFamily: fonts.mulishSemiBold,
-                    color: colors.yellowHeading,
-                    fontSize: 15,
-                  }}
-                  onChange={txt => setPostal(txt)}
-                  placeholder={'00000'}
-                // error={touched.email ? errors.email : ''}
-                // onBlur={() => setFieldTouched('email')}
-                />
+          provider={PROVIDER_GOOGLE}
+          showsCompass={true}
+          showsUserLocation={true}
+          showsMyLocationButton={false}
+          onRegionChangeComplete={handleRegionChangeComplete}
 
-                <View style={{ paddingVertical: 20 }}>
-                  <GradientButton
-                    onPress={() => {
-                      searchPlaces();
-                      setModalVisible(false);
-                    }}
-                    // disabled={!isValid || loader || !checked}
-                    title="Confirm"
-                  />
-                </View>
-              </View>
-            </View>
-          </ScrollView>
-        </KeyboardAvoidingView>
-      </Modal>
+          style={{
+            width: '100%',
+            height: '100%',
+            alignItems: 'center',
+            position: 'absolute',
+          }}>
+
+        { myDirection &&  <Marker
+            draggable={true}
+            key={1}
+            title={'My Postion'}
+            coordinate={myDirection}
+            // coordinate={{ "latitude": 37.421098333333335, "longitude": -122.08400000000002 }}
+            onDragEnd={e => {
+              console.log('dragEnd', e.nativeEvent.coordinate);
+              setMyDirection({
+                latitude: Number(e.nativeEvent.coordinate.latitude),
+                longitude: Number(e.nativeEvent.coordinate.longitude),
+                // latitude: locData?.latitude,
+                // longitude: locData?.longitude,
+              });
+            }}
+            pinColor={'red'}
+          />}
+        </MapView>
+          :
+          <Text style={{ alignSelf: 'center', textAlignVertical: 'center', marginTop: 300, marginHorizontal: 40 }}>For you to be able to pick location using maps
+            you need to grant location permissions to the app
+            by going to the settings section</Text>}
+
       {/* <View
         style={{
           paddingHorizontal: 10,
@@ -375,7 +298,7 @@ export default function PinLocation({ navigation }) {
           position: 'absolute',
           bottom: 10,
         }}>
-{        hasLocationPermission ? <GradientButton
+        {hasLocationPermission ? <GradientButton
           disabled={!hasLocationPermission}
           onPress={() => {
             // getOneTimeLocation();
@@ -383,14 +306,14 @@ export default function PinLocation({ navigation }) {
           }}
           title="Continue"
         />
-      :
-      <GradientButton
-          onPress={() => {
-            requestLocationPermission();
-          }}
-          title="Request Permission"
-        />
-      }
+          :
+          <GradientButton
+            onPress={() => {
+              requestLocationPermission();
+            }}
+            title="Request Permission"
+          />
+        }
       </View>
     </View>
   );

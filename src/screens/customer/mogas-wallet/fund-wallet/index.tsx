@@ -60,12 +60,12 @@ import { mainServics } from '../../../../services';
 import { showMessage } from 'react-native-flash-message';
 let cameraIs = false;
 let cbData = [
-  {
-    id: 1,
-    title: 'Transfer',
-    subTitle: 'Make Transfer to an account number',
-    checked: false,
-  },
+  // {
+  //   id: 1,
+  //   title: 'Transfer',
+  //   subTitle: 'Make Transfer to an account number',
+  //   checked: false,
+  // },
   {
     id: 2,
     title: 'Master/Visa Card',

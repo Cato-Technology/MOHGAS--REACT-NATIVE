@@ -90,15 +90,23 @@ const DrawerNavigator = () => {
     <Drawer.Navigator
       screenOptions={{
         headerShown: false,
-        drawerItemStyle: {
-          marginVertical: -4,
-          borderRadius: 0,
+        drawerStyle: {
+          backgroundColor: '#FFFFFF',
+          width: 240,
         },
+        drawerItemStyle: {
+          marginVertical: 4,
+          borderRadius: 0,
+          backgroundColor: '#FFFFFF',        },
       }}
       drawerContent={props => <CustomDrawerContent {...props} />}>
       <Drawer.Screen
         name={SCREENS.MAIN_NAVIGATOR}
         component={BottomTabNavigator}
+        options={{
+          drawerLabel: () => null,
+          drawerItemStyle: {height: 0, marginBottom: 10, padding: 0},
+        }}
       />
 
       {/* <Drawer.Screen

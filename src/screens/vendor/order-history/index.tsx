@@ -21,7 +21,9 @@ import Icon4 from 'react-native-vector-icons/FontAwesome5';
 import Icon5 from 'react-native-vector-icons/MaterialIcons';
 import Icon6 from 'react-native-vector-icons/AntDesign';
 import { showMessage } from 'react-native-flash-message';
-import { Avatar } from 'react-native-paper';
+// import { Avatar } from 'react-native-paper';
+import { RefreshControl } from 'react-native';
+
 
 import {
   // ErrorModal,
@@ -64,6 +66,8 @@ export default function OrderHistoryVendor({ navigation }) {
   const authContext = React.useContext(AuthContext);
   const dispatch = useDispatch();
   const [orderHistory, setOrderHistory] = useState();
+  const [refreshing, setRefreshing] = React.useState(false);
+
 
   // const orderHistory = useSelector(
   //   (state: GlobalState) => state?.global?.vendorOrderHistory,
@@ -119,6 +123,16 @@ export default function OrderHistoryVendor({ navigation }) {
 
   }
 
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      let data = { vendor_id: authContext?.userData?.user_id }
+      getData(data);
+
+      setRefreshing(false);
+    }, 2000);
+  }, []);
+
 
   return (
     <View style={styles.container}>
@@ -128,7 +142,10 @@ export default function OrderHistoryVendor({ navigation }) {
         visible={loginError}
       /> */}
 
-      <ScrollView keyboardShouldPersistTaps={'handled'}>
+      <ScrollView keyboardShouldPersistTaps={'handled'}
+             refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }>
         <View
           style={{
             width: '100%',

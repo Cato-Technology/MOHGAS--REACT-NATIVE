@@ -99,7 +99,7 @@ const DrawerNavigatorVendor = () => {
           width: 240,
         },
         drawerItemStyle: {
-          marginVertical: -4,
+          marginVertical: 4,
           borderRadius: 0,
           backgroundColor: '#FFFFFF',
         },
@@ -110,7 +110,7 @@ const DrawerNavigatorVendor = () => {
         component={BottomTabNavigatorVendor}
         options={{
           drawerLabel: () => null,
-          drawerItemStyle: {height: 0, marginBottom: -10, padding: 0},
+          drawerItemStyle: {height: 0, marginBottom: 10, padding: 0},
         }}
       />
       <Drawer.Screen

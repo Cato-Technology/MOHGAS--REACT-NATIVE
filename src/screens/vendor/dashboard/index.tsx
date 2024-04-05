@@ -25,6 +25,8 @@ import card from '../../../assets/card.png';
 import aImage from '../../../assets/avatar.jpg';
 import { Avatar } from 'react-native-paper';
 import { capitalizeFirstLetter } from '../../../utils/functions/general-functions';
+import { RefreshControl } from 'react-native';
+
 
 
 import {
@@ -83,6 +85,8 @@ export default function VendorDashBoard({ navigation }) {
   );
   const [orderHistory, setOrderHistory] = useState();
   const [balance, setBalance] = useState();
+  const [refreshing, setRefreshing] = React.useState(false);
+
 
 
   React.useEffect(() => {
@@ -189,6 +193,16 @@ export default function VendorDashBoard({ navigation }) {
     }
   }
 
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      let data = { vendor_id: authContext?.userData?.user_id }
+      getData(data);
+      getWallet(data.vendor_id);
+      setRefreshing(false);
+    }, 2000);
+  }, []);
+
   return (
     <View style={styles.container}>
       <ActivityIndicator visible={false} />
@@ -197,7 +211,10 @@ export default function VendorDashBoard({ navigation }) {
         visible={loginError}
       /> */}
 
-      <ScrollView keyboardShouldPersistTaps={'handled'}>
+      <ScrollView keyboardShouldPersistTaps={'handled'}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }>
         <View
           style={{
             width: '100%',
@@ -295,7 +312,10 @@ export default function VendorDashBoard({ navigation }) {
               </View>
               <View style={{ alignItems: 'center' }}>
                 <View style={styles.circleView}>
-                  <Icon name="money" size={25} color="#fff" />
+                  <Icon name="money" size={25} color="#fff"
+                     onPress={() =>
+                      navigation.navigate(SCREENS.UPDATE_PRICE)
+                    } />
                 </View>
                 <Text style={styles.centerViewText}>Prices</Text>
               </View>

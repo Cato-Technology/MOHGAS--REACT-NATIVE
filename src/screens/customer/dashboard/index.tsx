@@ -348,7 +348,7 @@ export default function DashBoard({ navigation, props }) {
                   //     console.log(error.message);
                   //     console.log(error.code);
                   //   });
-                  navigation.navigate(SCREENS.PIN_LOCATION, {
+                  navigation.navigate(SCREENS.ADD_DELIVERY_ADDRESS, {
                     render: 'refill',
                   });
                 }}>

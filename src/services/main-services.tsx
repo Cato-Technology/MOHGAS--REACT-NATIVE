@@ -16,9 +16,14 @@ const addVendorProducts = (detail: any) => {
 const getVendorProducts = (detail: any) => {
   return client.get(API_URLS_VENDOR.VENDOR_PRODUCTS, detail);
 };
-const upDateProdcutPrice = (data: any, id: string) => {
-  return client.put(API_URLS_VENDOR.VENDOR_PRODUCTS + '/' + id, data);
+const upDateProductPrice = (data: any) => {
+  return client.post(API_URLS_VENDOR.UPDATE_GAS_PRICE, data);
 };
+
+const getVendorGasPrice = (id: any) => {
+
+  return client.get(`${API_URLS_VENDOR.GET_VENDOR_GAS_PRICE}?vendor_id=${id}`)
+}
 //User Services
 const nearByGasAgencyRefill = (
   lat: string,
@@ -140,7 +145,7 @@ export const mainServics = {
   getSupportAccountRelatedIssues,
   sendSupport,
   gasOrder,
-  upDateProdcutPrice,
+  upDateProductPrice,
   updateVendorBusinessProfile,
   getVendorBusinessProfile,
   upDateVendorBankAccount,
@@ -156,4 +161,5 @@ export const mainServics = {
   getOnlineVendorsByCity,
   getWalletBalance,
   requestWithdrawal,
+  getVendorGasPrice
 };

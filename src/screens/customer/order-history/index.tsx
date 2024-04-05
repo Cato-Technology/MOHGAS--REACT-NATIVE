@@ -14,13 +14,11 @@ import {
   SafeAreaView,
 } from 'react-native';
 
-import Icon from 'react-native-vector-icons/FontAwesome5';
-import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon3 from 'react-native-vector-icons/Entypo';
-import Icon4 from 'react-native-vector-icons/FontAwesome5';
 import Icon5 from 'react-native-vector-icons/MaterialIcons';
 import Icon6 from 'react-native-vector-icons/AntDesign';
-import { Avatar } from 'react-native-paper';
+import { RefreshControl } from 'react-native';
+
 
 import {
   // ErrorModal,
@@ -58,20 +56,30 @@ import { capitalizeFirstLetter } from '../../../utils/functions/general-function
 export default function OrderHistory({ navigation }) {
   const { colors } = useTheme();
   const styles = makeStyles(colors);
+  const [refreshing, setRefreshing] = React.useState(false);
   const authContext = React.useContext(AuthContext);
   const dispatch = useDispatch();
   const orderHistory = useSelector(
     (state: OrderState) => state.order.recentOrderHistory,
   );
-  console.log('orderHistory', orderHistory);
-  console.log('authContext', authContext?.userData?.user_id);
+  // console.log('orderHistory', orderHistory);
+  // console.log('authContext', authContext?.userData?.user_id);
 
   useEffect(() => {
     //authContext?.userData?.user_id
     let data = new FormData();
-    data.append('user_id', 33);
+    data.append('user_id', authContext?.userData?.user_id);
     dispatch(getReduxRecentOrderHistory(data));
   }, [dispatch]);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      let data = { vendor_id: authContext?.userData?.user_id }
+      
+      setRefreshing(false);
+    }, 2000);
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -81,7 +89,10 @@ export default function OrderHistory({ navigation }) {
         visible={loginError}
       /> */}
 
-      <ScrollView keyboardShouldPersistTaps={'handled'}>
+      <ScrollView keyboardShouldPersistTaps={'handled'}
+             refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }>
         <View
           style={{
             width: '100%',

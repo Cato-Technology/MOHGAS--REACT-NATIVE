@@ -405,9 +405,9 @@ export default function OrderSummary({navigation, route}) {
                 }}>
                 <TouchableOpacity
                   onPress={() => {
-                    sendNotification();
+                    // sendNotification();
 
-                    // navigation.navigate(SCREENS.CONFIRM_PAYMENT);
+                    navigation.navigate(SCREENS.DASHBOARD);
                   }}
                   disabled={isLoading}
                   style={[
@@ -417,7 +417,7 @@ export default function OrderSummary({navigation, route}) {
                       width: '80%',
                     },
                   ]}>
-                  <Text style={styles.btnTextStyle}>Continue</Text>
+                  <Text style={styles.btnTextStyle}>Back to Dashboard</Text>
                 </TouchableOpacity>
               </View>
               {/* <View
