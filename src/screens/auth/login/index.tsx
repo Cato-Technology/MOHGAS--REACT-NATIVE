@@ -107,17 +107,13 @@ export default function Login({ navigation }) {
     } catch (e) {
       setLoader(false);
 
-      console.log('error', e);
-      if (e?.status == 400) {
-        showMessage({
-          message: e?.errMsg?.message,
-          type: 'danger',
-          icon: 'danger',
-        });
-      }
-      if (e?.status == 401) {
-        setLoginError(true);
-      }
+      console.log('error===================================', e);
+        // showMessage({
+        //   message: e?.errMsg?.message,
+        //   type: 'danger',
+        //   icon: 'danger',
+        // });
+        setLoginError(e?.errMsg?.message);
     }
   };
 
@@ -125,12 +121,14 @@ export default function Login({ navigation }) {
     <View style={styles.container}>
       <ActivityIndicator visible={loader} />
       <ErrorModal
+        header={"Login Error"}
         onPress={() => {
-          navigation.navigate(SCREENS.FORGET_PASSWORLD, {
-            item: 'Verify your phone number',
-          });
+          // navigation.navigate(SCREENS.FORGET_PASSWORLD, {
+          //   item: 'Verify your phone number',
+          // });
           setLoginError(!loginError);
         }}
+        message={loginError}
         visible={loginError}
       />
       <KeyboardAvoidingView

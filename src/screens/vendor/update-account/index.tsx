@@ -1,19 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useContext, useEffect, useMemo, useState} from 'react';
 import {
-  Keyboard,
-  Platform,
+
   ScrollView,
   Text,
   TouchableOpacity,
   View,
-  Image,
-  Pressable,
-  KeyboardAvoidingView,
-  FlatList,
-  SafeAreaView,
-  ImageBackground,
-  PermissionsAndroid,
+
 } from 'react-native';
 import * as Yup from 'yup';
 import Feather from 'react-native-vector-icons/Feather';

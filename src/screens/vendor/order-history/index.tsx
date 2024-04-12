@@ -1,15 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useContext, useEffect, useState } from 'react';
 import {
-  Keyboard,
-  Platform,
   ScrollView,
   Text,
-  TouchableOpacity,
   View,
-  Image,
-  Pressable,
-  KeyboardAvoidingView,
   FlatList,
   SafeAreaView,
 } from 'react-native';
@@ -58,7 +52,7 @@ import { capitalizeFirstLetter } from '../../../utils/functions/general-function
 import { getVendorOrderHistory } from '../../../redux/global/actions';
 import { GlobalState } from '../../../redux/global/GlobalState';
 import moment from 'moment';
-import { mainServics, orderServices } from '../../../services';
+import { orderServices } from '../../../services';
 // import  from '../../../services'
 export default function OrderHistoryVendor({ navigation }) {
   const { colors } = useTheme();
@@ -101,7 +95,7 @@ export default function OrderHistoryVendor({ navigation }) {
   };
 
   const orderActionSelect = async (action: number, orderId: string) => {
-    const data = { order_id: orderId };
+    const data = { order_id: orderId, id: authContext?.userData?.user_id };
 
     try {
       const res = await orderServices.orderAction(data, action);

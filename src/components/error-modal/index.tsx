@@ -8,9 +8,11 @@ import styles from './styles';
 type Props = {
   onPress: any;
   visible: boolean;
+  header?: any;
+  message?: any;
 };
 
-export default function ErrorModal({visible = false, onPress}: Props) {
+export default function ErrorModal({visible = false, onPress, header, message}: Props) {
   const {colors} = useTheme();
 
   if (!visible) {
@@ -20,9 +22,15 @@ export default function ErrorModal({visible = false, onPress}: Props) {
   return (
     <View style={styles.overLay}>
       <View style={styles.view}>
-        <Text style={styles.heading}>Awaiting verification!</Text>
+        <Text style={styles.heading}>{header ? header : 'Awaiting verification!'}</Text>
         <Text style={styles.text}>
-          This account hasn't been approved by our customer support
+          {
+            message
+            ?
+            message
+            :
+          "This account hasn't been approved by our customer support"
+          }
         </Text>
         <View style={{marginTop: 20}}>
           <GradientButton

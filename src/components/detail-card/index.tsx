@@ -24,6 +24,7 @@ type Props = {
   actionOne?: any;
   actionTwo?: any;
   actionThree?: any;
+  actionFour?: any;
   data?: any
 };
 
@@ -40,6 +41,7 @@ const BranchCard = ({
   actionOne,
   actionTwo,
   actionThree,
+  actionFour,
   data
 }: Props) => {
   const navigations = useNavigation();
@@ -86,22 +88,28 @@ const BranchCard = ({
       {/* dropdown with options */}
       {dropdown &&
         <View style={styles.dropdown}>
-          <PromptButton
+          {actionOne && <PromptButton
             title={"accept"}
             onPress={actionOne}
-          />
+          />}
 
-          <PromptButton
+          {actionTwo && <PromptButton
             title={"decline"}
             onPress={actionTwo}
             btnColor={"red"}
-          />
+          />}
 
-          <PromptButton
+          {actionThree && <PromptButton
             title={"Complete"}
             onPress={actionThree}
             btnColor={"purple"}
-          />
+          />}
+
+          {actionFour && <PromptButton
+            title={"Approve"}
+            onPress={actionFour}
+            btnColor={"green"}
+          />}
         </View>
       }
     </TouchableOpacity>

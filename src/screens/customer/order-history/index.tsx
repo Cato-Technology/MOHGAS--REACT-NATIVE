@@ -1,23 +1,17 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useContext, useEffect, useState } from 'react';
 import {
-  Keyboard,
-  Platform,
   ScrollView,
   Text,
-  TouchableOpacity,
   View,
-  Image,
-  Pressable,
-  KeyboardAvoidingView,
   FlatList,
-  SafeAreaView,
 } from 'react-native';
 
 import Icon3 from 'react-native-vector-icons/Entypo';
 import Icon5 from 'react-native-vector-icons/MaterialIcons';
 import Icon6 from 'react-native-vector-icons/AntDesign';
 import { RefreshControl } from 'react-native';
+import { showMessage } from 'react-native-flash-message';
 
 
 import {
@@ -48,6 +42,7 @@ import { useTheme } from '@react-navigation/native';
 import GradientButton from '../../../components/buttons/gradient-button';
 import { useDispatch, useSelector } from 'react-redux';
 import { OrderState } from '../../../redux/orders/OrderState';
+import { orderServices } from '../../../services';
 import {
   getReduxOrderHistory,
   getReduxRecentOrderHistory,
@@ -80,6 +75,28 @@ export default function OrderHistory({ navigation }) {
       setRefreshing(false);
     }, 2000);
   }, []);
+
+  const orderActionSelect = async (action: number, orderId: string) => {
+    const data = { order_id: orderId, id: authContext?.userData?.user_id};
+    try {
+      const res = await orderServices.orderAction(data, action);
+      console.log(res);
+      await showMessage({
+        message: res?.message,
+        type: 'success',
+        icon: 'success',
+      })
+
+    } catch (e) {
+      console.log("--------", e)
+      await showMessage({
+        message: e?.errMsg?.message,
+        type: 'warning',
+        icon: 'danger',
+      })
+    }
+
+  }
 
   return (
     <View style={styles.container}>
@@ -134,8 +151,10 @@ export default function OrderHistory({ navigation }) {
                   title={`${capitalizeFirstLetter(item.order_type)} - ${item.delivery_cost
                     }`}
                   subTitle={item.created_date}
+                  showOptions={true}
                   price={item.grand_total}
                   srNo={item.status}
+                  actionFour={() => {orderActionSelect(3, item?.id)}}
                   icon={
                     item.order_type == 'refill' ? (
                       <Icon3 name="arrow-up" size={25} color="#4ca757" />
@@ -150,9 +169,9 @@ export default function OrderHistory({ navigation }) {
                       />
                     )
                   }
-                  onPressDelete={() => {
-                    console.log('item', item._id);
-                  }}
+                  // onPressDelete={() => {
+                  //   console.log('item', item._id);
+                  // }}
                 // onPressEdit={() =>
                 //   navigation.navigate(SCREENS.ADDPAYMENTMETHOD, {
                 //     edit: true,

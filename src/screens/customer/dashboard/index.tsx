@@ -348,7 +348,7 @@ export default function DashBoard({ navigation, props }) {
                   //     console.log(error.message);
                   //     console.log(error.code);
                   //   });
-                  navigation.navigate(SCREENS.ADD_DELIVERY_ADDRESS, {
+                  navigation.navigate(SCREENS.PIN_LOCATION, {
                     render: 'refill',
                   });
                 }}>
@@ -383,11 +383,11 @@ export default function DashBoard({ navigation, props }) {
               </TouchableOpacity>
               <TouchableOpacity
                 style={{ alignItems: 'center' }}
-                onPress={() => navigation.navigate(SCREENS.CUSTOMER_SUPPORT)}>
+                onPress={() => navigation.navigate(SCREENS.FUND_WALLET)}>
                 <View style={styles.circleView}>
-                  <Icon5 name="support-agent" size={25} color="#fff" />
+                  <Icon5 name="credit-card" size={25} color="#fff" />
                 </View>
-                <Text style={styles.centerViewText}>Support</Text>
+                <Text style={styles.centerViewText}>Fund Wallet</Text>
               </TouchableOpacity>
             </View>
           </View>
