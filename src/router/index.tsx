@@ -11,6 +11,7 @@ import darkColors from '../utils/themes/dark-colors';
 import lightColors from '../utils/themes/light-colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AuthContext from '../utils/auth-context';
+import { setSignOutFunction } from '../services/client';
 import SCREENS from '../utils/constants';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {configureNotificationService} from '../utils/NotificationService';
@@ -90,6 +91,8 @@ const Router = () => {
     bootstrapAsync();
   }, []);
 
+
+
   const authContext = React.useMemo(
     () => ({
       signIn: async data => {
@@ -130,6 +133,10 @@ const Router = () => {
     };
     loadUserData();
   }, []);
+
+  React.useEffect(() => {
+    setSignOutFunction(authContext.signOut);
+  }, [authContext.signOut]);
 
   return (
     <AuthContext.Provider value={{authContext, userData, setUserData}}>
