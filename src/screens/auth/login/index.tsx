@@ -85,6 +85,25 @@ export default function Login({ navigation }) {
       const result = await authService.login(data);
       console.log('result', result);
 
+      if (result?.code === "401") {
+        console.log("===========/////////=====", result);
+
+        showMessage({
+          message: result?.message,
+          type: 'warning',
+          icon: 'warning',
+        });
+        setLoader(false);
+        setLoginError(result?.message);
+        
+
+        navigation.navigate(SCREENS.OTP_VERIFICATION, {
+          userId: result?.response?.id,
+          phNumber: result?.response?.email,
+        });
+        return;
+      }
+
       if (!result?.status) {
         setLoader(false);
         setLoginError(true);
@@ -98,6 +117,8 @@ export default function Login({ navigation }) {
           console.error('Failed to save user data to storage');
         }
 
+
+
         if (result?.response?.token) {
           auth.setUserData(result?.response);
           auth.authContext.signIn(result?.response?.token);
@@ -108,12 +129,12 @@ export default function Login({ navigation }) {
       setLoader(false);
 
       console.log('error===================================', e);
-        // showMessage({
-        //   message: e?.errMsg?.message,
-        //   type: 'danger',
-        //   icon: 'danger',
-        // });
-        setLoginError(e?.errMsg?.message);
+      // showMessage({
+      //   message: e?.errMsg?.message,
+      //   type: 'danger',
+      //   icon: 'danger',
+      // });
+      setLoginError(e?.errMsg?.message);
     }
   };
 
