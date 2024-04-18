@@ -54,6 +54,9 @@ const backend_URLS = {
 
   GET_WALLET_BALANCE: '/backend/user/getUserWallet',
   REQUEST_WITHDRAWAL: '/backend/vendor/processWithdrawal',
+
+
+  GET_PROFILE_CHECK: '/backend/vendor/check_user_business_profile'
 };
 
-export {backend_URLS};
+export { backend_URLS };

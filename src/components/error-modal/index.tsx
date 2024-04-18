@@ -1,6 +1,6 @@
-import {Text, View} from 'react-native';
+import { Text, View } from 'react-native';
 import React from 'react';
-import {useTheme} from 'react-native-paper';
+import { useTheme } from 'react-native-paper';
 import GradientButton from '../../components/buttons/gradient-button';
 
 import styles from './styles';
@@ -10,10 +10,11 @@ type Props = {
   visible: boolean;
   header?: any;
   message?: any;
+  buttonTxt?: any
 };
 
-export default function ErrorModal({visible = false, onPress, header, message}: Props) {
-  const {colors} = useTheme();
+export default function ErrorModal({ visible = false, onPress, header, message, buttonTxt }: Props) {
+  const { colors } = useTheme();
 
   if (!visible) {
     return null;
@@ -26,18 +27,18 @@ export default function ErrorModal({visible = false, onPress, header, message}: 
         <Text style={styles.text}>
           {
             message
-            ?
-            message
-            :
-          "This account hasn't been approved by our customer support"
+              ?
+              message
+              :
+              "This account hasn't been approved by our customer support"
           }
         </Text>
-        <View style={{marginTop: 20}}>
+        <View style={{ marginTop: 20 }}>
           <GradientButton
             onPress={onPress}
             marginHorizontal={10}
             marginVertical={10}
-            title="Ok"
+            title={buttonTxt || "Ok"}
           />
         </View>
       </View>

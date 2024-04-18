@@ -1,6 +1,6 @@
 import client from './client';
-import {backend_URLS} from './url-constants';
-import {API_URLS_VENDOR} from './url-constants-vendor';
+import { backend_URLS } from './url-constants';
+import { API_URLS_VENDOR } from './url-constants-vendor';
 
 //Vendor Services
 const addBranch = (detail: any) => {
@@ -35,7 +35,7 @@ const nearByGasAgencyRefill = (
 
   return client.get(
     backend_URLS.NEAR_BY_GAS_REFILL +
-      `?latitude=${lat}&longitude=${lon}&type=${type}&size=${size}`,
+    `?latitude=${lat}&longitude=${lon}&type=${type}&size=${size}`,
   );
 };
 const swapCylinder = (detail: any) => {
@@ -116,16 +116,24 @@ const getWalletTopupDetails = (detail: any) => {
   return client.post(backend_URLS.GET_TOPUP_WALLET_DETAILS, detail);
 };
 
-const fundWallet = (detail:any) => {
+const fundWallet = (detail: any) => {
   return client.post(backend_URLS.FUND_WALLET, detail);
 }
 
-const getWalletBalance = (id:string) => {
+const getWalletBalance = (id: string) => {
   return client.get(`${backend_URLS.GET_WALLET_BALANCE}?user_id=${id}`)
 }
 
 const requestWithdrawal = (details: any) => {
   return client.post(`${backend_URLS.REQUEST_WITHDRAWAL}`, details)
+}
+
+const checkBusinessProfile = async (id: any) => {
+  console.log('*****************', id)
+
+  return await client.get(`${backend_URLS.GET_PROFILE_CHECK}?user_id=${id}`);
+  // return await client.get('/backend/vendor/check_user_business_profile?user_id=44')
+
 }
 
 export const mainServics = {
@@ -161,5 +169,6 @@ export const mainServics = {
   getOnlineVendorsByCity,
   getWalletBalance,
   requestWithdrawal,
-  getVendorGasPrice
+  getVendorGasPrice,
+  checkBusinessProfile
 };

@@ -1,7 +1,7 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 
 // import colors from 'assets/colors';
-import {RFValue} from 'react-native-responsive-fontsize';
+import { RFValue } from 'react-native-responsive-fontsize';
 import {
   heightPercentageToDP,
   widthPercentageToDP,
@@ -50,7 +50,7 @@ export const makeStyles = (colors: any) =>
       fontSize: RFValue(15),
       color: colors.black,
     },
-    dash: {height: 0.5, backgroundColor: colors.blue, width: '40%'},
+    dash: { height: 0.5, backgroundColor: colors.blue, width: '40%' },
     orView: {
       flexDirection: 'row',
       alignItems: 'center',
@@ -156,7 +156,7 @@ export const makeStyles = (colors: any) =>
     hardText: {
       color: '#fff',
       fontFamily: 'Rubik-Bold',
-      fontSize: 16,
+      fontSize: 13,
       textAlign: 'left',
     },
     cardContainer: {
@@ -177,5 +177,6 @@ export const makeStyles = (colors: any) =>
       top: 7,
       zIndex: -3,
     },
+
   });
 export default makeStyles;

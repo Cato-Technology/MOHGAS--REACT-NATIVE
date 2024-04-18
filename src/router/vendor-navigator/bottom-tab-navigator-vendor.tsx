@@ -1,16 +1,16 @@
 import * as React from 'react';
 
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import SCREENS from '../../utils/constants';
 
-import {StyleSheet, Text, View} from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {TabRouter, useTheme} from '@react-navigation/native';
+import { TabRouter, useTheme } from '@react-navigation/native';
 import HomeNavigator from '../customer-navigator/home-navigator';
 import Chat from '../../screens/customer/chat';
 
@@ -29,11 +29,11 @@ import SupportNavigator from '../customer-navigator/support-navigator';
 const Tab = createBottomTabNavigator();
 
 const BottomTabNavigatorVendor = () => {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
 
   return (
     <Tab.Navigator
-      screenOptions={({route}) => ({
+      screenOptions={({ route }) => ({
         headerShown: false,
         tabBarHideOnKeyboard: true,
         tabBarLabelStyle: {
@@ -44,7 +44,7 @@ const BottomTabNavigatorVendor = () => {
         tabBarIconStyle: {
           color: 'grey',
         },
-        tabBarLabel: ({focused}) => (
+        tabBarLabel: ({ focused }) => (
           <Text
             style={{
               color: focused ? '#455F9B' : 'gray',
@@ -84,12 +84,12 @@ const BottomTabNavigatorVendor = () => {
         name={'Home'}
         component={HomeNavigatorVendor}
         options={{
-          tabBarIcon: ({focused}) => (
+          tabBarIcon: ({ focused }) => (
             <Icon
               name="home"
               size={25}
               color={focused ? '#455F9B' : 'gray'}
-              style={{transform: [{rotateY: '180deg'}]}}
+              style={{ transform: [{ rotateY: '180deg' }] }}
             />
           ),
         }}
@@ -143,8 +143,8 @@ const BottomTabNavigatorVendor = () => {
         component={ProfileNavigatorVendor}
         options={{
           tabBarLabel: 'Profile',
-          tabBarLabelStyle: {color: 'gray', paddingBottom: 4},
-          tabBarIcon: ({focused}) => (
+          tabBarLabelStyle: { color: 'gray', paddingBottom: 4 },
+          tabBarIcon: ({ focused }) => (
             <Icon3
               name="person"
               size={22}
