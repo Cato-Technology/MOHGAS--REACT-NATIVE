@@ -30,6 +30,7 @@ import {
   Header,
   InputWithLabel,
   ProductView,
+  PaymentCheckBox
 } from '../../../../components';
 
 import SCREENS from '../../../../utils/constants';
@@ -58,6 +59,23 @@ import { mainServics } from '../../../../services';
 import { useDispatch } from 'react-redux';
 import { ORDER_SUMMARY } from '../../../../redux/global/constants';
 import { number } from 'yup';
+let cbData = [
+  {
+    id: 1,
+    title: 'wallet',
+    subTitle: 'Make Transfer to an account number',
+    checked: false,
+    value: "card"
+  },
+  {
+    id: 2,
+    title: 'pay on delivery',
+    subTitle: 'Pay directly from you debit card',
+    checked: false,
+    icon: "shopping-bag",
+    value: "cash"
+  },
+];
 
 export default function ConnectVendor({ navigation, route }) {
   const { colors } = useTheme();
@@ -71,6 +89,9 @@ export default function ConnectVendor({ navigation, route }) {
   const [address, setAddress] = useState(route?.params?.item?.faddress);
   const [refillSize, setRefillSize] = useState();
   const [city, setCity] = useState(route?.params?.item?.city);
+  const [isFlipped, setIsFlipped] = useState(false);
+  const [paymentType, setPaymentType] = useState();
+
 
   useEffect(() => {
     getData();
@@ -123,6 +144,21 @@ export default function ConnectVendor({ navigation, route }) {
   console.log('weightData', weightData);
   console.log('pData', route?.params?.item);
 
+  const handleCb = (txt, type) => {
+    console.log('txt', txt, type);
+    setPaymentType(type);
+    setIsFlipped(!isFlipped);
+
+    cbData.map((ele, index) => {
+      if (ele.id == txt) {
+        cbData[index].checked = true;
+      }
+      if (ele.id != txt) {
+        cbData[index].checked = false;
+      }
+    });
+  };
+
   const handleOrder = async () => {
     // navigation.navigate(SCREENS.CONFIRM_PAYMENT)}
     try {
@@ -142,7 +178,8 @@ export default function ConnectVendor({ navigation, route }) {
       fdata.append('city', item.city);
       fdata.append('postal', item.postal);
       fdata.append('state', item.state);
-      fdata.append('swap_type', 1)
+      fdata.append('swap_type', 1);
+      fdata.append('payment_type', paymentType);
       console.log('ffff=>', fdata);
 
       const resData = await mainServics.gasOrder(fdata);
@@ -242,7 +279,7 @@ export default function ConnectVendor({ navigation, route }) {
           </View>
           {data && (
             <>
-              <Text style={{ width: '90%', color: '#000', fontSize: 16 }}>
+              <Text style={{ width: '90%', color: '#000', fontSize: 15 }}>
                 Select a Vendor
               </Text>
               <FlatList
@@ -272,8 +309,36 @@ export default function ConnectVendor({ navigation, route }) {
               />
             </>
           )}
+
+          <Text style={{ width: '90%', color: '#000', fontSize: 15, marginTop: 5 }}>
+            Select payment type
+          </Text>
+          <FlatList
+            data={cbData}
+            extraData={isFlipped}
+            renderItem={({ item, index }) => (
+              <View
+                style={{
+                  width: '90%',
+                  marginTop: 20,
+                }}>
+                <PaymentCheckBox
+                  onPress={txt => handleCb(txt, item?.value)}
+                  title={item?.title}
+                  subTitle={item?.subTitle}
+                  check={item?.checked}
+                  id={item?.id}
+                  icon={item?.icon}
+                />
+              </View>
+            )}
+            ListEmptyComponent={() => (
+              <Text style={styles.noDataText}>No Data</Text>
+            )}
+            keyExtractor={(item, index) => index.toString()}
+          />
         </View>
-  
+
         <View
           style={{
             height: '100%',
@@ -351,7 +416,7 @@ export default function ConnectVendor({ navigation, route }) {
                 onPress={() => {
                   handleOrder();
                 }}
-                disabled={!itemVendor || !refillSize}
+                disabled={!itemVendor || !refillSize || !paymentType}
                 title="Countinue"
               />
             </View>
