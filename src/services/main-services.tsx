@@ -136,6 +136,10 @@ const checkBusinessProfile = async (id: any) => {
 
 }
 
+const myTotalOrders = (id: any) => {
+  return client.get(`${backend_URLS.TOTAL_ORDERS}?user_id=${id}`)
+}
+
 export const mainServics = {
   getWalletTopupDetails,
   getCities,
@@ -170,5 +174,6 @@ export const mainServics = {
   getWalletBalance,
   requestWithdrawal,
   getVendorGasPrice,
-  checkBusinessProfile
+  checkBusinessProfile,
+  myTotalOrders
 };

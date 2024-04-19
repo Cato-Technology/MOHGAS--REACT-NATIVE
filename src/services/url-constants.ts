@@ -56,7 +56,8 @@ const backend_URLS = {
   REQUEST_WITHDRAWAL: '/backend/vendor/processWithdrawal',
 
 
-  GET_PROFILE_CHECK: '/backend/vendor/check_user_business_profile'
+  GET_PROFILE_CHECK: '/backend/vendor/check_user_business_profile',
+  TOTAL_ORDERS: '/backend/user/total_orders'
 };
 
 export { backend_URLS };
