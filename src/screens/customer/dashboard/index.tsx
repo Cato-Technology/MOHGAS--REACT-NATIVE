@@ -81,12 +81,14 @@ export default function DashBoard({ navigation, props }) {
   });
   const [refreshing, setRefreshing] = React.useState(false);
   const [balance, setBalance] = useState();
+  const [totalOrders, setTotalOrders] = useState();
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     setTimeout(() => {
       getProfile();
       getWallet();
+      getTotalOrders();
       setRefreshing(false);
     }, 2000);
   }, []);
@@ -195,6 +197,15 @@ export default function DashBoard({ navigation, props }) {
     }
   }
 
+  const getTotalOrders = async () => {
+    try {
+      const getTotal = await mainServics.myTotalOrders(authContext?.userData?.user_id);
+      setTotalOrders(getTotal?.total_orders, "]]]]]]]]]]]]]]]]]]]");
+    } catch (e) {
+      console.log('error', e);
+    }
+  }
+
   const getProfile = async () => {
     try {
       const getProfile = await profileService.getProfile();
@@ -226,6 +237,7 @@ export default function DashBoard({ navigation, props }) {
   useEffect(() => {
     getProfile();
     getWallet();
+    getTotalOrders();
   }, []);
 
   return (
@@ -310,8 +322,8 @@ export default function DashBoard({ navigation, props }) {
                   ₦ {balance}
                 </Text>
               </View>
-              <Text style={{ color: '#fff', fontFamily: 'Rubik-Regular' }}>
-                ■ ■ ■ ■{'   '}■ ■ ■ ■{'   '}■ ■ ■ ■{'   '}1 2 3 4
+              <Text style={{ color: '#fff', fontFamily: 'Rubik-Regular', fontWeight: '900' }}>
+                My total orders: {totalOrders}
               </Text>
               <Text style={{ color: '#fff', marginTop: 10 }}>
                 {' '}

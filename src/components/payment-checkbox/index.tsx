@@ -1,6 +1,6 @@
-import {useNavigation, useTheme} from '@react-navigation/native';
-import React, {useState} from 'react';
-import {Image, Pressable, Text, View, TouchableOpacity} from 'react-native';
+import { useNavigation, useTheme } from '@react-navigation/native';
+import React, { useState } from 'react';
+import { Image, Pressable, Text, View, TouchableOpacity } from 'react-native';
 import Entypo from 'react-native-vector-icons/Entypo';
 import makeStyles from './styles';
 
@@ -42,23 +42,24 @@ type Props = {
   id?: number;
   check?: boolean;
   onPress?: any;
+  icon?: any;
 };
-const PaymentCheckBox = ({title, subTitle, check, onPress, id}: Props) => {
-  const {colors} = useTheme();
+const PaymentCheckBox = ({ title, subTitle, check, onPress, id, icon }: Props) => {
+  const { colors } = useTheme();
   const styles = makeStyles(colors);
   return (
     <View style={styles.rdbView}>
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <View style={styles.iconCircleView}>
-          <Entypo name="wallet" size={25} color={'#fff'} />
+          <Entypo name={icon || "wallet"} size={25} color={'#fff'} />
         </View>
-        <View style={{paddingLeft: 15, width: '80%'}}>
+        <View style={{ paddingLeft: 15, width: '80%' }}>
           <Text style={styles.rdbHeading}>{title}</Text>
           <Text style={styles.rdbSubHeading}>{subTitle}</Text>
         </View>
       </View>
       <TouchableOpacity onPress={() => onPress(id)}>
-        <RadioButton selected={check} />
+        <RadioButton selected={check} style={{ height: 25, width: 25 }} />
       </TouchableOpacity>
     </View>
   );

@@ -178,6 +178,7 @@ const VendorEditProfile = () => {
       data.append('business_name', values.business_name);
       data.append('business_phone', values.business_phone);
       data.append('main_branch_address', values.main_branch_address);
+      data.append('business_city', values.business_city);
       data.append(
         'main_branch_store_manager_name',
         values.main_branch_store_manager_name,
@@ -353,6 +354,9 @@ const VendorEditProfile = () => {
                   main_branch_address: businessData?.main_branch_address
                     ? businessData?.main_branch_address
                     : '',
+                  business_city: businessData?.business_city
+                    ? businessData?.business_city
+                    : '',
                   nin: businessData?.nin ? businessData?.nin : '',
                   rc_bn_number: businessData?.rc_bn_number
                     ? businessData?.rc_bn_number
@@ -453,7 +457,7 @@ const VendorEditProfile = () => {
                           alignItems: 'center',
                         }}>
                         <InputWithLabel
-                          label="MiN"
+                          label="NIN"
                           labelStyle={{
                             // fontFamily: fonts.mulishSemiBold,
                             color: colors.yellowHeading,
@@ -532,7 +536,7 @@ const VendorEditProfile = () => {
                         onBlur={() => setFieldTouched('main_branch_address')}
                       />
                       <InputWithLabel
-                        label="City"
+                        label="Business City"
                         placeholder={'Lagos'}
                         styleInput={{ fontSize: 11 }}
                         //  containerStyles={{paddingHorizontal: 20}}
@@ -541,14 +545,14 @@ const VendorEditProfile = () => {
                           color: colors.yellowHeading,
                           fontSize: 12,
                         }}
-                        onChange={handleChange('main_branch_address')}
-                        value={values.main_branch_address}
+                        onChange={handleChange('business_city')}
+                        value={values.business_city}
                         error={
-                          touched.main_branch_address
-                            ? errors.main_branch_address
+                          touched.business_city
+                            ? errors.business_city
                             : ''
                         }
-                        onBlur={() => setFieldTouched('main_branch_address')}
+                        onBlur={() => setFieldTouched('business_city')}
                       />
                       <View
                         style={{
