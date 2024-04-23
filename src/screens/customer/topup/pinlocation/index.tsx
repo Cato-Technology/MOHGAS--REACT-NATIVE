@@ -131,8 +131,8 @@ export default function PinLocation({ navigation }) {
   const handleSubmitted = async () => {
     let item = {
       user_id: auth?.userData?.user_id,
-      latitude: locData.latitude,
-      longitude: locData.longitude,
+      latitude: myDirection?.latitude,
+      longitude: myDirection?.longitude,
       // latitude: 24.817556456461972,
       // longitude: 67.0560846850276,
       faddress: userAddress,
@@ -215,7 +215,7 @@ export default function PinLocation({ navigation }) {
             position: 'absolute',
           }}>
 
-        { myDirection &&  <Marker
+          {myDirection && <Marker
             draggable={true}
             key={1}
             title={'My Postion'}

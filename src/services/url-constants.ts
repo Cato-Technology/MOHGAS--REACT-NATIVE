@@ -57,7 +57,9 @@ const backend_URLS = {
 
 
   GET_PROFILE_CHECK: '/backend/vendor/check_user_business_profile',
-  TOTAL_ORDERS: '/backend/user/total_orders'
+  TOTAL_ORDERS_USER: '/backend/user/total_orders',
+  TOTAL_ORDERS_VENDOR: '/backend/vendor/total_orders'
+
 };
 
 export { backend_URLS };

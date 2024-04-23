@@ -10,6 +10,8 @@ import makeStyles from './styles';
 import { capitalizeFirstLetter } from '../../utils/functions/general-functions';
 import PromptButton from '../buttons/prompt-button';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import SCREENS from '../../utils/constants';
+
 
 type Props = {
   onPressEdit?: any;
@@ -25,7 +27,7 @@ type Props = {
   actionTwo?: any;
   actionThree?: any;
   actionFour?: any;
-  data?: any
+  data?: any;
 };
 
 const BranchCard = ({
@@ -44,7 +46,7 @@ const BranchCard = ({
   actionFour,
   data
 }: Props) => {
-  const navigations = useNavigation();
+  const navigation = useNavigation();
   const { colors } = useTheme();
   const styles = makeStyles(colors);
   const [dropdown, setDown] = useState(false);
@@ -53,6 +55,14 @@ const BranchCard = ({
   return (
     <TouchableOpacity style={styles.boxContent} onPress={() => {
       showOptions && setDown(!dropdown)
+      navigation.navigate(SCREENS.ORDER_DETAILS, {
+        orderDetail: data,
+        actionOne,
+        actionTwo,
+        actionThree,
+        actionFour
+      });
+
     }}>
       <View style={styles.main}>
         <View
@@ -78,7 +88,9 @@ const BranchCard = ({
                   },
                 ]}>
                 {capitalizeFirstLetter(srNo)}
+
               </Text>
+
             </View>
           </View>
         </View>

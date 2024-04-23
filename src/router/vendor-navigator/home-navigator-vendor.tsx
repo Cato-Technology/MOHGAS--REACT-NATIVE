@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import React, { useEffect, useState } from 'react';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import SCREENS from '../../utils/constants';
 // import Chat from '../screens/cutomer/screens/chat';
@@ -29,8 +29,9 @@ import VendorRequest from '../../screens/vendor/request';
 import OrderSummarySwap from '../../screens/customer/accessories/swap-cylinder/order-summary';
 import ViewProductVendor from '../../screens/vendor/view-product';
 import NewOrder from '../../screens/vendor/new-order';
+import OrderDetails from '../../screens/vendor/order-details';
 import messaging from '@react-native-firebase/messaging';
-import {ActivityIndicator} from '../../components';
+import { ActivityIndicator } from '../../components';
 const Stack = createNativeStackNavigator();
 
 const HomeNavigatorVendor = () => {
@@ -104,6 +105,7 @@ const HomeNavigatorVendor = () => {
       <Stack.Screen name={SCREENS.TRACK_ORDER} component={TrackOrder} />
       <Stack.Screen name={SCREENS.PIN_LOCATION} component={PinLocation} />
       <Stack.Screen name={SCREENS.ORDER_SUMMARY} component={OrderSummary} />
+      <Stack.Screen name={SCREENS.ORDER_DETAILS} component={OrderDetails} />
 
       <Stack.Screen name={SCREENS.CONNECT_VENDOR} component={ConnectVendor} />
       <Stack.Screen name={SCREENS.SWAP_CYLINDER} component={SwapCylinder} />
