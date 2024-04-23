@@ -44,8 +44,14 @@ const swapCylinder = (detail: any) => {
 const nearByGasAgencyAsPerRequiredSize = (detail: any) => {
   return client.post(backend_URLS.nearByGasAgencyAsPerRequiredSize, detail);
 };
-const getOnlineVendorsByCity = (city: string) => {
-  return client.get(`${backend_URLS.GET_ONLINE_BRANCH_BY_CITY}/${city}`);
+
+const getOnlineVendorsByCity = (city: string, lon: any, lat: any) => {
+  return client.get(`${backend_URLS.GET_ONLINE_BRANCH_BY_CITY}/${city}`, {
+    params: {
+      longitude: lon,
+      latitude: lat
+    }
+  });
 };
 const getAccessoriesAsPerNearestAgencies = (lat, lon) => {
   return client.get(
@@ -129,15 +135,20 @@ const requestWithdrawal = (details: any) => {
 }
 
 const checkBusinessProfile = async (id: any) => {
-  console.log('*****************', id)
 
   return await client.get(`${backend_URLS.GET_PROFILE_CHECK}?user_id=${id}`);
   // return await client.get('/backend/vendor/check_user_business_profile?user_id=44')
 
 }
 
-const myTotalOrders = (id: any) => {
-  return client.get(`${backend_URLS.TOTAL_ORDERS}?user_id=${id}`)
+const myTotalOrders = (id: any, type: string) => {
+  if (type == "vendor") {
+    return client.get(`${backend_URLS.TOTAL_ORDERS_VENDOR}?user_id=${id}`)
+  }
+
+  if (type == "user") {
+    return client.get(`${backend_URLS.TOTAL_ORDERS_USER}?user_id=${id}`)
+  }
 }
 
 export const mainServics = {

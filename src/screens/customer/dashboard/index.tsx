@@ -199,8 +199,8 @@ export default function DashBoard({ navigation, props }) {
 
   const getTotalOrders = async () => {
     try {
-      const getTotal = await mainServics.myTotalOrders(authContext?.userData?.user_id);
-      setTotalOrders(getTotal?.total_orders, "]]]]]]]]]]]]]]]]]]]");
+      const getTotal = await mainServics.myTotalOrders(authContext?.userData?.user_id, "user");
+      setTotalOrders(getTotal?.total_orders);
     } catch (e) {
       console.log('error', e);
     }
@@ -447,6 +447,7 @@ export default function DashBoard({ navigation, props }) {
                     />
                   )
                 }
+                data={item}
                 onPressDelete={() => {
                   console.log('item', item._id);
                 }}

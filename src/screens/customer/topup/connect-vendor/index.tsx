@@ -109,7 +109,9 @@ export default function ConnectVendor({ navigation, route }) {
       //   // item.latitude,
       //   // item.longitude,
       // );
-      const resData = await mainServics.getOnlineVendorsByCity(city.toLowerCase());
+      const resData = await mainServics.getOnlineVendorsByCity(
+        city.toLowerCase(), item?.longitude, item?.latitude);
+
       console.log('resDataGet', resData);
       if (resData?.status) {
         setData(resData?.data);

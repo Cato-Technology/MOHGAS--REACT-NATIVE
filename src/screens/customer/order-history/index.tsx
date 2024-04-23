@@ -71,13 +71,13 @@ export default function OrderHistory({ navigation }) {
     setRefreshing(true);
     setTimeout(() => {
       let data = { vendor_id: authContext?.userData?.user_id }
-      
+
       setRefreshing(false);
     }, 2000);
   }, []);
 
   const orderActionSelect = async (action: number, orderId: string) => {
-    const data = { order_id: orderId, id: authContext?.userData?.user_id};
+    const data = { order_id: orderId, id: authContext?.userData?.user_id };
     try {
       const res = await orderServices.orderAction(data, action);
       console.log(res);
@@ -107,9 +107,9 @@ export default function OrderHistory({ navigation }) {
       /> */}
 
       <ScrollView keyboardShouldPersistTaps={'handled'}
-             refreshControl={
-              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-            }>
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
         <View
           style={{
             width: '100%',
@@ -154,7 +154,7 @@ export default function OrderHistory({ navigation }) {
                   showOptions={true}
                   price={item.grand_total}
                   srNo={item.status}
-                  actionFour={() => {orderActionSelect(3, item?.id)}}
+                  actionFour={() => { orderActionSelect(3, item?.id) }}
                   icon={
                     item.order_type == 'refill' ? (
                       <Icon3 name="arrow-up" size={25} color="#4ca757" />
@@ -169,9 +169,10 @@ export default function OrderHistory({ navigation }) {
                       />
                     )
                   }
-                  // onPressDelete={() => {
-                  //   console.log('item', item._id);
-                  // }}
+                  data={item}
+                // onPressDelete={() => {
+                //   console.log('item', item._id);
+                // }}
                 // onPressEdit={() =>
                 //   navigation.navigate(SCREENS.ADDPAYMENTMETHOD, {
                 //     edit: true,

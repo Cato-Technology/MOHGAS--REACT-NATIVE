@@ -12,6 +12,7 @@ import {
   KeyboardAvoidingView,
   FlatList,
   Button,
+  RefreshControl
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -27,8 +28,6 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import { Avatar } from 'react-native-paper';
 import { capitalizeFirstLetter } from '../../../utils/functions/general-functions';
-import { RefreshControl } from 'react-native';
-
 
 
 import {
@@ -70,9 +69,7 @@ import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
 import moment from 'moment';
 import { orderServices, mainServics } from '../../../services';
 import { showMessage } from 'react-native-flash-message';
-
-
-
+import { useFocusEffect } from '@react-navigation/native';
 
 
 
@@ -80,8 +77,7 @@ export default function VendorDashBoard({ navigation }) {
   const { colors } = useTheme();
   const styles = makeStyles(colors);
   const dispatch = useDispatch();
-  const authContext = React.useContext(AuthContext);
-  console.log('authContext==>', authContext);
+  const authContext = useContext(AuthContext);
   const businessData = useSelector(
     (state: GlobalState) => state?.global?.businessProfileData,
   );
@@ -90,6 +86,8 @@ export default function VendorDashBoard({ navigation }) {
   const [refreshing, setRefreshing] = useState(false);
   const [businessProfileCheck, setbusinessProfileCheck] = useState(false);
   const [loginError, setLoginError] = useState();
+  const [totalOrders, setTotalOrders] = useState();
+
 
   React.useEffect(() => {
     // Load the user data from storage when the app starts
@@ -104,6 +102,16 @@ export default function VendorDashBoard({ navigation }) {
     };
     loadUserData();
   }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      checkBusinessProfile(authContext?.userData?.user_id);
+
+      return () => {
+        // Clean up function (optional)
+      };
+    }, [])
+  );
 
   useEffect(() => {
     onLocationEnablePressed();
@@ -168,6 +176,7 @@ export default function VendorDashBoard({ navigation }) {
     let data = { vendor_id: authContext?.userData?.user_id }
     getData(data);
     getWallet(data.vendor_id);
+    getTotalOrders(data.vendor_id);
     checkBusinessProfile(data.vendor_id);
 
   }, [dispatch]);
@@ -200,15 +209,25 @@ export default function VendorDashBoard({ navigation }) {
     }
   }
 
+  const getTotalOrders = async (id) => {
+    try {
+      const getTotal = await mainServics.myTotalOrders(id, "vendor");
+      setTotalOrders(getTotal?.total_orders);
+      console.log(getTotal, "////////////////////");
+    } catch (e) {
+      console.log('error', e);
+    }
+  }
+
   const checkBusinessProfile = async (id) => {
     try {
 
       const res = await mainServics.checkBusinessProfile(id);
 
-      console.log(res, "@$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+      // console.log(res, "@$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
       setLoginError(undefined);
     } catch (e) {
-      console.log(e, "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+      // console.log(e, "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
       setLoginError(e?.errMsg?.message)
 
     }
@@ -233,6 +252,7 @@ export default function VendorDashBoard({ navigation }) {
           navigation.navigate(SCREENS.PROFILE_NAVIGATOR_VENDOR, {
             item: 'Verify your phone number',
           });
+
           setLoginError(loginError);
         }}
         message={loginError || " "}
@@ -311,7 +331,7 @@ export default function VendorDashBoard({ navigation }) {
                 </Text>
               </View>
               <Text style={{ color: '#fff' }}>
-                ■ ■ ■ ■{'   '}■ ■ ■ ■{'   '}■ ■ ■ ■{'   '}1 2 3 4
+                My total orders: {totalOrders}
               </Text>
               <Text style={{ color: '#fff', marginTop: 10 }}>
                 {' '}
@@ -452,7 +472,7 @@ export default function VendorDashBoard({ navigation }) {
             </Text>
           </TouchableOpacity>
           <FlatList
-            data={orderHistory}
+            data={orderHistory?.slice(0, 3)}
             renderItem={({ item, index }) => (
               <DetailCard
                 title={`${capitalizeFirstLetter(item?.order_type)} - ${item?.invoice
