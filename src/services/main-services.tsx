@@ -48,6 +48,7 @@ const nearByGasAgencyAsPerRequiredSize = (detail: any) => {
 const getOnlineVendorsByCity = (city: string, lon: any, lat: any) => {
   return client.get(`${backend_URLS.GET_ONLINE_BRANCH_BY_CITY}/${city}`, {
     params: {
+      city,
       longitude: lon,
       latitude: lat
     }
