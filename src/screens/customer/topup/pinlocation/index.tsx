@@ -69,6 +69,7 @@ export default function PinLocation({ navigation }) {
   const locData = useSelector(
     (state: GlobalState) => state?.global?.locationData,
   );
+  const [locationInfo, setLocationInfo] = useState();
 
   const [myDirection, setMyDirection] = useState();
   const mapRef = useRef<MapView>(null);
@@ -103,7 +104,6 @@ export default function PinLocation({ navigation }) {
     }
   };
 
-
   const requestLocationPermission = async () => {
     try {
       const result = await PermissionsAndroid.request(
@@ -128,6 +128,41 @@ export default function PinLocation({ navigation }) {
   };
 
 
+  const handlePlaceSelect = async (place) => {
+    console.log(place?.place_id)
+    try {
+      const response = await fetch(
+        `https://maps.googleapis.com/maps/api/geocode/json?place_id=${place?.place_id}&key=AIzaSyD26sAjzThLmmzzLWJrHRxwtphkYmo90vw`
+      );
+      console.log("response --------", response)
+      const data = await response.json();
+      const addressComponents = data.results[0].address_components;
+
+      // Extract state, city, and country from address components
+      let state, city, country;
+      addressComponents.forEach((component) => {
+        if (component.types.includes('administrative_area_level_1')) {
+          if (component.long_name.match(/Federal Capital Territory/)) {
+            state = "abuja";
+          } else {
+            state = component.long_name;
+          }
+        } else if (component.types.includes('locality')) {
+          city = component.long_name;
+        } else if (component.types.includes('country')) {
+          country = component.long_name;
+        }
+      });
+
+      console.log("output------------ ", state, "----", city, country);
+      setLocationInfo({ state, city, country });
+    } catch (error) {
+      console.error('Error fetching location details:', error);
+    }
+  };
+
+
+
   const handleSubmitted = async () => {
     let item = {
       user_id: auth?.userData?.user_id,
@@ -136,7 +171,7 @@ export default function PinLocation({ navigation }) {
       // latitude: 24.817556456461972,
       // longitude: 67.0560846850276,
       faddress: userAddress,
-      city: city,
+      city: locationInfo?.state,
       postal: postal ? postal : '000000',
       state: state,
     };
@@ -183,8 +218,9 @@ export default function PinLocation({ navigation }) {
               latitude: details?.geometry.location.lat || locData?.latitude,
               longitude: details?.geometry.location.lng || locData?.longitude
             }
-            setMyDirection(position)
-            moveTo(position)
+            handlePlaceSelect(data);
+            setMyDirection(position);
+            moveTo(position);
           }}
           query={{
             key: 'AIzaSyD26sAjzThLmmzzLWJrHRxwtphkYmo90vw',
