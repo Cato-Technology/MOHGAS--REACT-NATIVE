@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Keyboard,
   Platform,
@@ -19,7 +19,7 @@ import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Icon4 from 'react-native-vector-icons/FontAwesome5';
 import Icon5 from 'react-native-vector-icons/MaterialIcons';
-import {Avatar} from 'react-native-paper';
+import { Avatar } from 'react-native-paper';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
 import {
@@ -34,7 +34,7 @@ import {
 import SCREENS from '../../../../utils/constants';
 
 import makeStyles from './styles';
-import {RFValue} from 'react-native-responsive-fontsize';
+import { RFValue } from 'react-native-responsive-fontsize';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -48,19 +48,19 @@ export const PASS_REGIX =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AuthContext from '../../../../utils/auth-context';
-import {useTheme} from '@react-navigation/native';
+import { useTheme } from '@react-navigation/native';
 import GradientButton from '../../../../components/buttons/gradient-button';
 import HeaderBottom from '../../../../components/header-bottom';
 import VendorCard from '../../../../components/vendor-card';
 import moment from 'moment';
 import ConnectingVendor from '../../../../components/connecting-vendor/connecting-vendor';
-import {showMessage} from 'react-native-flash-message';
-import {mainServics} from '../../../../services';
-import {useSelector} from 'react-redux';
-import {GlobalState} from '../../../../redux/global/GlobalState';
+import { showMessage } from 'react-native-flash-message';
+import { mainServics } from '../../../../services';
+import { useSelector } from 'react-redux';
+import { GlobalState } from '../../../../redux/global/GlobalState';
 import messaging from '@react-native-firebase/messaging';
-export default function OrderSummary({navigation, route}) {
-  const {colors} = useTheme();
+export default function OrderSummary({ navigation, route }) {
+  const { colors } = useTheme();
   const styles = makeStyles(colors);
   const auth = React.useContext(AuthContext);
   const [isLoading, setIsLoading] = React.useState(false);
@@ -257,11 +257,11 @@ export default function OrderSummary({navigation, route}) {
               <AntDesign name="setting" size={25} color={colors.text} />
             }
           />
-          <View style={{width: '100%', paddingHorizontal: 20}}>
+          <View style={{ width: '100%', paddingHorizontal: 20 }}>
             <HeaderBottom
               title="Order Summary"
-              subTitle={'Review what you have done Emekai'}
-              contentStyle={{marginTop: 50}}
+              subTitle={'Review what you have done'}
+              contentStyle={{ marginTop: 50 }}
               rightIcon={
                 <View
                   style={{
@@ -281,20 +281,20 @@ export default function OrderSummary({navigation, route}) {
             paddingHorizontal: 10,
             alignItems: 'center',
           }}>
-          <View style={{width: '100%', paddingHorizontal: 20}}>
+          <View style={{ width: '100%', paddingHorizontal: 20 }}>
             <View
               style={{
                 paddingVertical: heightPercentageToDP(2),
               }}>
               <Image
-                style={{width: '100%', height: 260}}
+                style={{ width: '100%', height: 260 }}
                 source={require('./gas_cylinder.png')}
                 resizeMode="cover"
               />
-              <View style={{flexDirection: 'row'}}>
+              <View style={{ flexDirection: 'row' }}>
                 <View style={styles.twoView}>
-                  <View style={{paddingBottom: 10}}>
-                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <View style={{ paddingBottom: 10 }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                       <View style={styles.check}>
                         <Entypo name="check" size={9} color={'#fff'} />
                       </View>
@@ -305,7 +305,7 @@ export default function OrderSummary({navigation, route}) {
                     </Text>
                     <Text style={styles.descText}>
                       Order Status -{' '}
-                      <Text style={[styles.descText, {color: '#eaa844'}]}>
+                      <Text style={[styles.descText, { color: '#eaa844' }]}>
                         Pending
                       </Text>
                     </Text>
@@ -317,7 +317,7 @@ export default function OrderSummary({navigation, route}) {
                         )}
                     </Text>
                   </View>
-                  <View style={{paddingBottom: 10}}>
+                  <View style={{ paddingBottom: 10 }}>
                     <View
                       style={{
                         flexDirection: 'row',
@@ -337,7 +337,7 @@ export default function OrderSummary({navigation, route}) {
                 </View>
 
                 <View style={styles.twoView}>
-                  <View style={{paddingBottom: 10}}>
+                  <View style={{ paddingBottom: 10 }}>
                     <View
                       style={{
                         flexDirection: 'row',
@@ -355,7 +355,7 @@ export default function OrderSummary({navigation, route}) {
                       {orderSummary?.vendor_details?.address}
                     </Text>
                   </View>
-                  <View style={{paddingBottom: 10}}>
+                  <View style={{ paddingBottom: 10 }}>
                     <View
                       style={{
                         flexDirection: 'row',
@@ -376,7 +376,7 @@ export default function OrderSummary({navigation, route}) {
                     <Text style={styles.descText}>
                       Due - N {orderSummary?.product_details?.price}
                     </Text>
-                    <Text style={[styles.descText, {color: 'pink'}]}>
+                    <Text style={[styles.descText, { color: 'pink' }]}>
                       See Breakdown
                     </Text>
                   </View>
@@ -391,7 +391,7 @@ export default function OrderSummary({navigation, route}) {
                 }}>
                 N {orderSummary?.summary?.total}
               </Text>
-              <Text style={{width: '100%', fontSize: 11, textAlign: 'center'}}>
+              <Text style={{ width: '100%', fontSize: 11, textAlign: 'center' }}>
                 Service Charge: N{orderSummary?.summary?.service_charge}
                 {'   '}|{'   '}Delivery Cost: N
                 {orderSummary?.summary?.delivery_cost}
@@ -405,9 +405,9 @@ export default function OrderSummary({navigation, route}) {
                 }}>
                 <TouchableOpacity
                   onPress={() => {
-                    sendNotification();
+                    // sendNotification();
 
-                    // navigation.navigate(SCREENS.CONFIRM_PAYMENT);
+                    navigation.navigate(SCREENS.DASHBOARD);
                   }}
                   disabled={isLoading}
                   style={[
@@ -417,7 +417,7 @@ export default function OrderSummary({navigation, route}) {
                       width: '80%',
                     },
                   ]}>
-                  <Text style={styles.btnTextStyle}>Continue</Text>
+                  <Text style={styles.btnTextStyle}>Back to Dashboard</Text>
                 </TouchableOpacity>
               </View>
               {/* <View

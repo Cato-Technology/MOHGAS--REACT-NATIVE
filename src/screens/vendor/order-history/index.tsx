@@ -1,15 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
-  Keyboard,
-  Platform,
   ScrollView,
   Text,
-  TouchableOpacity,
   View,
-  Image,
-  Pressable,
-  KeyboardAvoidingView,
   FlatList,
   SafeAreaView,
 } from 'react-native';
@@ -20,7 +14,10 @@ import Icon3 from 'react-native-vector-icons/Entypo';
 import Icon4 from 'react-native-vector-icons/FontAwesome5';
 import Icon5 from 'react-native-vector-icons/MaterialIcons';
 import Icon6 from 'react-native-vector-icons/AntDesign';
-import {Avatar} from 'react-native-paper';
+import { showMessage } from 'react-native-flash-message';
+// import { Avatar } from 'react-native-paper';
+import { RefreshControl } from 'react-native';
+
 
 import {
   // ErrorModal,
@@ -34,7 +31,7 @@ import {
 import SCREENS from '../../../utils/constants';
 
 import makeStyles from './styles';
-import {RFValue} from 'react-native-responsive-fontsize';
+import { RFValue } from 'react-native-responsive-fontsize';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -46,32 +43,90 @@ export const PASS_REGIX =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AuthContext from '../../../utils/auth-context';
-import {useTheme} from '@react-navigation/native';
+import { useTheme } from '@react-navigation/native';
 import GradientButton from '../../../components/buttons/gradient-button';
-import {useDispatch, useSelector} from 'react-redux';
-import {OrderState} from '../../../redux/orders/OrderState';
-import {getReduxOrderHistory} from '../../../redux/orders/orders-actions';
-import {capitalizeFirstLetter} from '../../../utils/functions/general-functions';
-import {getVendorOrderHistory} from '../../../redux/global/actions';
-import {GlobalState} from '../../../redux/global/GlobalState';
+import { useDispatch, useSelector } from 'react-redux';
+import { OrderState } from '../../../redux/orders/OrderState';
+import { getReduxOrderHistory } from '../../../redux/orders/orders-actions';
+import { capitalizeFirstLetter } from '../../../utils/functions/general-functions';
+import { getVendorOrderHistory } from '../../../redux/global/actions';
+import { GlobalState } from '../../../redux/global/GlobalState';
 import moment from 'moment';
-export default function OrderHistoryVendor({navigation}) {
-  const {colors} = useTheme();
+import { orderServices } from '../../../services';
+// import  from '../../../services'
+export default function OrderHistoryVendor({ navigation }) {
+  const { colors } = useTheme();
   const styles = makeStyles(colors);
   const authContext = React.useContext(AuthContext);
   const dispatch = useDispatch();
+  const [orderHistory, setOrderHistory] = useState();
+  const [refreshing, setRefreshing] = React.useState(false);
 
-  const orderHistory = useSelector(
-    (state: GlobalState) => state?.global?.vendorOrderHistory,
-  );
-  console.log('orderHistory', orderHistory);
-  console.log('authContext', authContext?.userData?.user_id);
+
+  // const orderHistory = useSelector(
+  //   (state: GlobalState) => state?.global?.vendorOrderHistory,
+  // );
+  // console.log('orderHistory', orderHistory);
+  // console.log('authContext', authContext?.userData?.user_id);
 
   useEffect(() => {
-    let data = new FormData();
-    data.append('user_id', authContext?.userData?.user_id);
-    dispatch(getVendorOrderHistory());
+    let data = { vendor_id: authContext?.userData?.user_id }
+    getData(data);
+    // dispatch(getVendorOrderHistory(data));
   }, [dispatch]);
+
+  const getData = async (data: any) => {
+    try {
+      // const res = mainServics.getVendorOrderHistory(data);
+      const res = await orderServices.orderHistory(data);
+      console.log("-------------------", res);
+
+      setOrderHistory(res?.order_history);
+
+    } catch (e) {
+      showMessage({
+        message: JSON.stringify(e),
+        type: 'danger',
+        icon: 'danger',
+      });
+      console.log('----e', e);
+    }
+    //  navigation.navigate(SCREENS.CONNECT_VENDOR);
+  };
+
+  const orderActionSelect = async (action: number, orderId: string) => {
+    const data = { order_id: orderId, id: authContext?.userData?.user_id };
+
+    try {
+      const res = await orderServices.orderAction(data, action);
+      console.log(res);
+      await showMessage({
+        message: res?.message,
+        type: 'success',
+        icon: 'success',
+      })
+
+    } catch (e) {
+      console.log("--------", e)
+      await showMessage({
+        message: e?.errMsg?.message,
+        type: 'warning',
+        icon: 'danger',
+      })
+    }
+
+  }
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      let data = { vendor_id: authContext?.userData?.user_id }
+      getData(data);
+
+      setRefreshing(false);
+    }, 2000);
+  }, []);
+
 
   return (
     <View style={styles.container}>
@@ -81,7 +136,10 @@ export default function OrderHistoryVendor({navigation}) {
         visible={loginError}
       /> */}
 
-      <ScrollView keyboardShouldPersistTaps={'handled'}>
+      <ScrollView keyboardShouldPersistTaps={'handled'}
+             refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }>
         <View
           style={{
             width: '100%',
@@ -89,11 +147,11 @@ export default function OrderHistoryVendor({navigation}) {
             alignItems: 'center',
           }}>
           <View style={styles.icon} />
-          <View style={{width: '100%', paddingHorizontal: 20}}>
+          <View style={{ width: '100%', paddingHorizontal: 20 }}>
             <Header
               title="Order History"
               subTitle={'Review Past and Present Orders'}
-              contentStyle={{marginTop: 100}}
+              contentStyle={{ marginTop: 100 }}
               rightIcon={
                 <View
                   style={{
@@ -112,35 +170,40 @@ export default function OrderHistoryVendor({navigation}) {
                 justifyContent: 'space-between',
               }}>
               <Text>Recent Transcations</Text>
-              <Text style={{color: 'gray'}}>
+              <Text style={{ color: 'gray' }}>
                 View All <Icon6 name="arrowright" size={10} color="gray" />{' '}
               </Text>
             </View>
             <FlatList
               data={orderHistory}
-              renderItem={({item, index}) => (
+              renderItem={({ item, index }) => (
                 <DetailCard
-                  title={`${capitalizeFirstLetter(item?.order_type)} - ${
-                    item?.cylinder_size
-                  }`}
+                  title={`${capitalizeFirstLetter(item?.order_type)} - ${item?.invoice
+                    }`}
                   subTitle={
-                    item?.createdate
-                      ? moment(item?.createdate).format('MMMM,DD,YYYY')
+                    item?.created_date
+                      ? moment(item?.created_date).format('MMMM,DD,YYYY')
                       : '--'
                   }
-                  style={{backgroundColor: '#eaf5fc'}}
-                  price={`N${item?.price}`}
+                  style={{ backgroundColor: '#eaf5fc' }}
+                  showOptions={true}
+                  price={`N${item?.grand_total}`}
                   srNo={capitalizeFirstLetter(item?.status)}
                   icon={<Icon3 name="arrow-up" size={25} color="#455F9B" />}
                   onPressDelete={() => {
                     console.log('item?', item?._id);
                   }}
-                  // onPressEdit={() =>
-                  //   navigation.navigate(SCREENS.ADDPAYMENTMETHOD, {
-                  //     edit: true,
-                  //     item: item,
-                  //   })
-                  // }
+                  data={item}
+                  actionOne={() => { orderActionSelect(1, item?.id) }}
+                  actionTwo={() => { orderActionSelect(2, item?.id) }}
+                  actionThree={() => { orderActionSelect(3, item?.id) }}
+
+                // onPressEdit={() =>
+                //   navigation.navigate(SCREENS.ADDPAYMENTMETHOD, {
+                //     edit: true,
+                //     item: item,
+                //   })
+                // }
                 />
               )}
               ListEmptyComponent={() => (

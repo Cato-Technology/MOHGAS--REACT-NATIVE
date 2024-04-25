@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Keyboard,
   Platform,
@@ -20,7 +20,7 @@ import Icon3 from 'react-native-vector-icons/Entypo';
 import Icon4 from 'react-native-vector-icons/FontAwesome5';
 import Icon5 from 'react-native-vector-icons/MaterialIcons';
 import aImage from '../../../../assets/avatar.jpg';
-import {Avatar} from 'react-native-paper';
+import { Avatar } from 'react-native-paper';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
 import {
@@ -30,12 +30,13 @@ import {
   Header,
   InputWithLabel,
   ProductView,
+  PaymentCheckBox
 } from '../../../../components';
 
 import SCREENS from '../../../../utils/constants';
 
 import makeStyles from './styles';
-import {RFValue} from 'react-native-responsive-fontsize';
+import { RFValue } from 'react-native-responsive-fontsize';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -49,17 +50,35 @@ export const PASS_REGIX =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AuthContext from '../../../../utils/auth-context';
-import {useTheme} from '@react-navigation/native';
+import { useTheme } from '@react-navigation/native';
 import GradientButton from '../../../../components/buttons/gradient-button';
 import HeaderBottom from '../../../../components/header-bottom';
 import VendorCard from '../../../../components/vendor-card';
-import {showMessage} from 'react-native-flash-message';
-import {mainServics} from '../../../../services';
-import {useDispatch} from 'react-redux';
-import {ORDER_SUMMARY} from '../../../../redux/global/constants';
+import { showMessage } from 'react-native-flash-message';
+import { mainServics } from '../../../../services';
+import { useDispatch } from 'react-redux';
+import { ORDER_SUMMARY } from '../../../../redux/global/constants';
+import { number } from 'yup';
+let cbData = [
+  {
+    id: 1,
+    title: 'wallet',
+    subTitle: 'Make Transfer to an account number',
+    checked: false,
+    value: "card"
+  },
+  {
+    id: 2,
+    title: 'pay on delivery',
+    subTitle: 'Pay directly from you debit card',
+    checked: false,
+    icon: "shopping-bag",
+    value: "cash"
+  },
+];
 
-export default function ConnectVendor({navigation, route}) {
-  const {colors} = useTheme();
+export default function ConnectVendor({ navigation, route }) {
+  const { colors } = useTheme();
   const styles = makeStyles(colors);
 
   const [isLoading, setIsLoading] = useState(false);
@@ -67,7 +86,12 @@ export default function ConnectVendor({navigation, route}) {
   const [weightInput, setWeightInput] = useState('');
   const [data, setData] = useState();
   const [itemVendor, setItemVendor] = useState();
-  console.log('route', route.params);
+  const [address, setAddress] = useState(route?.params?.item?.faddress);
+  const [refillSize, setRefillSize] = useState();
+  const [city, setCity] = useState(route?.params?.item?.city);
+  const [isFlipped, setIsFlipped] = useState(false);
+  const [paymentType, setPaymentType] = useState();
+
 
   useEffect(() => {
     getData();
@@ -78,13 +102,16 @@ export default function ConnectVendor({navigation, route}) {
       setIsLoading(true);
       let item = route?.params?.item;
 
-      const resData = await mainServics.nearByGasAgencyRefill(
-        '9.138435493506822',
-        '7.367293098773452',
-        'REFILL',
-        // item.latitude,
-        // item.longitude,
-      );
+      // const resData = await mainServics.nearByGasAgencyRefill(
+      //   '9.138435493506822',
+      //   '7.367293098773452',
+      //   'REFILL',
+      //   // item.latitude,
+      //   // item.longitude,
+      // );
+      const resData = await mainServics.getOnlineVendorsByCity(
+        city.toLowerCase(), item?.longitude, item?.latitude);
+
       console.log('resDataGet', resData);
       if (resData?.status) {
         setData(resData?.data);
@@ -119,6 +146,21 @@ export default function ConnectVendor({navigation, route}) {
   console.log('weightData', weightData);
   console.log('pData', route?.params?.item);
 
+  const handleCb = (txt, type) => {
+    console.log('txt', txt, type);
+    setPaymentType(type);
+    setIsFlipped(!isFlipped);
+
+    cbData.map((ele, index) => {
+      if (ele.id == txt) {
+        cbData[index].checked = true;
+      }
+      if (ele.id != txt) {
+        cbData[index].checked = false;
+      }
+    });
+  };
+
   const handleOrder = async () => {
     // navigation.navigate(SCREENS.CONFIRM_PAYMENT)}
     try {
@@ -128,16 +170,18 @@ export default function ConnectVendor({navigation, route}) {
       console.log('data=>', item);
       let fdata = new FormData();
       fdata.append('order_type', 'REFILL');
-      fdata.append('product_id', parseInt(weightData?.product_id));
-      fdata.append('qty', 1);
-      fdata.append('price', parseInt(weightData?.price));
-      fdata.append('branch_id', parseInt(itemVendor?.branch_id));
+      fdata.append('product_id', parseInt('1'));
+      fdata.append('qty', parseInt(refillSize));
+      fdata.append('price', parseInt(itemVendor?.price_per_kg));
+      fdata.append('branch_id', parseInt(itemVendor?.id));
       fdata.append('latitude', item.latitude);
       fdata.append('longitude', item.longitude);
       fdata.append('address', item.faddress);
       fdata.append('city', item.city);
       fdata.append('postal', item.postal);
       fdata.append('state', item.state);
+      fdata.append('swap_type', 1);
+      fdata.append('payment_type', paymentType);
       console.log('ffff=>', fdata);
 
       const resData = await mainServics.gasOrder(fdata);
@@ -162,7 +206,7 @@ export default function ConnectVendor({navigation, route}) {
       }
     } catch (e) {
       showMessage({
-        message: JSON.stringify(e),
+        message: e.errMsg.message,
         type: 'danger',
         icon: 'danger',
       });
@@ -193,11 +237,11 @@ export default function ConnectVendor({navigation, route}) {
               <AntDesign name="setting" size={25} color={colors.text} />
             }
           />
-          <View style={{width: '100%', paddingHorizontal: 20}}>
+          <View style={{ width: '100%', paddingHorizontal: 20 }}>
             <HeaderBottom
               title="New Order"
               subTitle={'Request for Refill'}
-              contentStyle={{marginTop: 50}}
+              contentStyle={{ marginTop: 50 }}
               rightIcon={
                 <View
                   style={{
@@ -217,38 +261,48 @@ export default function ConnectVendor({navigation, route}) {
                 fontSize: 15,
               }}
               // onChange={handleChange('email')}
-              value={'100 Main Street fake, City, Country'}
-              // error={touched.email ? errors.email : ''}
-              // onBlur={() => setFieldTouched('email')}
+              value={address}
+            // error={touched.email ? errors.email : ''}
+            // onBlur={() => setFieldTouched('email')}
             />
-            <Text style={{width: '100%', textAlign: 'right', color: '#ecb241'}}>
+            <Text style={{ width: '100%', textAlign: 'right', color: '#ecb241' }}>
               Change
             </Text>
+            <InputWithLabel
+              label="Refill size (KG)"
+              labelStyle={{
+                color: colors.yellowHeading,
+                fontSize: 15,
+              }}
+              onChange={(value) => setRefillSize(value.replace(/[^0-9]/g, ''))}
+              value={refillSize}
+              keyboardType="numeric"
+            />
           </View>
           {data && (
             <>
-              <Text style={{width: '90%', color: '#000', fontSize: 16}}>
+              <Text style={{ width: '90%', color: '#000', fontSize: 15 }}>
                 Select a Vendor
               </Text>
               <FlatList
                 data={data}
-                renderItem={({item}) => (
-                  <View style={{paddingHorizontal: 20}}>
+                renderItem={({ item }) => (
+                  <View style={{ paddingHorizontal: 20 }}>
                     <VendorCard
                       onPress={() => setItemVendor(item)}
                       backgroundColor={
                         itemVendor == item ? '#dee8d2' : '#f5f5f5'
                       }
                       image={item.vendor_image_url}
-                      title={item?.vendor_name}
-                      orders={item?.orders}
-                      rating={item?.rating}
-                      price={item?.price}
-                      distance={parseFloat(item?.distance).toFixed(2) + 'KM'}
+                      title={item?.branch_name}
+                      orders={item?.branch_phone}
+                      rating={item?.def}
+                      price={item?.price_per_kg}
+                      email={item?.email}
                       time={
                         item?.distance_time ? item?.distance_time : '-' + 'mins'
                       }
-                      pricePerKg={'Price Per Kg - ' + item?.avg_price_per_kg}
+                      pricePerKg={'Price Per Kg - ' + item?.price_per_kg}
                     />
                   </View>
                 )}
@@ -257,15 +311,45 @@ export default function ConnectVendor({navigation, route}) {
               />
             </>
           )}
+
+          <Text style={{ width: '90%', color: '#000', fontSize: 15, marginTop: 5 }}>
+            Select payment type
+          </Text>
+          <FlatList
+            data={cbData}
+            extraData={isFlipped}
+            renderItem={({ item, index }) => (
+              <View
+                style={{
+                  width: '90%',
+                  marginTop: 20,
+                }}>
+                <PaymentCheckBox
+                  onPress={txt => handleCb(txt, item?.value)}
+                  title={item?.title}
+                  subTitle={item?.subTitle}
+                  check={item?.checked}
+                  id={item?.id}
+                  icon={item?.icon}
+                />
+              </View>
+            )}
+            ListEmptyComponent={() => (
+              <Text style={styles.noDataText}>No Data</Text>
+            )}
+            keyExtractor={(item, index) => index.toString()}
+          />
         </View>
+
         <View
           style={{
+            height: '100%',
             width: '100%',
             paddingHorizontal: 10,
             alignItems: 'center',
           }}>
-          <View style={{width: '100%', paddingHorizontal: 20}}>
-            <View style={{height: 20}} />
+          <View style={{ width: '100%', paddingHorizontal: 20 }}>
+            <View style={{ height: 20 }} />
             {itemVendor?.refill_size && (
               <Text
                 style={{
@@ -277,7 +361,7 @@ export default function ConnectVendor({navigation, route}) {
               </Text>
             )}
 
-            <View style={{flexDirection: 'row', marginTop: 10}}>
+            <View style={{ flexDirection: 'row', marginTop: 10 }}>
               {/* <Text style={styles.tagText}>6KG</Text>
               <Text style={styles.tagText}>12KG</Text>
               <Text
@@ -319,8 +403,8 @@ export default function ConnectVendor({navigation, route}) {
                   setWeightInput(txt);
                 }}
                 placeholder={'0'}
-                // error={touched.email ? errors.email : ''}
-                // onBlur={() => setFieldTouched('email')}
+              // error={touched.email ? errors.email : ''}
+              // onBlur={() => setFieldTouched('email')}
               />
             )}
             <View
@@ -334,7 +418,7 @@ export default function ConnectVendor({navigation, route}) {
                 onPress={() => {
                   handleOrder();
                 }}
-                disabled={!weightData || !itemVendor}
+                disabled={!itemVendor || !refillSize || !paymentType}
                 title="Countinue"
               />
             </View>

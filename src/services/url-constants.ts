@@ -15,10 +15,14 @@ const backend_URLS = {
 
   //order history contants
   ORDER_HISTORY: '/backend/user_order_history',
-  RECENT_HISTORY: '/backend/user/dashboard',
+  // RECENT_HISTORY: '/backend/user/dashboard',
+  RECENT_HISTORY: '/backend/user/full_order_history?user_id=17',
+
 
   // Topup gas
   NEAR_BY_GAS_REFILL: '/backend/orders/nearest_vendors',
+
+  GET_ONLINE_BRANCH_BY_CITY: '/backend/user/getOnlineBranchesByCity',
 
   // Swap Cylinder
   SWAP_CYLINDER: '/backend/orders/swap',
@@ -36,13 +40,26 @@ const backend_URLS = {
 
   //Accept Reject Order
   ACCEPT_ORDER: '/backend/orders/accepted',
-  REJECT_ORDER: '/backend/orders/decline',
+  REJECT_ORDER: '/backend/orders/declined',
+  COMPLETE_ORDER: '/backend/orders/mark_order_as_complete',
   GET_STATES: '/backend/register/states',
   GET_CITIES: '/backend/register/cities',
   GET_LGA: '/backend/register/lga',
   GET_TOPUP_WALLET_DETAILS: '/backend/user/wallet',
 
   NEW_PASSWORD: '/backend/register/new_password',
+
+  //fund
+  FUND_WALLET: '/backend/paymentController/pay',
+
+  GET_WALLET_BALANCE: '/backend/user/getUserWallet',
+  REQUEST_WITHDRAWAL: '/backend/vendor/processWithdrawal',
+
+
+  GET_PROFILE_CHECK: '/backend/vendor/check_user_business_profile',
+  TOTAL_ORDERS_USER: '/backend/user/total_orders',
+  TOTAL_ORDERS_VENDOR: '/backend/vendor/total_orders'
+
 };
 
-export {backend_URLS};
+export { backend_URLS };

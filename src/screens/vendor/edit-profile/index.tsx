@@ -1,4 +1,4 @@
-import React, {Component, useEffect, useMemo, useState} from 'react';
+import React, { Component, useEffect, useMemo, useState } from 'react';
 import {
   Text,
   View,
@@ -22,32 +22,32 @@ import Feather from 'react-native-vector-icons/Feather';
 //import TopTabButton from '../../../../../components/top-tab-buttons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {useNavigation, useTheme} from '@react-navigation/native';
-import {AccountMenu} from '../../../components/ui';
+import { useNavigation, useTheme } from '@react-navigation/native';
+import { AccountMenu } from '../../../components/ui';
 import makeStyles from './styles';
 import SCREENS from '../../../utils/constants';
 import AuthContext from '../../../utils/auth-context';
 import Images from '../../../assets/images';
 import * as Yup from 'yup';
-import {Formik} from 'formik';
-import {NAME} from '../../../utils/regix';
+import { Formik } from 'formik';
+import { NAME } from '../../../utils/regix';
 import GradientButton from '../../../components/buttons/gradient-button';
 import {
   heightPercentageToDP,
   widthPercentageToDP,
 } from 'react-native-responsive-screen';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import ImagePicker from 'react-native-image-crop-picker';
-import {mainServics, profileService} from '../../../services';
-import {showMessage} from 'react-native-flash-message';
+import { mainServics, profileService } from '../../../services';
+import { showMessage } from 'react-native-flash-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useDispatch, useSelector} from 'react-redux';
-import {GlobalState} from '../../../redux/global/GlobalState';
-import {getVendorBusinessProfileR} from '../../../redux/global/actions';
+import { useDispatch, useSelector } from 'react-redux';
+import { GlobalState } from '../../../redux/global/GlobalState';
+import { getVendorBusinessProfileR } from '../../../redux/global/actions';
 let cameraIs = false;
 const VendorEditProfile = () => {
   const navigation = useNavigation();
-  const {colors} = useTheme();
+  const { colors } = useTheme();
   const dispatch = useDispatch();
   const businessData = useSelector(
     (state: GlobalState) => state?.global?.businessProfileData,
@@ -178,6 +178,7 @@ const VendorEditProfile = () => {
       data.append('business_name', values.business_name);
       data.append('business_phone', values.business_phone);
       data.append('main_branch_address', values.main_branch_address);
+      data.append('business_city', values.business_city);
       data.append(
         'main_branch_store_manager_name',
         values.main_branch_store_manager_name,
@@ -294,7 +295,7 @@ const VendorEditProfile = () => {
       <EditProfileModal
         iconPress={() => {
           setType('pi');
-          setShowModal(true);
+          setShowModal(false);
         }}
         visible={showModal}
         onPressGallery={() => imagePickerFromGallery()}
@@ -302,7 +303,7 @@ const VendorEditProfile = () => {
       />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={{flex: 1}}>
+        style={{ flex: 1 }}>
         <ScrollView keyboardShouldPersistTaps={'handled'}>
           <View style={styles.contentView}>
             <View style={[styles.image]}>
@@ -334,7 +335,7 @@ const VendorEditProfile = () => {
                 />
               </View>
             </View>
-            <View style={{marginTop: 40}}>
+            <View style={{ marginTop: 40 }}>
               <Formik
                 initialValues={{
                   business_name: businessData?.business_name
@@ -352,6 +353,9 @@ const VendorEditProfile = () => {
                       : '',
                   main_branch_address: businessData?.main_branch_address
                     ? businessData?.main_branch_address
+                    : '',
+                  business_city: businessData?.business_city
+                    ? businessData?.business_city
                     : '',
                   nin: businessData?.nin ? businessData?.nin : '',
                   rc_bn_number: businessData?.rc_bn_number
@@ -372,7 +376,7 @@ const VendorEditProfile = () => {
                   setFieldTouched,
                 }) => (
                   <>
-                    <View style={{alignItems: 'center'}}>
+                    <View style={{ alignItems: 'center' }}>
                       <InputWithLabel
                         label="Business Name"
                         labelStyle={{
@@ -380,7 +384,7 @@ const VendorEditProfile = () => {
                           color: colors.yellowHeading,
                           fontSize: 12,
                         }}
-                        styleInput={{fontSize: 11}}
+                        styleInput={{ fontSize: 11 }}
                         placeholder={'Eg. Holi Gas and Accessories'}
                         //  containerStyles={{paddingHorizontal: 20}}
                         onChange={handleChange('business_name')}
@@ -390,7 +394,7 @@ const VendorEditProfile = () => {
                         }
                         onBlur={() => setFieldTouched('business_name')}
                       />
-                      <View style={{height: 7}} />
+                      <View style={{ height: 7 }} />
                       <View
                         style={{
                           flexDirection: 'row',
@@ -405,7 +409,7 @@ const VendorEditProfile = () => {
                             color: colors.yellowHeading,
                             fontSize: 12,
                           }}
-                          styleInput={{fontSize: 11}}
+                          styleInput={{ fontSize: 11 }}
                           placeholder={'Eg. Ahmed Peter Hassan'}
                           containerStyles={{
                             width: Dimensions.get('window').width * 0.44,
@@ -431,7 +435,7 @@ const VendorEditProfile = () => {
                             color: colors.yellowHeading,
                             fontSize: 12,
                           }}
-                          styleInput={{fontSize: 11}}
+                          styleInput={{ fontSize: 11 }}
                           placeholder={'Eg. 1700056'}
                           containerStyles={{
                             width: Dimensions.get('window').width * 0.44,
@@ -453,13 +457,13 @@ const VendorEditProfile = () => {
                           alignItems: 'center',
                         }}>
                         <InputWithLabel
-                          label="MiN"
+                          label="NIN"
                           labelStyle={{
                             // fontFamily: fonts.mulishSemiBold,
                             color: colors.yellowHeading,
                             fontSize: 12,
                           }}
-                          styleInput={{fontSize: 11}}
+                          styleInput={{ fontSize: 11 }}
                           placeholder={'Eg. 43535434634'}
                           containerStyles={{
                             width: Dimensions.get('window').width * 0.44,
@@ -477,7 +481,7 @@ const VendorEditProfile = () => {
                             color: colors.yellowHeading,
                             fontSize: 12,
                           }}
-                          styleInput={{fontSize: 11}}
+                          styleInput={{ fontSize: 11 }}
                           placeholder={'Eg. 036434634'}
                           containerStyles={{
                             width: Dimensions.get('window').width * 0.44,
@@ -492,7 +496,7 @@ const VendorEditProfile = () => {
                         />
                       </View>
 
-                      <View style={{height: 7}} />
+                      <View style={{ height: 7 }} />
                       <InputWithLabel
                         label={'Email'}
                         placeholder={'Eg. abc@abc.com'}
@@ -502,7 +506,7 @@ const VendorEditProfile = () => {
                           color: colors.yellowHeading,
                           fontSize: 12,
                         }}
-                        styleInput={{fontSize: 11}}
+                        styleInput={{ fontSize: 11 }}
                         onChange={handleChange('business_email')}
                         value={values.business_email}
                         error={
@@ -510,12 +514,12 @@ const VendorEditProfile = () => {
                         }
                         onBlur={() => setFieldTouched('business_email')}
                       />
-                      <View style={{height: 7}} />
+                      <View style={{ height: 7 }} />
 
                       <InputWithLabel
                         label="Main Branch Address"
                         placeholder={'Eg. 600 Main Street, garki'}
-                        styleInput={{fontSize: 11}}
+                        styleInput={{ fontSize: 11 }}
                         //  containerStyles={{paddingHorizontal: 20}}
                         labelStyle={{
                           // fontFamily: fonts.mulishSemiBold,
@@ -530,6 +534,25 @@ const VendorEditProfile = () => {
                             : ''
                         }
                         onBlur={() => setFieldTouched('main_branch_address')}
+                      />
+                      <InputWithLabel
+                        label="Business City"
+                        placeholder={'Lagos'}
+                        styleInput={{ fontSize: 11 }}
+                        //  containerStyles={{paddingHorizontal: 20}}
+                        labelStyle={{
+                          // fontFamily: fonts.mulishSemiBold,
+                          color: colors.yellowHeading,
+                          fontSize: 12,
+                        }}
+                        onChange={handleChange('business_city')}
+                        value={values.business_city}
+                        error={
+                          touched.business_city
+                            ? errors.business_city
+                            : ''
+                        }
+                        onBlur={() => setFieldTouched('business_city')}
                       />
                       <View
                         style={{

@@ -374,7 +374,7 @@ export default function SwapCylinder({navigation}) {
               <AntDesign name="setting" size={25} color={colors.text} />
             }
           />
-          <View style={{width: '100%', paddingHorizontal: 20}}>
+          {/* <View style={{width: '100%', paddingHorizontal: 20}}>
             <HeaderBottom
               title="Swap Cylinder"
               subTitle={'New order to swap cylinder'}
@@ -418,7 +418,7 @@ export default function SwapCylinder({navigation}) {
               </Text>
               <RadioGroup radioButtons={radioButtons} layout={'row'} />
             </View>
-          </View>
+          </View> */}
         </View>
         <View
           style={{
@@ -439,7 +439,7 @@ export default function SwapCylinder({navigation}) {
             <Text style={{color: '#000000', fontSize: 16, paddingVertical: 5}}>
               Select size of your cylinder
             </Text>
-            <View style={{flexDirection: 'row', marginTop: 10}}>
+            {/* <View style={{flexDirection: 'row', marginTop: 10}}>
               {sizeCylinders.map(ele => (
                 <Text
                   style={[
@@ -453,8 +453,8 @@ export default function SwapCylinder({navigation}) {
                   {ele.size}KG
                 </Text>
               ))}
-            </View>
-            <View style={{marginTop: 25}}>
+            </View> */}
+            {/* <View style={{marginTop: 25}}>
               <Text
                 style={{
                   color: '#000000',
@@ -517,7 +517,7 @@ export default function SwapCylinder({navigation}) {
                   }}
                 />
               </View>
-            </View>
+            </View> */}
 
             <View
               style={{
@@ -526,20 +526,25 @@ export default function SwapCylinder({navigation}) {
                 zIndex: -1,
                 marginTop: 50,
               }}>
-              <GradientButton
+                
+                <Text style={{textAlign: 'center', alignSelf: 'center'}}>
+                  This feature is actively being worked on and will be made
+                  available in next release
+                </Text>
+              {/* <GradientButton
                 onPress={() => handleSubmitted()}
                 // disabled={!isValid || loader || !checked}
                 title="Countinue"
-              />
+              /> */}
             </View>
           </View>
-          <LabResultModal
+          {/* <LabResultModal
             visible={showModal}
             title={'Upload Photos'}
             closeModal={() => setShowModal(!showModal)}
             onTakePhoto={() => imagePickerFromCamera()}
             onUploadFromGallery={() => imagePickerFromGallery()}
-          />
+          /> */}
         </View>
       </ScrollView>
     </View>

@@ -57,7 +57,7 @@ const DetailCard = ({
           {status}
         </Text>
         <Text style={[styles.detailText, {textAlign: 'right'}]}>
-          Ammount in wallet
+          Amount in wallet
         </Text>
         <Text style={[styles.detailText, {textAlign: 'right'}]}>{price}</Text>
       </View>

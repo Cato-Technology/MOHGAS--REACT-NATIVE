@@ -1,19 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useContext, useEffect, useMemo, useState} from 'react';
 import {
-  Keyboard,
-  Platform,
+
   ScrollView,
   Text,
   TouchableOpacity,
   View,
-  Image,
-  Pressable,
-  KeyboardAvoidingView,
-  FlatList,
-  SafeAreaView,
-  ImageBackground,
-  PermissionsAndroid,
+
 } from 'react-native';
 import * as Yup from 'yup';
 import Feather from 'react-native-vector-icons/Feather';
@@ -76,14 +69,16 @@ export default function UpdateVendorAccount({navigation}) {
     (state: GlobalState) => state?.global?.vendorBankDetalis,
   );
   const handleSubmit = async values => {
-    console.log('values', values);
     try {
       setLoader(true);
       let data = new FormData();
-      data.append('account_title', values.account_title);
+      data.append('account_name', values.account_title);
       data.append('account_number', values.account_number);
       data.append('bank', values.bank);
-      const result = await mainServics.upDateVendorBankAccount(data);
+      data.append('amount', values.amount.replace('₦', ''));
+      data.append('vendor_id', authContext?.userData?.user_id);
+      console.log('details', data);
+      const result = await mainServics.requestWithdrawal(data);
       console.log('result', result);
       setLoader(false);
       if (result.status)
@@ -91,12 +86,12 @@ export default function UpdateVendorAccount({navigation}) {
           render: 'UpdateBank',
           item: result?.data,
         });
-      dispatch(getVendorAccountDetials());
+      // dispatch(getVendorAccountDetials());
     } catch (e) {
       setLoader(false);
       console.log('e', e);
       showMessage({
-        message: JSON.stringify(e),
+        message: JSON.stringify(e.errMsg.message),
         type: 'danger',
         icon: 'danger',
       });
@@ -160,6 +155,7 @@ export default function UpdateVendorAccount({navigation}) {
                   ? backData?.account_number
                   : '',
                 bank: backData?.bank ? backData?.bank : '',
+                amount: backData?.amount ? backData?.amount : '',
               }}
               onSubmit={values => handleSubmit(values)}
               validationSchema={BAccountSchema}>
@@ -215,6 +211,19 @@ export default function UpdateVendorAccount({navigation}) {
                     onBlur={() => setFieldTouched('bank')}
                     value={values?.bank}
                   />
+                  <InputWithLabel
+                    label={'Amount'}
+                    labelStyle={{
+                      fontFamily: 'Rubik-Regular',
+                      color: colors.yellowHeading,
+                      fontSize: 15,
+                    }}
+                    onChange={handleChange('amount')}
+                    placeholder={'Guaranty Trust Bank'}
+                    error={touched.bank ? errors.bank : ''}
+                    onBlur={() => setFieldTouched('bank')}
+                    value={`₦${values?.amount?.replace('₦', '')}`}
+                  />
                   <View style={{width: '100%', paddingHorizontal: 20}}>
                     <View
                       style={{
@@ -225,7 +234,7 @@ export default function UpdateVendorAccount({navigation}) {
                       <GradientButton
                         onPress={() => handleSubmit()}
                         disabled={!isValid || loader}
-                        title="Update"
+                        title="Request Withdrawal"
                       />
                     </View>
                   </View>

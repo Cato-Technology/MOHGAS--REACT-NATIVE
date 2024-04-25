@@ -12,6 +12,7 @@ export default {
   MAIN_NAVIGATOR: 'MAIN_NAVIGATOR',
   DASHBOARD: 'DASHBOARD',
   ORDER_HISTORY: 'ORDER_HISTORY',
+  ORDER_DETAILS: 'ORDER_DETAILS',
   CHAT: 'CHAT',
 
   //Orders navigator customer

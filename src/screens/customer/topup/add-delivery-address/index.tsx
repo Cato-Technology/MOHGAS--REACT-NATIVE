@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Keyboard,
   Platform,
@@ -31,7 +31,7 @@ import {
 import SCREENS from '../../../../utils/constants';
 
 import makeStyles from './styles';
-import {RFValue} from 'react-native-responsive-fontsize';
+import { RFValue } from 'react-native-responsive-fontsize';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -45,12 +45,12 @@ export const PASS_REGIX =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AuthContext from '../../../../utils/auth-context';
-import {useTheme} from '@react-navigation/native';
+import { useTheme } from '@react-navigation/native';
 import GradientButton from '../../../../components/buttons/gradient-button';
 import HeaderBottom from '../../../../components/header-bottom';
-import {mainServics} from '../../../../services';
-export default function AddDeliveryAddress({navigation, route}) {
-  const {colors} = useTheme();
+import { mainServics } from '../../../../services';
+export default function AddDeliveryAddress({ navigation, route }) {
+  const { colors } = useTheme();
   const styles = makeStyles(colors);
   const auth = React.useContext(AuthContext);
   const authContext = React.useContext(AuthContext);
@@ -59,6 +59,7 @@ export default function AddDeliveryAddress({navigation, route}) {
   const [loginError, setLoginError] = useState(false);
   const [checked, setChecked] = useState(false);
   const render = route?.params?.render;
+  const mapaddress = route?.params?.faddress;
 
   const handleApi = async () => {
     navigation.navigate(SCREENS.PIN_LOCATION);
@@ -83,7 +84,7 @@ export default function AddDeliveryAddress({navigation, route}) {
           back={true}
           rightIcon={<AntDesign name="setting" size={25} color={colors.text} />}
         />
-        <View style={{width: '100%', paddingHorizontal: 20}}>
+        <View style={{ width: '100%', paddingHorizontal: 20 }}>
           <HeaderBottom
             title={render == 'refill' ? 'New Order' : 'Accessories'}
             subTitle={
@@ -91,7 +92,7 @@ export default function AddDeliveryAddress({navigation, route}) {
                 ? 'Request for Refill'
                 : 'Find and Buy gas accessories'
             }
-            contentStyle={{marginTop: 50}}
+            contentStyle={{ marginTop: 50 }}
             rightIcon={
               <View
                 style={{
@@ -103,6 +104,7 @@ export default function AddDeliveryAddress({navigation, route}) {
               </View>
             }
           />
+
           <InputWithLabel
             label="Set Delivery Address"
             labelStyle={{
@@ -110,12 +112,13 @@ export default function AddDeliveryAddress({navigation, route}) {
               color: colors.yellowHeading,
               fontSize: 15,
             }}
+            value={mapaddress}
             onChange={txt => setAddress(txt)}
             placeholder={'100 Main Street fake, City, Country'}
-            // error={touched.email ? errors.email : ''}
-            // onBlur={() => setFieldTouched('email')}
+          // error={touched.email ? errors.email : ''}
+          // onBlur={() => setFieldTouched('email')}
           />
-          <Text style={{width: '100%', textAlign: 'right', color: '#ecb241'}}>
+          <Text style={{ width: '100%', textAlign: 'right', color: '#ecb241' }}>
             Change
           </Text>
         </View>
@@ -133,7 +136,7 @@ export default function AddDeliveryAddress({navigation, route}) {
             handleApi();
           }}
           //  disabled={!address}
-          title="Countinue"
+          title="Continue"
         />
       </View>
     </View>

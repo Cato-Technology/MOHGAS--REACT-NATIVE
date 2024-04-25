@@ -1,5 +1,5 @@
-import {StyleSheet} from 'react-native';
-import {RFValue} from 'react-native-responsive-fontsize';
+import { StyleSheet } from 'react-native';
+import { RFValue } from 'react-native-responsive-fontsize';
 import {
   heightPercentageToDP,
   widthPercentageToDP,
@@ -12,7 +12,7 @@ export const makeStyles = (colors: any) =>
       width: '100%',
       justifyContent: 'space-between',
       alignItems: 'center',
-      paddingVertical: 15,
+      paddingVertical: 1,
     },
     rdbHeading: {
       fontFamily: 'Rubik-Bold',
@@ -20,14 +20,14 @@ export const makeStyles = (colors: any) =>
       color: '#000000',
     },
     rdbSubHeading: {
-      fontSize: 15,
+      fontSize: 11.5,
       width: '70%',
       color: '#000000',
     },
     iconCircleView: {
       backgroundColor: '#92d76a',
-      width: 50,
-      height: 50,
+      width: 40,
+      height: 40,
       justifyContent: 'center',
       alignItems: 'center',
       borderRadius: 50,

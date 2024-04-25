@@ -140,7 +140,7 @@ export default function Accessories({navigation}) {
             }
           />
           <View style={{width: '100%', paddingHorizontal: 20}}>
-            <HeaderBottom
+            {/* <HeaderBottom
               title="Accessories"
               subTitle={'Find and Buy gas accessories'}
               contentStyle={{marginTop: 50}}
@@ -154,8 +154,8 @@ export default function Accessories({navigation}) {
                   <Icon5 name="sort" size={30} color="#fff" />
                 </View>
               }
-            />
-            <InputWithLabel
+            /> */}
+            {/* <InputWithLabel
               placeholder={'Search'}
               labelStyle={{
                 //   fontFamily: fonts.mulishSemiBold,
@@ -174,8 +174,13 @@ export default function Accessories({navigation}) {
               <Text style={{color: '#000000', fontSize: 12}}>
                 {userAddress}
               </Text>
-            </Text>
+            </Text> */}
 
+            <Text style={{textAlign: 'center'}}>
+                  This feature is actively being worked on and will be made
+                  available in next release
+                </Text>
+{/* 
             <FlatList
               data={accessories}
               numColumns={4}
@@ -200,7 +205,7 @@ export default function Accessories({navigation}) {
                 <Text style={styles.noDataText}>No Data</Text>
               )}
               keyExtractor={(item, index) => index.toString()}
-            />
+            /> */}
           </View>
         </View>
       </ScrollView>

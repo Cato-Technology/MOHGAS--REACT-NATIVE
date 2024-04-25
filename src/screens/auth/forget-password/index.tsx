@@ -78,8 +78,8 @@ export default function ForgetPassword({navigation, route}) {
       console.log('result', result);
       setLoader(false);
       if (result?.status == '0') {
-        setLoader(false);
-        showMessage({
+       setLoader(false);
+         showMessage({
           message: result?.message,
           type: 'danger',
           icon: 'warning',

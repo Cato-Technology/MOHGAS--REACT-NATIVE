@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Keyboard,
   Platform,
@@ -25,7 +25,7 @@ import {
 import SCREENS from '../../../utils/constants';
 
 import makeStyles from './styles';
-import {RFValue} from 'react-native-responsive-fontsize';
+import { RFValue } from 'react-native-responsive-fontsize';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -36,14 +36,14 @@ export const PASS_REGIX =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AuthContext from '../../../utils/auth-context';
-import {useTheme} from '@react-navigation/native';
+import { useTheme } from '@react-navigation/native';
 import GradientButton from '../../../components/buttons/gradient-button';
-import {authService} from '../../../services';
+import { authService } from '../../../services';
 import ErrorModal from '../../../components/error-modal';
 import Logo from '../../../assets/images/logo.png';
-import {showMessage} from 'react-native-flash-message';
-export default function Login({navigation}) {
-  const {colors} = useTheme();
+import { showMessage } from 'react-native-flash-message';
+export default function Login({ navigation }) {
+  const { colors } = useTheme();
   const styles = makeStyles(colors);
   const auth = React.useContext(AuthContext);
   const authContext = React.useContext(AuthContext);
@@ -72,18 +72,37 @@ export default function Login({navigation}) {
   const handleLogin = async () => {
     try {
       setLoader(true);
-      // const fcm = await AsyncStorage.getItem('fcm');
-      // console.log('fcmAsync', fcm);
+      const fcm = await AsyncStorage.getItem('fcm');
+      console.log('fcmAsync', fcm);
 
       let data = new FormData();
       data.append('email', userName);
       data.append('password', password);
       data.append('firebase_token', fcm);
-      data.append('device_name', 'gfbdf');
+      data.append('device_name', 'android');
       console.log('data', data);
 
       const result = await authService.login(data);
       console.log('result', result);
+
+      if (result?.code === "401") {
+        console.log("===========/////////=====", result);
+
+        showMessage({
+          message: result?.message,
+          type: 'warning',
+          icon: 'warning',
+        });
+        setLoader(false);
+        setLoginError(result?.message);
+        
+
+        navigation.navigate(SCREENS.OTP_VERIFICATION, {
+          userId: result?.response?.id,
+          phNumber: result?.response?.email,
+        });
+        return;
+      }
 
       if (!result?.status) {
         setLoader(false);
@@ -98,6 +117,8 @@ export default function Login({navigation}) {
           console.error('Failed to save user data to storage');
         }
 
+
+
         if (result?.response?.token) {
           auth.setUserData(result?.response);
           auth.authContext.signIn(result?.response?.token);
@@ -107,17 +128,13 @@ export default function Login({navigation}) {
     } catch (e) {
       setLoader(false);
 
-      console.log('error', e);
-      if (e?.status == 400) {
-        showMessage({
-          message: e?.errMsg?.message,
-          type: 'danger',
-          icon: 'danger',
-        });
-      }
-      if (e?.status == 401) {
-        setLoginError(true);
-      }
+      console.log('error===================================', e);
+      // showMessage({
+      //   message: e?.errMsg?.message,
+      //   type: 'danger',
+      //   icon: 'danger',
+      // });
+      setLoginError(e?.errMsg?.message);
     }
   };
 
@@ -125,17 +142,19 @@ export default function Login({navigation}) {
     <View style={styles.container}>
       <ActivityIndicator visible={loader} />
       <ErrorModal
+        header={"Login Error"}
         onPress={() => {
-          navigation.navigate(SCREENS.FORGET_PASSWORLD, {
-            item: 'Verify your phone number',
-          });
+          // navigation.navigate(SCREENS.FORGET_PASSWORLD, {
+          //   item: 'Verify your phone number',
+          // });
           setLoginError(!loginError);
         }}
+        message={loginError}
         visible={loginError}
       />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={{flex: 1}}>
+        style={{ flex: 1 }}>
         <ScrollView keyboardShouldPersistTaps={'handled'}>
           <View
             style={{
@@ -147,7 +166,7 @@ export default function Login({navigation}) {
               <Image style={styles.logo} source={Logo} />
             </View>
           </View>
-          <View style={{marginTop: 230, paddingHorizontal: 25}}>
+          <View style={{ marginTop: 230, paddingHorizontal: 25 }}>
             <InputWithLabel
               label="Email or Number"
               labelStyle={{
@@ -158,10 +177,10 @@ export default function Login({navigation}) {
               // leftIcon={<Icon name="person" size={20} color="#fff" />}
               placeholder={'Enter your username here'}
               onChange={text => setUserName(text)}
-              // value={ammount + ''}
+            // value={ammount + ''}
             />
 
-            <View style={{height: 5}} />
+            <View style={{ height: 5 }} />
 
             <InputWithLabel
               label="Password"
@@ -174,9 +193,9 @@ export default function Login({navigation}) {
               showEye={true}
               placeholder={'Enter your password here'}
               onChange={text => setPassword(text)}
-              // value={ammount + ''}
+            // value={ammount + ''}
             />
-            <View style={{height: 30}} />
+            <View style={{ height: 30 }} />
             <View
               style={{
                 flexDirection: 'row',
@@ -184,18 +203,18 @@ export default function Login({navigation}) {
                 justifyContent: 'space-between',
               }}>
               <View style={styles.tcText}>
-                <View style={{flexDirection: 'row'}}>
+                <View style={{ flexDirection: 'row' }}>
                   <CheckBox checked={checked} setChecked={setChecked} />
                   <Text style={styles.tcTextStyle}>Remember me</Text>
                 </View>
               </View>
               <Text
                 onPress={() => navigation.navigate(SCREENS.FORGET_PASSWORLD)}
-                style={[styles.tcTextStyle, {color: '#4ca757'}]}>
+                style={[styles.tcTextStyle, { color: '#4ca757' }]}>
                 Forgot Password?
               </Text>
             </View>
-            <View style={{height: 30}} />
+            <View style={{ height: 30 }} />
             <GradientButton
               onPress={() => handleLogin()}
               disabled={false}
@@ -203,13 +222,13 @@ export default function Login({navigation}) {
             />
             <Text
               onPress={() => navigation.navigate(SCREENS.SIGNUP_CUSTOMER)}
-              style={[styles.centerText, {fontSize: RFValue(12)}]}>
+              style={[styles.centerText, { fontSize: RFValue(12) }]}>
               Register as Customer
             </Text>
 
             <Text style={styles.centerText}>Or</Text>
             <Text
-              style={[styles.centerText, {fontSize: RFValue(12)}]}
+              style={[styles.centerText, { fontSize: RFValue(12) }]}
               onPress={() => navigation.navigate(SCREENS.SIGNUP_VENDOR)}>
               Register as Vendor
             </Text>

@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Keyboard,
   Platform,
@@ -12,6 +12,7 @@ import {
   KeyboardAvoidingView,
   FlatList,
   Button,
+  RefreshControl
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -23,10 +24,14 @@ import Icon5 from 'react-native-vector-icons/MaterialIcons';
 import Icon6 from 'react-native-vector-icons/AntDesign';
 import card from '../../../assets/card.png';
 import aImage from '../../../assets/avatar.jpg';
-import {Avatar} from 'react-native-paper';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Fontisto from 'react-native-vector-icons/Fontisto';
+import { Avatar } from 'react-native-paper';
+import { capitalizeFirstLetter } from '../../../utils/functions/general-functions';
+
 
 import {
-  // ErrorModal,
+  ErrorModal,
   ActivityIndicator,
   // PhoneNumber,
   CheckBox,
@@ -37,7 +42,7 @@ import {
 import SCREENS from '../../../utils/constants';
 
 import makeStyles from './styles';
-import {RFValue} from 'react-native-responsive-fontsize';
+import { RFValue } from 'react-native-responsive-fontsize';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -49,27 +54,40 @@ export const PASS_REGIX =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AuthContext from '../../../utils/auth-context';
-import {useTheme} from '@react-navigation/native';
+import { useTheme } from '@react-navigation/native';
 import GradientButton from '../../../components/buttons/gradient-button';
 import LinearGradient from 'react-native-linear-gradient';
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   getVendorAccountDetials,
   getVendorBusinessProfileR,
 } from '../../../redux/global/actions';
-import {GlobalState} from '../../../redux/global/GlobalState';
+import { GlobalState } from '../../../redux/global/GlobalState';
 import messaging from '@react-native-firebase/messaging';
-import {navigate} from '../../../utils/functions/RootNavigator';
+import { navigate } from '../../../utils/functions/RootNavigator';
 import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
-export default function VendorDashBoard({navigation}) {
-  const {colors} = useTheme();
+import moment from 'moment';
+import { orderServices, mainServics } from '../../../services';
+import { showMessage } from 'react-native-flash-message';
+import { useFocusEffect } from '@react-navigation/native';
+
+
+
+export default function VendorDashBoard({ navigation }) {
+  const { colors } = useTheme();
   const styles = makeStyles(colors);
   const dispatch = useDispatch();
-  const authContext = React.useContext(AuthContext);
-  console.log('authContext==>', authContext);
+  const authContext = useContext(AuthContext);
   const businessData = useSelector(
     (state: GlobalState) => state?.global?.businessProfileData,
   );
+  const [orderHistory, setOrderHistory] = useState();
+  const [balance, setBalance] = useState();
+  const [refreshing, setRefreshing] = useState(false);
+  const [businessProfileCheck, setbusinessProfileCheck] = useState(false);
+  const [loginError, setLoginError] = useState();
+  const [totalOrders, setTotalOrders] = useState();
+
 
   React.useEffect(() => {
     // Load the user data from storage when the app starts
@@ -84,9 +102,21 @@ export default function VendorDashBoard({navigation}) {
     };
     loadUserData();
   }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      checkBusinessProfile(authContext?.userData?.user_id);
+
+      return () => {
+        // Clean up function (optional)
+      };
+    }, [])
+  );
+
   useEffect(() => {
     onLocationEnablePressed();
   }, []);
+
   const onLocationEnablePressed = () => {
     if (Platform.OS === 'android') {
       RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({
@@ -139,20 +169,101 @@ export default function VendorDashBoard({navigation}) {
         }
       });
   }, []);
+
   useEffect(() => {
     dispatch(getVendorBusinessProfileR());
     dispatch(getVendorAccountDetials());
+    let data = { vendor_id: authContext?.userData?.user_id }
+    getData(data);
+    getWallet(data.vendor_id);
+    getTotalOrders(data.vendor_id);
+    checkBusinessProfile(data.vendor_id);
+
   }, [dispatch]);
+
+  const getData = async (data: any) => {
+    try {
+      // const res = mainServics.getVendorOrderHistory(data);
+      const res = await orderServices.orderHistory(data);
+      console.log("-------------------", res);
+
+      setOrderHistory(res?.order_history);
+
+    } catch (e) {
+      // showMessage({
+      //   message: JSON.stringify(e),
+      //   type: 'danger',
+      //   icon: 'danger',
+      // });
+      console.log('e--', e);
+    }
+    //  navigation.navigate(SCREENS.CONNECT_VENDOR);
+  };
+
+  const getWallet = async (id: string) => {
+    try {
+      const getWallet = await mainServics.getWalletBalance(id);
+      setBalance(getWallet?.data?.wallet);
+    } catch (e) {
+      console.log('error', e);
+    }
+  }
+
+  const getTotalOrders = async (id) => {
+    try {
+      const getTotal = await mainServics.myTotalOrders(id, "vendor");
+      setTotalOrders(getTotal?.total_orders);
+      console.log(getTotal, "////////////////////");
+    } catch (e) {
+      console.log('error', e);
+    }
+  }
+
+  const checkBusinessProfile = async (id) => {
+    try {
+
+      const res = await mainServics.checkBusinessProfile(id);
+
+      // console.log(res, "@$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+      setLoginError(undefined);
+    } catch (e) {
+      // console.log(e, "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+      setLoginError(e?.errMsg?.message)
+
+    }
+  }
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      let data = { vendor_id: authContext?.userData?.user_id }
+      getData(data);
+      getWallet(data.vendor_id);
+      setRefreshing(false);
+    }, 2000);
+  }, []);
 
   return (
     <View style={styles.container}>
       <ActivityIndicator visible={false} />
-      {/* <ErrorModal
-        onPress={() => setLoginError(!loginError)}
-        visible={loginError}
-      /> */}
+      <ErrorModal
+        header={"Business Profile Incomplete"}
+        onPress={() => {
+          navigation.navigate(SCREENS.PROFILE_NAVIGATOR_VENDOR, {
+            item: 'Verify your phone number',
+          });
 
-      <ScrollView keyboardShouldPersistTaps={'handled'}>
+          setLoginError(loginError);
+        }}
+        message={loginError || " "}
+        visible={loginError}
+        buttonTxt={"go to business profile"}
+      />
+
+      <ScrollView keyboardShouldPersistTaps={'handled'}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
         <View
           style={{
             width: '100%',
@@ -168,7 +279,7 @@ export default function VendorDashBoard({navigation}) {
               justifyContent: 'space-between',
               alignItems: 'center',
             }}>
-            <View style={{marginTop: 20}}>
+            <View style={{ marginTop: 20 }}>
               <Icon3
                 name="menu"
                 onPress={() => navigation.openDrawer()}
@@ -181,7 +292,7 @@ export default function VendorDashBoard({navigation}) {
                   fontSize: 15,
                   color: '#000000',
                 }}>
-                Wellcome
+                Welcome
               </Text>
               <Text
                 style={{
@@ -193,42 +304,42 @@ export default function VendorDashBoard({navigation}) {
               </Text>
 
               <Text
-                style={{fontFamily: 'Rubik-Bold', color: 'gray', fontSize: 10}}>
+                style={{ fontFamily: 'Rubik-Bold', color: 'gray', fontSize: 10 }}>
                 <Icon4 name="crown" size={10} color="gray" /> Premium Member
               </Text>
             </View>
             <Avatar.Image
               size={45}
-              source={{uri: authContext?.userData?.image}}
+              source={{ uri: authContext?.userData?.image }}
             />
           </View>
           <View style={styles.cardContainer}>
             <LinearGradient
-              start={{x: 0, y: 0}}
-              end={{x: 1, y: 0}}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
               colors={['#526ba3', '#657aa5']}
               style={styles.gradientView}
             />
             <View>
-              <Text style={{color: '#fff', fontFamily: 'Rubik-Bold'}}>
+              <Text style={{ color: '#fff', fontFamily: 'Rubik-Bold' }}>
                 Mohgas Wallet
               </Text>
-              <View style={{paddingVertical: 20}}>
-                <Text style={{color: '#fff'}}>Balance</Text>
-                <Text style={{color: '#fff'}}>
-                  N{authContext?.userData?.wallet}
+              <View style={{ paddingVertical: 20 }}>
+                <Text style={{ color: '#fff' }}>Balance</Text>
+                <Text style={{ color: '#fff' }}>
+                  ₦ {balance}
                 </Text>
               </View>
-              <Text style={{color: '#fff'}}>
-                ■ ■ ■ ■{'   '}■ ■ ■ ■{'   '}■ ■ ■ ■{'   '}1 2 3 4
+              <Text style={{ color: '#fff' }}>
+                My total orders: {totalOrders}
               </Text>
-              <Text style={{color: '#fff', marginTop: 10}}>
+              <Text style={{ color: '#fff', marginTop: 10 }}>
                 {' '}
                 {authContext?.userData?.full_name}
               </Text>
             </View>
           </View>
-          <View style={{width: '100%', alignItems: 'center'}}>
+          <View style={{ width: '100%', alignItems: 'center' }}>
             <View
               style={{
                 flexDirection: 'row',
@@ -237,7 +348,7 @@ export default function VendorDashBoard({navigation}) {
                 paddingTop: 30,
                 paddingHorizontal: 20,
               }}>
-              <View style={{alignItems: 'center'}}>
+              <View style={{ alignItems: 'center' }}>
                 <View style={styles.circleView}>
                   <Icon3
                     name="plus"
@@ -248,13 +359,16 @@ export default function VendorDashBoard({navigation}) {
                 </View>
                 <Text style={styles.centerViewText}>Product</Text>
               </View>
-              <View style={{alignItems: 'center'}}>
+              <View style={{ alignItems: 'center' }}>
                 <View style={styles.circleView}>
-                  <Icon name="money" size={25} color="#fff" />
+                  <Icon name="money" size={25} color="#fff"
+                    onPress={() =>
+                      navigation.navigate(SCREENS.UPDATE_PRICE)
+                    } />
                 </View>
                 <Text style={styles.centerViewText}>Prices</Text>
               </View>
-              <View style={{alignItems: 'center'}}>
+              <View style={{ alignItems: 'center' }}>
                 <View style={styles.circleView}>
                   <FontAwesome5
                     name="map-marker-alt"
@@ -265,7 +379,7 @@ export default function VendorDashBoard({navigation}) {
                 </View>
                 <Text style={styles.centerViewText}>Branches</Text>
               </View>
-              <View style={{alignItems: 'center'}}>
+              <View style={{ alignItems: 'center' }}>
                 <View style={styles.circleView}>
                   <AntDesign
                     name="copy1"
@@ -280,7 +394,7 @@ export default function VendorDashBoard({navigation}) {
               </View>
             </View>
           </View>
-          <View
+          {/* <View
             style={{
               width: '90%',
               backgroundColor: '#131a28',
@@ -306,20 +420,45 @@ export default function VendorDashBoard({navigation}) {
                 justifyContent: 'space-between',
                 marginTop: 5,
               }}>
-              <View style={{width: '40%', marginLeft: 10}}>
+              <View style={{ width: '40%', marginLeft: 10 }}>
                 <Text style={styles.lightText}>Sales Today</Text>
                 <Text style={styles.hardText}>N123.456.78</Text>
               </View>
-              <View style={{backgroundColor: '#fff', height: 40, width: 0.5}} />
-              <View style={{width: '40%'}}>
+              <View style={{ backgroundColor: '#fff', height: 40, width: 0.5 }} />
+              <View style={{ width: '40%' }}>
                 <Text style={styles.lightText}>Orders Completed</Text>
                 <Text style={styles.hardText}>88/249</Text>
               </View>
             </View>
+          </View> */}
+        </View>
+        <View
+          style={{
+            backgroundColor: '#131a28',
+            height: 60,
+            borderRadius: 10,
+            paddingHorizontal: 10,
+            alignItems: 'center',
+            flexDirection: 'row',
+            width: '90%',
+            justifyContent: 'space-between',
+            marginTop: 10,
+            alignSelf: 'center'
+          }}>
+          <MaterialIcons name="support-agent" size={25} color={'#fff'} />
+          <View style={{ width: '40%' }}>
+            <Text style={styles.lightText}>Support</Text>
+            <Text style={styles.hardText}>080 123 456 789</Text>
+          </View>
+
+          <Fontisto name="email" size={25} color={'#fff'} />
+          <View style={{ width: '40%' }}>
+            <Text style={styles.lightText}>Send a message</Text>
+            <Text style={styles.hardText}>info@mohgas.com</Text>
           </View>
         </View>
 
-        <View style={{paddingHorizontal: 20, marginTop: 10}}>
+        <View style={{ paddingHorizontal: 20, marginTop: 10 }}>
           <TouchableOpacity
             onPress={() => navigation.navigate(SCREENS.ORDER_HISTORY_VENDOR)}
             style={{
@@ -328,23 +467,26 @@ export default function VendorDashBoard({navigation}) {
               justifyContent: 'space-between',
             }}>
             <Text>Recent Orders</Text>
-            <Text style={{color: 'gray'}}>
+            <Text style={{ color: 'gray' }}>
               View All <Icon6 name="arrowright" size={10} color="gray" />{' '}
             </Text>
           </TouchableOpacity>
           <FlatList
-            data={[1, 2]}
-            renderItem={({item, index}) => (
+            data={orderHistory?.slice(0, 3)}
+            renderItem={({ item, index }) => (
               <DetailCard
-                style={{backgroundColor: '#f9f5fc'}}
-                title={'Top Up - LPG 25kg'}
-                subTitle={'Today - 02.15 PM'}
-                price={'N12.34'}
-                srNo={'#MGS74TY'}
+                title={`${capitalizeFirstLetter(item?.order_type)} - ${item?.invoice
+                  }`}
+                subTitle={
+                  item?.created_date
+                    ? moment(item?.created_date).format('MMMM,DD,YYYY')
+                    : '--'
+                }
+                style={{ backgroundColor: '#eaf5fc' }}
+                price={`N${item?.grand_total}`}
+                srNo={capitalizeFirstLetter(item?.status)}
                 icon={<Icon3 name="arrow-up" size={25} color="#455F9B" />}
-                onPressDelete={() => {
-                  console.log('item', item._id);
-                }}
+                data={item}
               />
             )}
             ListEmptyComponent={() => (
@@ -352,7 +494,7 @@ export default function VendorDashBoard({navigation}) {
             )}
             keyExtractor={(item, index) => index.toString()}
           />
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() => {
               navigation.navigate(SCREENS.PROFILE_NAVIGATOR_VENDOR, {
                 screen: SCREENS.EDIT_PROFILE,
@@ -383,12 +525,14 @@ export default function VendorDashBoard({navigation}) {
               <Text
                 style={[
                   styles.hardText,
-                  {fontSize: 12, color: '#000', fontWeight: '700'},
+                  { fontSize: 12, color: '#000', fontWeight: '700' },
                 ]}>
                 Update Now?
               </Text>
             </Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
+
+
         </View>
       </ScrollView>
     </View>

@@ -1,26 +1,18 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
-  Keyboard,
-  Platform,
   ScrollView,
   Text,
-  TouchableOpacity,
   View,
-  Image,
-  Pressable,
-  KeyboardAvoidingView,
   FlatList,
-  SafeAreaView,
 } from 'react-native';
 
-import Icon from 'react-native-vector-icons/FontAwesome5';
-import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon3 from 'react-native-vector-icons/Entypo';
-import Icon4 from 'react-native-vector-icons/FontAwesome5';
 import Icon5 from 'react-native-vector-icons/MaterialIcons';
 import Icon6 from 'react-native-vector-icons/AntDesign';
-import {Avatar} from 'react-native-paper';
+import { RefreshControl } from 'react-native';
+import { showMessage } from 'react-native-flash-message';
+
 
 import {
   // ErrorModal,
@@ -34,7 +26,7 @@ import {
 import SCREENS from '../../../utils/constants';
 
 import makeStyles from './styles';
-import {RFValue} from 'react-native-responsive-fontsize';
+import { RFValue } from 'react-native-responsive-fontsize';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -46,32 +38,65 @@ export const PASS_REGIX =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AuthContext from '../../../utils/auth-context';
-import {useTheme} from '@react-navigation/native';
+import { useTheme } from '@react-navigation/native';
 import GradientButton from '../../../components/buttons/gradient-button';
-import {useDispatch, useSelector} from 'react-redux';
-import {OrderState} from '../../../redux/orders/OrderState';
+import { useDispatch, useSelector } from 'react-redux';
+import { OrderState } from '../../../redux/orders/OrderState';
+import { orderServices } from '../../../services';
 import {
   getReduxOrderHistory,
   getReduxRecentOrderHistory,
 } from '../../../redux/orders/orders-actions';
-import {capitalizeFirstLetter} from '../../../utils/functions/general-functions';
-export default function OrderHistory({navigation}) {
-  const {colors} = useTheme();
+import { capitalizeFirstLetter } from '../../../utils/functions/general-functions';
+export default function OrderHistory({ navigation }) {
+  const { colors } = useTheme();
   const styles = makeStyles(colors);
+  const [refreshing, setRefreshing] = React.useState(false);
   const authContext = React.useContext(AuthContext);
   const dispatch = useDispatch();
   const orderHistory = useSelector(
     (state: OrderState) => state.order.recentOrderHistory,
   );
-  console.log('orderHistory', orderHistory);
-  console.log('authContext', authContext?.userData?.user_id);
+  // console.log('orderHistory', orderHistory);
+  // console.log('authContext', authContext?.userData?.user_id);
 
   useEffect(() => {
     //authContext?.userData?.user_id
     let data = new FormData();
-    data.append('user_id', 33);
+    data.append('user_id', authContext?.userData?.user_id);
     dispatch(getReduxRecentOrderHistory(data));
   }, [dispatch]);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      let data = { vendor_id: authContext?.userData?.user_id }
+
+      setRefreshing(false);
+    }, 2000);
+  }, []);
+
+  const orderActionSelect = async (action: number, orderId: string) => {
+    const data = { order_id: orderId, id: authContext?.userData?.user_id };
+    try {
+      const res = await orderServices.orderAction(data, action);
+      console.log(res);
+      await showMessage({
+        message: res?.message,
+        type: 'success',
+        icon: 'success',
+      })
+
+    } catch (e) {
+      console.log("--------", e)
+      await showMessage({
+        message: e?.errMsg?.message,
+        type: 'warning',
+        icon: 'danger',
+      })
+    }
+
+  }
 
   return (
     <View style={styles.container}>
@@ -81,7 +106,10 @@ export default function OrderHistory({navigation}) {
         visible={loginError}
       /> */}
 
-      <ScrollView keyboardShouldPersistTaps={'handled'}>
+      <ScrollView keyboardShouldPersistTaps={'handled'}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
         <View
           style={{
             width: '100%',
@@ -89,11 +117,11 @@ export default function OrderHistory({navigation}) {
             alignItems: 'center',
           }}>
           <View style={styles.icon} />
-          <View style={{width: '100%', paddingHorizontal: 20}}>
+          <View style={{ width: '100%', paddingHorizontal: 20 }}>
             <Header
               title="Order History"
               subTitle={'Review Past and Present Orders'}
-              contentStyle={{marginTop: 100}}
+              contentStyle={{ marginTop: 100 }}
               rightIcon={
                 <View
                   style={{
@@ -112,20 +140,21 @@ export default function OrderHistory({navigation}) {
                 justifyContent: 'space-between',
               }}>
               <Text>Recent Transcations</Text>
-              <Text style={{color: 'gray'}}>
+              <Text style={{ color: 'gray' }}>
                 View All <Icon6 name="arrowright" size={10} color="gray" />{' '}
               </Text>
             </View>
             <FlatList
               data={orderHistory}
-              renderItem={({item, index}) => (
+              renderItem={({ item, index }) => (
                 <DetailCard
-                  title={`${capitalizeFirstLetter(item.order_type)} - ${
-                    item.weight
-                  }`}
-                  subTitle={item.order_date}
-                  price={item.price}
+                  title={`${capitalizeFirstLetter(item.order_type)} - ${item.delivery_cost
+                    }`}
+                  subTitle={item.created_date}
+                  showOptions={true}
+                  price={item.grand_total}
                   srNo={item.status}
+                  actionFour={() => { orderActionSelect(3, item?.id) }}
                   icon={
                     item.order_type == 'refill' ? (
                       <Icon3 name="arrow-up" size={25} color="#4ca757" />
@@ -135,20 +164,21 @@ export default function OrderHistory({navigation}) {
                         size={22}
                         color="#4ca757"
                         style={{
-                          transform: [{rotate: '0deg'}],
+                          transform: [{ rotate: '0deg' }],
                         }}
                       />
                     )
                   }
-                  onPressDelete={() => {
-                    console.log('item', item._id);
-                  }}
-                  // onPressEdit={() =>
-                  //   navigation.navigate(SCREENS.ADDPAYMENTMETHOD, {
-                  //     edit: true,
-                  //     item: item,
-                  //   })
-                  // }
+                  data={item}
+                // onPressDelete={() => {
+                //   console.log('item', item._id);
+                // }}
+                // onPressEdit={() =>
+                //   navigation.navigate(SCREENS.ADDPAYMENTMETHOD, {
+                //     edit: true,
+                //     item: item,
+                //   })
+                // }
                 />
               )}
               ListEmptyComponent={() => (

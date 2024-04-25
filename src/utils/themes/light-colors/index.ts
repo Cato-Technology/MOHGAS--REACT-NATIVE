@@ -15,8 +15,8 @@ const lightColors = {
 
   // new colors
   primaryBlue: '#3F60A0 ',
-  lightBlue: '#3F60A0 ',
-  primaryGreen: '#00AA13 ',
+  lightBlue: '#3F60A0',
+  primaryGreen: '#00AA13',
   lightGreen: '#F1FAF2',
   textColor: '#3F60A0',
   subTitles: '#70767F',

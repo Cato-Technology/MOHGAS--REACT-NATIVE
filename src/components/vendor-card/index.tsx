@@ -20,6 +20,7 @@ type Props = {
   pricePerKg?: String;
   onPress?: any;
   backgroundColor?: string;
+  email?: string
 };
 
 const VendorCard = ({
@@ -27,7 +28,7 @@ const VendorCard = ({
   title,
   orders,
   rating,
-  distance,
+  email,
   time,
   pricePerKg,
   onPress,
@@ -52,21 +53,21 @@ const VendorCard = ({
           <View
             style={{
               flexDirection: 'row',
-
               justifyContent: 'space-between',
               alignItems: 'center',
             }}>
-            <Text style={[styles.detailText]}>Orders - {orders}</Text>
+            <Text style={[styles.detailText]}>Phone - {orders}  </Text>
             <Text style={styles.detailText}>
               <AntDesign name="star" size={12} color={'#debf5a'} /> {rating}{' '}
-              rating
+              {/* rating */}
             </Text>
           </View>
         </View>
       </View>
       <View>
         <Text style={styles.detailText}>
-          {distance} - {time}
+          {/* {distance} - {time} */}
+          {email}
         </Text>
         <Text style={styles.detailText}>{pricePerKg}</Text>
       </View>

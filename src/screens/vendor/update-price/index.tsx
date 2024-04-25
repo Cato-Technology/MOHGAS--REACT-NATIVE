@@ -1,28 +1,28 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useContext, useEffect, useState} from 'react';
 import {
-  Keyboard,
-  Platform,
+  // Keyboard,
+  // Platform,
   ScrollView,
   Text,
-  TouchableOpacity,
+  // TouchableOpacity,
   View,
-  Image,
-  Pressable,
-  KeyboardAvoidingView,
-  FlatList,
-  SafeAreaView,
-  ImageBackground,
-  PermissionsAndroid,
+  // Image,
+  // Pressable,
+  // KeyboardAvoidingView,
+  // FlatList,
+  // SafeAreaView,
+  // ImageBackground,
+  // PermissionsAndroid,
 } from 'react-native';
 
-import Feather from 'react-native-vector-icons/Feather';
+// import Feather from 'react-native-vector-icons/Feather';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialIcons';
-import card from '../../../assets/card.png';
-import aImage from '../../../assets/avatar.jpg';
-import RadioGroup, {RadioButtonProps} from 'react-native-radio-buttons-group';
+// import card from '../../../assets/card.png';
+// import aImage from '../../../assets/avatar.jpg';
+// import RadioGroup, {RadioButtonProps} from 'react-native-radio-buttons-group';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {PERMISSIONS, check, request} from 'react-native-permissions';
+// import {PERMISSIONS, check, request} from 'react-native-permissions';
 import {
   // ErrorModal,
   ActivityIndicator,
@@ -35,7 +35,7 @@ import {
 import SCREENS from '../../../utils/constants';
 
 import makeStyles from './styles';
-import {RFValue} from 'react-native-responsive-fontsize';
+// import {RFValue} from 'react-native-responsive-fontsize';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -47,26 +47,20 @@ import qs from 'qs';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 export const PASS_REGIX =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-import AsyncStorage from '@react-native-async-storage/async-storage';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
 import AuthContext from '../../../utils/auth-context';
 import {useTheme} from '@react-navigation/native';
 import GradientButton from '../../../components/buttons/gradient-button';
 import HeaderBottom from '../../../components/header-bottom';
-import VendorCard from '../../../components/vendor-card';
-import LabResultModal from '../../../components/lab-results-modal';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+// import VendorCard from '../../../components/vendor-card';
+// import LabResultModal from '../../../components/lab-results-modal';
+// import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {Dropdown} from 'react-native-element-dropdown';
 import {showMessage} from 'react-native-flash-message';
 import {mainServics} from '../../../services';
 const data = [
   {label: 'Item 1', value: '1'},
-  {label: 'Item 2', value: '2'},
-  {label: 'Item 3', value: '3'},
-  {label: 'Item 4', value: '4'},
-  {label: 'Item 5', value: '5'},
-  {label: 'Item 6', value: '6'},
-  {label: 'Item 7', value: '7'},
-  {label: 'Item 8', value: '8'},
+ 
 ];
 
 export default function UpdatePrice({navigation, route}) {
@@ -80,10 +74,28 @@ export default function UpdatePrice({navigation, route}) {
   const [value, setValue] = useState(null);
   const [price, setPrice] = useState('');
   const [confirmPrice, setConfirmPrice] = useState('');
+  const [currentPrice, setCurrentPrice] = useState();
+
+  useEffect(() => {
+
+getVendorsPrice();
+  }, [])
+
+  const getVendorsPrice = async () => {
+    setLoader(true);
+
+    try{
+      const response = await mainServics.getVendorGasPrice(authContext?.userData?.user_id);
+      console.log(response, authContext?.userData?.user_id);
+      setCurrentPrice(response?.price_per_kg);
+    } catch (e) {
+ console.log(e);
+    }
+    setLoader(false);
+  }
 
   const handleSubmit = async () => {
-    console.log('price', price);
-    console.log('confirmPrice', confirmPrice);
+   
     setLoader(true);
     if (price !== confirmPrice) {
       showMessage({
@@ -93,25 +105,25 @@ export default function UpdatePrice({navigation, route}) {
       });
     } else {
       try {
-        // let detail = new FormData();
-        // detail.append('price', price);
-        let data = qs.stringify({
-          price: '35',
-        });
+       
+        let data = {
+          vendor_id: authContext?.userData?.user_id,
+          price: price
+      }
         console.log('detail', data);
-        const result = await mainServics.upDateProdcutPrice(data, item?.id);
+        const result = await mainServics.upDateProductPrice(data);
         console.log('result', result);
         if (result.status) {
           showMessage({
-            message: 'Product Added!',
+            message: result?.message,
             type: 'success',
             icon: 'success',
           });
           let sucessData = {
-            title: 'Price Update Sucessfull',
+            title: 'Price Update Sucessful',
             secondTitle: 'Price has been update sucessfully',
-            oldPrice: `Old Price - 6Kg -> N${result?.data?.old_prirce}`,
-            newPrice: `New Price - 6Kg ->N${result?.data?.new_price}`,
+            oldPrice: `Old Price - 1Kg -> N${currentPrice}`,
+            newPrice: `New Price - 1Kg ->N${price}`,
           };
           navigation.navigate(SCREENS.SUCCESS_SCREEN, {
             item: sucessData,
@@ -188,7 +200,7 @@ export default function UpdatePrice({navigation, route}) {
             />
             {route?.params?.render != 'product' && (
               <>
-                <Dropdown
+                {/* <Dropdown
                   style={styles.dropdown}
                   placeholderStyle={styles.placeholderStyle}
                   selectedTextStyle={styles.selectedTextStyle}
@@ -213,8 +225,10 @@ export default function UpdatePrice({navigation, route}) {
                   //     size={20}
                   //   />
                   // )}
-                />
-
+                /> */}
+      <Text style={{marginTop: 20, paddingHorizontal: 10, fontSize: 16}}>
+              Current Price
+            </Text>
                 <InputWithLabel
                   labelStyle={{
                     //   fontFamily: fonts.mulishSemiBold,
@@ -222,6 +236,8 @@ export default function UpdatePrice({navigation, route}) {
                     fontSize: 15,
                   }}
                   // onChange={hnandleChange('email')}
+                  value={currentPrice}
+                  disabled={false}
                   placeholder={'N0.00'}
                   // error={touched.email ? errors.email : ''}
                   // onBlur={() => setFieldTouched('email')}
@@ -238,7 +254,7 @@ export default function UpdatePrice({navigation, route}) {
                 color: colors.yellowHeading,
                 fontSize: 15,
               }}
-              onChange={txt => setPrice(txt)}
+              onChange={txt => setPrice(txt.replace(/[^0-9]/g, ''))}
               placeholder={'Price *'}
               keyboardType={'numeric'}
               // error={touched.email ? errors.email : ''}
@@ -251,7 +267,7 @@ export default function UpdatePrice({navigation, route}) {
                 fontSize: 15,
               }}
               keyboardType={'numeric'}
-              onChange={txt => setConfirmPrice(txt)}
+              onChange={txt => setConfirmPrice(txt.replace(/[^0-9]/g, ''))}
               placeholder={'Confirm New Price *'}
               // error={touched.email ? errors.email : ''}
               // onBlur={() => setFieldTouched('email')}

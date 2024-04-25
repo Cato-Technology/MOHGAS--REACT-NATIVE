@@ -1,8 +1,10 @@
 PODS:
+  - Alamofire (5.8.1)
   - boost (1.76.0)
   - BVLinearGradient (2.6.2):
     - React-Core
   - DoubleConversion (1.1.6)
+  - EasyTipView (2.1.0)
   - FBLazyVector (0.70.6)
   - FBReactNativeSpec (0.70.6):
     - RCT-Folly (= 2021.07.22.00)
@@ -62,7 +64,19 @@ PODS:
   - GoogleUtilities/UserDefaults (7.11.1):
     - GoogleUtilities/Logger
   - hermes-engine (0.70.6)
+  - IQKeyboardManagerSwift (6.5.16)
   - libevent (2.1.12)
+  - lottie-ios (4.4.0)
+  - MonnifyiOSSDK (0.2.5):
+    - Alamofire
+    - EasyTipView
+    - IQKeyboardManagerSwift
+    - lottie-ios
+    - StompClientLib
+    - SwiftyJSON
+  - MonnifyReactNativeSdk (0.1.18):
+    - MonnifyiOSSDK
+    - React
   - nanopb (2.30909.0):
     - nanopb/decode (= 2.30909.0)
     - nanopb/encode (= 2.30909.0)
@@ -389,7 +403,7 @@ PODS:
     - FirebaseCoreExtension (= 10.7.0)
     - React-Core
     - RNFBApp
-  - RNGestureHandler (2.10.1):
+  - RNGestureHandler (2.15.0):
     - React-Core
   - RNImageCropPicker (0.38.1):
     - React-Core
@@ -436,6 +450,10 @@ PODS:
     - React-Core
   - RNVectorIcons (9.2.0):
     - React-Core
+  - SocketRocket (0.7.0)
+  - StompClientLib (1.4.1):
+    - SocketRocket
+  - SwiftyJSON (5.0.1)
   - TOCropViewController (2.6.1)
   - Yoga (1.14.0)
 
@@ -448,6 +466,7 @@ DEPENDENCIES:
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - hermes-engine (from `../node_modules/react-native/sdks/hermes/hermes-engine.podspec`)
   - libevent (~> 2.1.12)
+  - "MonnifyReactNativeSdk (from `../node_modules/@monnify/react-native-sdk`)"
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
   - RCTTypeSafety (from `../node_modules/react-native/Libraries/TypeSafety`)
@@ -497,6 +516,8 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - Alamofire
+    - EasyTipView
     - Firebase
     - FirebaseCore
     - FirebaseCoreExtension
@@ -506,9 +527,15 @@ SPEC REPOS:
     - fmt
     - GoogleDataTransport
     - GoogleUtilities
+    - IQKeyboardManagerSwift
     - libevent
+    - lottie-ios
+    - MonnifyiOSSDK
     - nanopb
     - PromisesObjC
+    - SocketRocket
+    - StompClientLib
+    - SwiftyJSON
     - TOCropViewController
 
 EXTERNAL SOURCES:
@@ -526,6 +553,8 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
   hermes-engine:
     :podspec: "../node_modules/react-native/sdks/hermes/hermes-engine.podspec"
+  MonnifyReactNativeSdk:
+    :path: "../node_modules/@monnify/react-native-sdk"
   RCT-Folly:
     :podspec: "../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec"
   RCTRequired:
@@ -618,9 +647,11 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
+  Alamofire: 3ca42e259043ee0dc5c0cdd76c4bc568b8e42af7
   boost: a7c83b31436843459a1961bfd74b96033dc77234
   BVLinearGradient: 34a999fda29036898a09c6a6b728b0b4189e1a44
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
+  EasyTipView: a92b6edc377b81c5ac18e9fd35d5ee78e9409488
   FBLazyVector: 48289402952f4f7a4e235de70a9a590aa0b79ef4
   FBReactNativeSpec: dd1186fd05255e3457baa2f4ca65e94c2cd1e3ac
   Firebase: 0219acf760880eeec8ce479895bd7767466d9f81
@@ -634,7 +665,11 @@ SPEC CHECKSUMS:
   GoogleDataTransport: f0308f5905a745f94fb91fea9c6cbaf3831cb1bd
   GoogleUtilities: 9aa0ad5a7bc171f8bae016300bfcfa3fb8425749
   hermes-engine: 2af7b7a59128f250adfd86f15aa1d5a2ecd39995
+  IQKeyboardManagerSwift: 12d89768845bb77b55cc092ecc2b1f9370f06b76
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
+  lottie-ios: ef1be1f90d54255f08e09d767950e43714661178
+  MonnifyiOSSDK: d9019057a7bf1f3c3002ab3b5f6761e2185a725c
+  MonnifyReactNativeSdk: 32e777f503bf08819149dc63c338dd33e9f70099
   nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
   PromisesObjC: 09985d6d70fbe7878040aa746d78236e6946d2ef
   RCT-Folly: 0080d0a6ebf2577475bda044aa59e2ca1f909cda
@@ -674,16 +709,19 @@ SPEC CHECKSUMS:
   RNDateTimePicker: 7ecd54a97fc3749f38c3c89a171f6cbd52f3c142
   RNFBApp: d59efa0872fff4e27de03cca3c528c203a436ae5
   RNFBMessaging: 216693dd5ba4f18ba65fb39fc73a44a23c26190f
-  RNGestureHandler: 42ec7c28dd02d540ed6c9159c57a98ff016492dc
+  RNGestureHandler: 0cba6c7c51a90cd793cf2475cf7fdca613ede300
   RNImageCropPicker: 648356d68fbf9911a1016b3e3723885d28373eda
   RNPermissions: 215c54462104b3925b412b0fb3c9c497b21c358b
   RNReanimated: 6668b0587bebd4b15dd849b99e5a9c70fc12ed95
   RNScreens: 218801c16a2782546d30bd2026bb625c0302d70f
   RNSVG: 53c661b76829783cdaf9b7a57258f3d3b4c28315
   RNVectorIcons: fcc2f6cb32f5735b586e66d14103a74ce6ad61f8
+  SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
+  StompClientLib: ac40390e9660c574675f1c933bec81c8e2811a4f
+  SwiftyJSON: 2f33a42c6fbc52764d96f13368585094bfd8aa5e
   TOCropViewController: edfd4f25713d56905ad1e0b9f5be3fbe0f59c863
   Yoga: 99caf8d5ab45e9d637ee6e0174ec16fbbb01bcfc
 
 PODFILE CHECKSUM: 2b35f9be6045dd711a35569f489fe6283b7d4428
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.15.2

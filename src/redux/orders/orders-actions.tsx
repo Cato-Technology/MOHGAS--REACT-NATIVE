@@ -31,18 +31,20 @@ export const getReduxOrderHistory =
   };
 export const getReduxRecentOrderHistory =
   () => async (dispatch: (arg0: {type: string; payload?: any}) => void) => {
+    console.log('running-------')
     dispatch({
       type: SHOW_LOADER,
     });
     await orderServices
       .orderRecentHistory()
       .then(async res => {
+        console.log('recent order=========', res)
         await dispatch(addRecentHistory(res.responsedata));
         dispatch({
           type: HIDE_LOADER,
         });
       })
       .catch(err => {
-        console.log('err', err);
+        console.log('err@', err);
       });
   };

@@ -99,7 +99,7 @@ const DrawerNavigatorVendor = () => {
           width: 240,
         },
         drawerItemStyle: {
-          marginVertical: -4,
+          marginVertical: 4,
           borderRadius: 0,
           backgroundColor: '#FFFFFF',
         },
@@ -110,14 +110,14 @@ const DrawerNavigatorVendor = () => {
         component={BottomTabNavigatorVendor}
         options={{
           drawerLabel: () => null,
-          drawerItemStyle: {height: 0, marginBottom: -10, padding: 0},
+          drawerItemStyle: {height: 0, marginBottom: 10, padding: 0},
         }}
       />
       <Drawer.Screen
         name={SCREENS.UPDATE_ACCOUNT_VENDOR}
         component={UpdateVendorAccount}
         options={{
-          drawerLabel: 'Bank Information',
+          drawerLabel: 'Withdrawal',
           drawerLabelStyle: {
             color: '#000000',
             fontFamily: 'Rubik-SemiBold',
@@ -129,7 +129,7 @@ const DrawerNavigatorVendor = () => {
           },
         }}
       />
-      <Drawer.Screen
+      {/* <Drawer.Screen
         name={SCREENS.EDIT_USERNAME}
         component={EditUsername}
         options={{
@@ -160,8 +160,8 @@ const DrawerNavigatorVendor = () => {
             return <Icon3 name="email" size={20} color="#000000" />;
           },
         }}
-      />
-      <Drawer.Screen
+      /> */}
+      {/* <Drawer.Screen
         name={SCREENS.PASSWORD}
         component={ForgetPassword}
         options={{
@@ -178,7 +178,7 @@ const DrawerNavigatorVendor = () => {
             );
           },
         }}
-      />
+      /> */}
     </Drawer.Navigator>
   );
 };
