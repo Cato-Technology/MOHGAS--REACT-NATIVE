@@ -154,7 +154,7 @@ export default function PinLocation({ navigation }) {
         }
       });
 
-      console.log("output------------ ", state, "----", city, country);
+      // console.log("output------------ ", state, "----", city, country);
       setLocationInfo({ state, city, country });
     } catch (error) {
       console.error('Error fetching location details:', error);
@@ -168,8 +168,6 @@ export default function PinLocation({ navigation }) {
       user_id: auth?.userData?.user_id,
       latitude: myDirection?.latitude,
       longitude: myDirection?.longitude,
-      // latitude: 24.817556456461972,
-      // longitude: 67.0560846850276,
       faddress: userAddress,
       city: locationInfo?.state,
       postal: postal ? postal : '000000',
