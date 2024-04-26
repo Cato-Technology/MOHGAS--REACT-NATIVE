@@ -1,4 +1,4 @@
-import React, {Component, useEffect, useMemo, useState} from 'react';
+import React, { Component, useEffect, useMemo, useState } from 'react';
 import {
   Text,
   View,
@@ -21,33 +21,33 @@ import {
 //import TopTabButton from '../../../../../../components/top-tab-buttons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {useNavigation, useTheme} from '@react-navigation/native';
-import {AccountMenu} from '../../../../components/ui';
+import { useNavigation, useTheme } from '@react-navigation/native';
+import { AccountMenu } from '../../../../components/ui';
 import makeStyles from './styles';
 import SCREENS from '../../../../utils/constants';
 import AuthContext from '../../../../utils/auth-context';
 import Images from '../../../../assets/images';
 import * as Yup from 'yup';
-import {Formik} from 'formik';
-import {NAME} from '../../../../utils/regix';
+import { Formik } from 'formik';
+import { NAME } from '../../../../utils/regix';
 import GradientButton from '../../../../components/buttons/gradient-button';
 import {
   heightPercentageToDP,
   widthPercentageToDP,
 } from 'react-native-responsive-screen';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import ImagePicker from 'react-native-image-crop-picker';
-import {mainServics, profileService} from '../../../../services';
-import {showMessage} from 'react-native-flash-message';
+import { mainServics, profileService } from '../../../../services';
+import { showMessage } from 'react-native-flash-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import RNFetchBlob from 'rn-fetch-blob';
 import moment from 'moment';
-import {Dropdown} from 'react-native-element-dropdown';
+import { Dropdown } from 'react-native-element-dropdown';
 let cameraIs = false;
 
 const EditProfile = () => {
   const navigation = useNavigation();
-  const {colors} = useTheme();
+  const { colors } = useTheme();
 
   const styles = makeStyles(colors);
   const [EditprofileLoader, setProfileLoader] = React.useState(false);
@@ -76,9 +76,11 @@ const EditProfile = () => {
       setDate(new Date(authContext?.userData?.dateOfBirth));
     }
   }, []);
+
   useEffect(() => {
     getStateData();
   }, []);
+
   const getLgaData = async id => {
     try {
       const result = await mainServics.getLga(id);
@@ -100,6 +102,7 @@ const EditProfile = () => {
       console.log('eer', e);
     }
   };
+
   const getStateData = async () => {
     try {
       const result = await mainServics.getStates();
@@ -135,6 +138,7 @@ const EditProfile = () => {
       console.log('eer', e);
     }
   };
+
   const getCitiesData = async id => {
     try {
       const result = await mainServics.getCities(id);
@@ -167,6 +171,7 @@ const EditProfile = () => {
       console.log('eer', e);
     }
   };
+
   const signUpSchema = useMemo(
     () =>
       Yup.object({
@@ -186,6 +191,7 @@ const EditProfile = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   );
+
   const imagePickerFromGallery = () => {
     // setImageModal(false);
 
@@ -365,7 +371,7 @@ const EditProfile = () => {
       />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={{flex: 1}}>
+        style={{ flex: 1 }}>
         <ScrollView keyboardShouldPersistTaps={'handled'}>
           <View style={styles.contentView}>
             <View style={[styles.image]}>
@@ -375,13 +381,13 @@ const EditProfile = () => {
                 source={
                   image
                     ? {
-                        uri: image?.uri,
-                      }
+                      uri: image?.uri,
+                    }
                     : !authContext?.userData?.image
-                    ? authContext?.userData?.gender == 'Female'
-                      ? Images.femaleAvatar
-                      : Images.avatar
-                    : {uri: authContext?.userData?.image}
+                      ? authContext?.userData?.gender == 'Female'
+                        ? Images.femaleAvatar
+                        : Images.avatar
+                      : { uri: authContext?.userData?.image }
                 }
                 style={styles.image}
               />
@@ -402,7 +408,7 @@ const EditProfile = () => {
                 />
               </View>
             </View>
-            <View style={{marginTop: 40, paddingHorizontal: 25}}>
+            <View style={{ marginTop: 40, paddingHorizontal: 25 }}>
               <Formik
                 initialValues={{
                   fullname: authContext?.userData?.full_name,
@@ -425,7 +431,7 @@ const EditProfile = () => {
                 }) => (
                   <>
                     {console.log('errors', errors)}
-                    <View style={{width: '90%'}}>
+                    <View style={{ width: '90%' }}>
                       <InputWithLabel
                         label="Full Name"
                         labelStyle={{
@@ -434,15 +440,15 @@ const EditProfile = () => {
                           fontSize: 15,
                         }}
                         placeholder={'Eg. Amit'}
-                        containerStyles={{paddingHorizontal: 20}}
+                        containerStyles={{ paddingHorizontal: 20 }}
                         onChange={handleChange('fullname')}
                         value={values.fullname}
                         error={touched.fullname ? errors.fullname : ''}
                         onBlur={() => setFieldTouched('fullname')}
                       />
-                      <View style={{height: 20}} />
+                      <View style={{ height: 20 }} />
                       <Text style={styles.inputLablel}>Date of Birth</Text>
-                      <View style={{paddingHorizontal: 20}}>
+                      <View style={{ paddingHorizontal: 20 }}>
                         <DatePickerModal
                           isPickerShow={isPickerShow}
                           setIsPickerShow={setIsPickerShow}
@@ -452,12 +458,12 @@ const EditProfile = () => {
                           minimumDate={new Date('jan-01-1922')}
                         />
                       </View>
-                      <View style={{height: 20}} />
+                      <View style={{ height: 20 }} />
 
                       <InputWithLabel
                         label={'Phone number'}
                         placeholder={'Eg. 564564565'}
-                        containerStyles={{paddingHorizontal: 20}}
+                        containerStyles={{ paddingHorizontal: 20 }}
                         labelStyle={{
                           //   fontFamily: fonts.mulishSemiBold,
                           color: colors.yellowHeading,
@@ -468,11 +474,11 @@ const EditProfile = () => {
                         error={touched.phone_no ? errors.phone_no : ''}
                         onBlur={() => setFieldTouched('phone_no')}
                       />
-                      <View style={{height: 20}} />
+                      <View style={{ height: 20 }} />
                       <InputWithLabel
                         label={'Email'}
                         placeholder={'Eg. abc@abc.com'}
-                        containerStyles={{paddingHorizontal: 20}}
+                        containerStyles={{ paddingHorizontal: 20 }}
                         labelStyle={{
                           //   fontFamily: fonts.mulishSemiBold,
                           color: colors.yellowHeading,
@@ -483,12 +489,12 @@ const EditProfile = () => {
                         error={touched.email ? errors.email : ''}
                         onBlur={() => setFieldTouched('email')}
                       />
-                      <View style={{height: 20}} />
+                      <View style={{ height: 20 }} />
 
                       <InputWithLabel
                         label="Street Address"
                         placeholder={'Eg. Street 1'}
-                        containerStyles={{paddingHorizontal: 20}}
+                        containerStyles={{ paddingHorizontal: 20 }}
                         labelStyle={{
                           // fontFamily: fonts.mulishSemiBold,
                           color: colors.yellowHeading,
@@ -513,7 +519,7 @@ const EditProfile = () => {
                         error={touched.state ? errors.state : ''}
                         onBlur={() => setFieldTouched('state')}
                       /> */}
-                      <View style={{paddingHorizontal: 20}}>
+                      <View style={{ paddingHorizontal: 20 }}>
                         <Text
                           style={{
                             fontFamily: 'Rubik-Regular',
@@ -542,19 +548,19 @@ const EditProfile = () => {
                             getCitiesData(item.value);
                             getLgaData(item.value);
                           }}
-                          // renderLeftIcon={() => (
-                          //   <AntDesign
-                          //     style={styles.icon2}
-                          //     color="black"
-                          //     name="Safety"
-                          //     size={20}
-                          //   />
-                          // )}
+                        // renderLeftIcon={() => (
+                        //   <AntDesign
+                        //     style={styles.icon2}
+                        //     color="black"
+                        //     name="Safety"
+                        //     size={20}
+                        //   />
+                        // )}
                         />
                       </View>
 
                       {cityData.length > 0 && (
-                        <View style={{paddingHorizontal: 20}}>
+                        <View style={{ paddingHorizontal: 20 }}>
                           <Text
                             style={{
                               fontFamily: 'Rubik-Regular',
@@ -581,19 +587,19 @@ const EditProfile = () => {
                             onChange={item => {
                               setCityValue(item);
                             }}
-                            // renderLeftIcon={() => (
-                            //   <AntDesign
-                            //     style={styles.icon2}
-                            //     color="black"
-                            //     name="Safety"
-                            //     size={20}
-                            //   />
-                            // )}
+                          // renderLeftIcon={() => (
+                          //   <AntDesign
+                          //     style={styles.icon2}
+                          //     color="black"
+                          //     name="Safety"
+                          //     size={20}
+                          //   />
+                          // )}
                           />
                         </View>
                       )}
                       {lgaData.length > 0 && (
-                        <View style={{paddingHorizontal: 20}}>
+                        <View style={{ paddingHorizontal: 20 }}>
                           <Text
                             style={{
                               fontFamily: 'Rubik-Regular',
@@ -620,14 +626,14 @@ const EditProfile = () => {
                             onChange={item => {
                               setLgaValue(item);
                             }}
-                            // renderLeftIcon={() => (
-                            //   <AntDesign
-                            //     style={styles.icon2}
-                            //     color="black"
-                            //     name="Safety"
-                            //     size={20}
-                            //   />
-                            // )}
+                          // renderLeftIcon={() => (
+                          //   <AntDesign
+                          //     style={styles.icon2}
+                          //     color="black"
+                          //     name="Safety"
+                          //     size={20}
+                          //   />
+                          // )}
                           />
                         </View>
                       )}

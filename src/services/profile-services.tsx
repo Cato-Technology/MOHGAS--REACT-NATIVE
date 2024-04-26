@@ -1,10 +1,10 @@
 import moment from 'moment';
-import {UserResponse} from '../redux/types/auth/auth-types';
+import { UserResponse } from '../redux/types/auth/auth-types';
 
 //import { ErrorResponse } from 'types/ErrorResponse';
 //import { setAuthAsyncStorage } from '../async-storage/auth-async-storage';
 import client from './client';
-import {backend_URLS} from '../../src/services/url-constants';
+import { backend_URLS } from '../../src/services/url-constants';
 //import {store} from '../redux';
 
 function updateProfile(data: any) {
@@ -14,22 +14,24 @@ function updateProfile(data: any) {
     client
       .post(backend_URLS.UPDATE_USER, data)
       .then(async response => {
+        console.log(response, "response coming in========");
         try {
           console.log('res ', response);
 
           //  await setAuthAsyncStorage(response.data);
           resolve(response);
         } catch (e) {
-          console.log('E', e);
+          console.log('===errlog', e);
           reject(e);
         }
       })
       .catch(async err => {
-        console.log('E', err);
+        console.log('Errlo', err);
         reject(err);
       });
   });
 }
+
 function getProfile(data: any) {
   // console.log('data==>', data);
 
