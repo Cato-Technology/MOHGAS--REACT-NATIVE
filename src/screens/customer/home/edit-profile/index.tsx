@@ -284,14 +284,15 @@ const EditProfile = () => {
         });
       }
 
-      data.append('dateOfBirth', moment(date).format('YYYY-MM-DD'));
+      data.append('date_of_Birth', moment(date).format('YYYY-MM-DD'));
       data.append('fullname', values.fullname);
-      data.append('phone_no', values.phone_no.toString());
+      data.append('phone_number', values.phone_no.toString());
       data.append('email', values.email);
       data.append('street_name', values.street_name);
       data.append('lga_id', lgaValue?.value);
       data.append('state_id', stateValue?.value);
       data.append('city_id', cityValue?.value);
+      data.append('address', `${values.street_name}`)
 
       console.log('data==>', data);
 

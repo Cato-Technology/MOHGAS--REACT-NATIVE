@@ -10,7 +10,7 @@ const backend_URLS = {
   SEND_ACC_VERIFY: '/backend/register/new_otp',
 
   //Profile constants
-  UPDATE_USER: '/backend/user',
+  UPDATE_USER: '/backend/user/updateUser',
   GET_USER: '/backend/user/all_detail',
 
   //order history contants
