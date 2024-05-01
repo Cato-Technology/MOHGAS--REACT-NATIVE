@@ -152,6 +152,16 @@ const myTotalOrders = (id: any, type: string) => {
   }
 }
 
+const changeOnlineStatus = (status: any, id: any) => {
+  console.log(status, id)
+
+  if (status) {
+    return client.post(backend_URLS.ONLINE, { id });
+  } else {
+    return client.post(backend_URLS.OFFLINE, { id });
+  }
+}
+
 export const mainServics = {
   getWalletTopupDetails,
   getCities,
@@ -187,5 +197,6 @@ export const mainServics = {
   requestWithdrawal,
   getVendorGasPrice,
   checkBusinessProfile,
-  myTotalOrders
+  myTotalOrders,
+  changeOnlineStatus
 };

@@ -26,6 +26,26 @@ target 'mohgas' do
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
+  #!/usr/bin/env ruby
+  require 'xcodeproj'
+
+  project = Xcodeproj::Project.open 'YourProject.xcodeproj'
+  bad_arch = 'arm64'
+  current_arch = `uname -m`.strip
+
+  # Exclude arm64 for debug simulator builds
+  project.build_settings('Debug')["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = bad_arch
+  project.save
+  
+
+  post_install do |installer|
+    installer.pods_project.build_configurations.each do |config|
+      config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = "arm64"
+    end
+  end
+
+
+
   target 'mohgasTests' do
     inherit! :complete
     # Pods for testing

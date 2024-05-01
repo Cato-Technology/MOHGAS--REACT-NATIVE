@@ -204,7 +204,7 @@ export default function PinLocation({ navigation }) {
       <ActivityIndicator visible={isLoading} />
       <View style={styles.searchContainer}>
         <GooglePlacesAutocomplete
-          placeholder='Search'
+          placeholder='delivery addressm'
           styles={{ textInput: styles.searchInput }}
           onPress={(data, details = null) => {
             setUserAddress(data.description);

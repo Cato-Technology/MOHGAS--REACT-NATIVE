@@ -208,7 +208,7 @@ export default function DashBoard({ navigation, props }) {
 
   const getProfile = async () => {
     try {
-      const getProfile = await profileService.getProfile();
+      const getProfile = await profileService.getProfile({ user_id: authContext?.userData?.user_id });
       console.log('getProfile', getProfile?.response);
       if (getProfile?.status) {
         const updatedUserData = {

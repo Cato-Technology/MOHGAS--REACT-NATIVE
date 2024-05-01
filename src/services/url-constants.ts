@@ -10,7 +10,7 @@ const backend_URLS = {
   SEND_ACC_VERIFY: '/backend/register/new_otp',
 
   //Profile constants
-  UPDATE_USER: '/backend/user/updateUser',
+  UPDATE_USER: '/backend/user/updateuser',
   GET_USER: '/backend/user/all_detail',
 
   //order history contants
@@ -58,7 +58,10 @@ const backend_URLS = {
 
   GET_PROFILE_CHECK: '/backend/vendor/check_user_business_profile',
   TOTAL_ORDERS_USER: '/backend/user/total_orders',
-  TOTAL_ORDERS_VENDOR: '/backend/vendor/total_orders'
+  TOTAL_ORDERS_VENDOR: '/backend/vendor/total_orders',
+
+  ONLINE: '/backend/vendor/branch_status_online',
+  OFFLINE: '/backend/vendor/branch_status_offline'
 
 };
 

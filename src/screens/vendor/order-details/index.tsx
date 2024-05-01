@@ -250,18 +250,18 @@ export default function OrderDetails({ navigation, route }) {
               </View>
 
               <View style={styles.dropdown}>
-                {true && <PromptButton
+                {order?.status === "New" && <PromptButton
                   title={"accept"}
                   onPress={() => { orderActionSelect(1) }}
                 />}
 
-                {true && <PromptButton
+                {order?.status === "New" && <PromptButton
                   title={"decline"}
                   onPress={() => { orderActionSelect(2) }}
                   btnColor={"red"}
                 />}
 
-                {true && <PromptButton
+                {order?.status === "Confirmed" && <PromptButton
                   title={"Complete"}
                   onPress={() => { orderActionSelect(3) }}
                   btnColor={"purple"}

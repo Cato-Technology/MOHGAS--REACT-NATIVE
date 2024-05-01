@@ -66,6 +66,7 @@ const EditProfile = () => {
   const [cityValue, setCityValue] = useState();
   const [lgaData, setLgaData] = useState([]);
   const [lgaValue, setLgaValue] = useState(lgaData[0]);
+  const [user, setUser] = useState(authContext?.userData)
 
   const [value, setValue] = useState(null);
   console.log('uuser', authContext?.userData);
@@ -272,6 +273,7 @@ const EditProfile = () => {
 
   const handleUpdateUser = async values => {
     console.log('vvalue', values);
+    console.log("authenticated user", authContext?.userData, lgaData)
 
     try {
       // setLoader(true);
@@ -290,20 +292,31 @@ const EditProfile = () => {
         });
       }
 
-      data.append('date_of_Birth', moment(date).format('YYYY-MM-DD'));
-      data.append('fullname', values.fullname);
-      data.append('phone_number', values.phone_no.toString());
-      data.append('email', values.email);
-      data.append('street_name', values.street_name);
-      data.append('lga_id', lgaValue?.value);
-      data.append('state_id', stateValue?.value);
-      data.append('city_id', cityValue?.value);
-      data.append('address', `${values.street_name}`)
+      // data.append('date_of_birth', moment(date).format('YYYY-MM-DD'));
+      // data.append('fullname', values.fullname);
+      // data.append('phone_number', values.phone_no.toString());
+      // data.append('email', values.email);
+      // data.append('street_name', values.street_name);
+      // data.append('lga_id', lgaValue?.label);
+      // data.append('state_id', stateValue?.label);
+      // data.append('city', cityValue?.label);
+      // data.append('user_id', authContext?.userData?.user_id)
+      // data.append('address', `${values.street_name} ${lgaValue?.label} ${stateValue?.label}`);
+
+      let details = {
+        user_id: authContext?.userData?.user_id,
+        address: `${values.street_name} ${lgaValue?.label} ${stateValue?.label}`,
+        date_of_birth: moment(date).format('YYYY-MM-DD'),
+        fullname: values.fullname,
+        email: values.email,
+        city: cityValue?.label,
+        state: stateValue?.label
+      }
 
       console.log('data==>', data);
-
-      const result = await profileService.updateProfile(data);
+      const result = await profileService.updateProfile(details);
       console.log('result', result);
+
 
       if (result?.status) {
         try {
@@ -414,7 +427,7 @@ const EditProfile = () => {
                 initialValues={{
                   fullname: authContext?.userData?.full_name,
                   email: authContext?.userData?.email,
-                  phone_no: authContext?.userData?.phone_no.toString(),
+                  phone_no: authContext?.userData?.phone_no,
                   street_name: authContext?.userData?.street_name,
                 }}
                 onSubmit={values => handleUpdateUser(values)}
@@ -431,7 +444,7 @@ const EditProfile = () => {
                   setFieldTouched,
                 }) => (
                   <>
-                    {console.log('errors', errors)}
+                    {/* {console.log('errors', errors)} */}
                     <View style={{ width: '90%' }}>
                       <InputWithLabel
                         label="Full Name"

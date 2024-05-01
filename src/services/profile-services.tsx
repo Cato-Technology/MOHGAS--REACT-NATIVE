@@ -7,8 +7,9 @@ import client from './client';
 import { backend_URLS } from '../../src/services/url-constants';
 //import {store} from '../redux';
 
-function updateProfile(data: any) {
+async function updateProfile(data: any) {
   console.log('data', data);
+
 
   return new Promise<UserResponse>((resolve, reject) => {
     client
@@ -16,8 +17,6 @@ function updateProfile(data: any) {
       .then(async response => {
         console.log(response, "response coming in========");
         try {
-          console.log('res ', response);
-
           //  await setAuthAsyncStorage(response.data);
           resolve(response);
         } catch (e) {
@@ -32,8 +31,21 @@ function updateProfile(data: any) {
   });
 }
 
+// async function updateProfile(data: any) {
+//   try {
+//     console.log('data', data);
+//     const res = await client.post(backend_URLS.UPDATE_USER, data);
+//     console.log('big response', res);
+//     return res;
+//   } catch (error) {
+//     console.error('Error updating profile:', error);
+//     throw error; // Optionally rethrow the error to handle it further upstream
+//   }
+// }
+
+
 function getProfile(data: any) {
-  // console.log('data==>', data);
+  console.log('data==>', data);
 
   return new Promise<UserResponse>((resolve, reject) => {
     client

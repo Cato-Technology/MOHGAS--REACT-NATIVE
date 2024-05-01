@@ -89,7 +89,7 @@ export default function VendorDashBoard({ navigation }) {
   const [totalOrders, setTotalOrders] = useState();
 
 
-  React.useEffect(() => {
+  useEffect(() => {
     // Load the user data from storage when the app starts
     const loadUserData = async () => {
       try {
@@ -137,6 +137,7 @@ export default function VendorDashBoard({ navigation }) {
         });
     }
   };
+
   useEffect(() => {
     // Assume a message-notification contains a "type" property in the data payload of the screen to open
 
@@ -173,13 +174,16 @@ export default function VendorDashBoard({ navigation }) {
   useEffect(() => {
     dispatch(getVendorBusinessProfileR());
     dispatch(getVendorAccountDetials());
-    let data = { vendor_id: authContext?.userData?.user_id }
-    getData(data);
-    getWallet(data.vendor_id);
-    getTotalOrders(data.vendor_id);
-    checkBusinessProfile(data.vendor_id);
-
   }, [dispatch]);
+
+  useEffect(() => {
+    let data = { vendor_id: authContext?.userData?.user_id }
+    getWallet(data.vendor_id);
+    checkBusinessProfile(data.vendor_id);
+    setOnline(data.vendor_id);
+    getData(data);
+    getTotalOrders(data.vendor_id);
+  }, [])
 
   const getData = async (data: any) => {
     try {
@@ -213,10 +217,21 @@ export default function VendorDashBoard({ navigation }) {
     try {
       const getTotal = await mainServics.myTotalOrders(id, "vendor");
       setTotalOrders(getTotal?.total_orders);
-      console.log(getTotal, "////////////////////");
+      // console.log(getTotal, "////////////////////");
     } catch (e) {
       console.log('error', e);
     }
+  }
+
+  const setOnline = async (id) => {
+    try {
+
+      const response = await mainServics.changeOnlineStatus(true, id);
+      // console.log("[[[[[[[[[[[[[[[[", response);
+    } catch (e) {
+      console.log(e);
+    }
+
   }
 
   const checkBusinessProfile = async (id) => {

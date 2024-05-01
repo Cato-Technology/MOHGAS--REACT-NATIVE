@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import React, {createContext, useContext} from 'react';
-import {Alert} from 'react-native';
+import React, { createContext, useContext } from 'react';
+import { Alert } from 'react-native';
 import SCREENS from '../utils/constants';
 //import Config from 'react-native-config';
 
@@ -33,7 +33,7 @@ const onError = async function (error: any) {
         // Token expired, navigate to login page
         signOutFunction();
         await AsyncStorage.clear();
-      
+
       }
       return Promise.reject({
         errMsg: error?.response?.data || 'Network Issue!',
@@ -47,7 +47,7 @@ const onError = async function (error: any) {
   }
   return Promise.reject({
     errMsg: !error?.response ? 'Network Issuee!' : error?.response?.data,
-    // status: error?.response?.status || 'not status',
+    status: error?.response?.status || 'not status',
   });
 };
 
