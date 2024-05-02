@@ -61,6 +61,9 @@ import { getAddress } from '../../../utils/functions/get-address';
 import { GEO_LOCATION } from '../../../redux/global/constants';
 import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
 import { RefreshControl } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
+
+
 export default function DashBoard({ navigation, props }) {
   RNMonnify.initialize({
     apiKey: 'MK_TEST_3X874HXYN3',
@@ -69,7 +72,7 @@ export default function DashBoard({ navigation, props }) {
   });
   const { colors } = useTheme();
   const styles = makeStyles(colors);
-  const authContext = React.useContext(AuthContext);
+  const authContext = useContext(AuthContext);
   const dispatch = useDispatch();
   const recentHistory = useSelector(
     (state: OrderState) => state.order.recentOrderHistory,
@@ -79,7 +82,7 @@ export default function DashBoard({ navigation, props }) {
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
   });
-  const [refreshing, setRefreshing] = React.useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const [balance, setBalance] = useState();
   const [totalOrders, setTotalOrders] = useState();
 
@@ -115,6 +118,19 @@ export default function DashBoard({ navigation, props }) {
         });
     }
   };
+
+  useFocusEffect(
+    React.useCallback(() => {
+
+      getProfile();
+      console.log('second run')
+
+      return () => {
+        // Clean up function (optional)
+      };
+    }, [])
+  );
+
   useEffect(() => {
     const requestLocationPermission = async () => {
       if (Platform.OS === 'ios') {

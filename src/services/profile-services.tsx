@@ -45,14 +45,13 @@ async function updateProfile(data: any) {
 
 
 function getProfile(data: any) {
-  console.log('data==>', data);
 
   return new Promise<UserResponse>((resolve, reject) => {
     client
-      .get(backend_URLS.GET_USER)
+      .get(backend_URLS.GET_USER, { params: { user_id: data.user_id } })
       .then(async response => {
         try {
-          console.log('res ', response);
+          console.log('res the actual ', response);
 
           //  await setAuthAsyncStorage(response.data);
           resolve(response);

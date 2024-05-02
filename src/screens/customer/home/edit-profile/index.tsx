@@ -62,7 +62,7 @@ const EditProfile = () => {
   const [isPickerShow, setIsPickerShow] = useState(false);
   const [stateData, setStateData] = useState([]);
   const [cityData, setCityData] = useState([]);
-  const [stateValue, setStateValue] = useState(stateData[0]);
+  const [stateValue, setStateValue] = useState();
   const [cityValue, setCityValue] = useState();
   const [lgaData, setLgaData] = useState([]);
   const [lgaValue, setLgaValue] = useState(lgaData[0]);
@@ -80,6 +80,7 @@ const EditProfile = () => {
 
   useEffect(() => {
     getStateData();
+    // setStateValue({ label: "Enugu" })
   }, []);
 
   const getLgaData = async id => {
@@ -112,7 +113,7 @@ const EditProfile = () => {
         let arr = [];
         result?.data?.map(ele => {
           console.log('ele', ele);
-          arr.push({
+          let state = {
             label: ele.name,
             value: ele.id,
             country_id: ele?.country_id,
@@ -129,10 +130,15 @@ const EditProfile = () => {
             price_per_kg: ele?.price_per_kg,
             service_charge: ele?.service_charge,
             delivery_cost_per_km: ele?.delivery_cost_per_km,
-          });
+          }
+          arr.push(state);
+          console.log(state.label.toLowerCase(), authContext?.userData?.city?.toLowerCase())
+          if (state.label.toLowerCase() === authContext?.userData?.city?.toLowerCase()) {
+            setStateValue(state);
+          };
         });
         setStateData(arr);
-        setStateValue(arr[0]);
+        // setStateValue(arr[0]);
         console.log('arr', arr);
       }
     } catch (e) {
@@ -271,7 +277,7 @@ const EditProfile = () => {
   };
   console.log('image', image);
 
-  const handleUpdateUser = async values => {
+  const handleUpdateUser = async (values) => {
     console.log('vvalue', values);
     console.log("authenticated user", authContext?.userData, lgaData)
 
@@ -305,17 +311,33 @@ const EditProfile = () => {
 
       let details = {
         user_id: authContext?.userData?.user_id,
-        address: `${values.street_name} ${lgaValue?.label} ${stateValue?.label}`,
+        // address: `${values.street_name} ${lgaValue?.label} ${stateValue?.label}`,
+        address: values?.address,
         date_of_birth: moment(date).format('YYYY-MM-DD'),
         fullname: values.fullname,
         email: values.email,
-        city: cityValue?.label,
-        state: stateValue?.label
+        city: stateValue?.label,
+        state: stateValue?.label,
+        phone_number: values.phone_no
       }
 
       console.log('data==>', data);
-      const result = await profileService.updateProfile(details);
-      console.log('result', result);
+      try {
+
+        const result = await profileService.updateProfile(details);
+        console.log('result', result);
+        showMessage({
+          message: result?.message,
+          type: 'success',
+          icon: 'success',
+        });
+      } catch (e) {
+        showMessage({
+          message: result?.message,
+          type: 'danger',
+          icon: 'danger',
+        });
+      }
 
 
       if (result?.status) {
@@ -340,6 +362,11 @@ const EditProfile = () => {
 
             authContext.setUserData(updatedUserData);
             setLoader(false);
+            showMessage({
+              message: JSON.stringify(e),
+              type: 'danger',
+              icon: 'danger',
+            });
             navigation.goBack();
           }
         } catch (e) {
@@ -357,11 +384,7 @@ const EditProfile = () => {
     } catch (e) {
       setLoader(false);
       console.log('error', e);
-      showMessage({
-        message: JSON.stringify(e),
-        type: 'danger',
-        icon: 'danger',
-      });
+
     }
   };
 
@@ -428,10 +451,11 @@ const EditProfile = () => {
                   fullname: authContext?.userData?.full_name,
                   email: authContext?.userData?.email,
                   phone_no: authContext?.userData?.phone_no,
-                  street_name: authContext?.userData?.street_name,
+                  address: authContext?.userData?.faddress,
                 }}
                 onSubmit={values => handleUpdateUser(values)}
-                validationSchema={signUpSchema}>
+              // validationSchema={signUpSchema}
+              >
                 {({
                   handleSubmit,
                   errors,
@@ -506,7 +530,7 @@ const EditProfile = () => {
                       <View style={{ height: 20 }} />
 
                       <InputWithLabel
-                        label="Street Address"
+                        label="Address"
                         placeholder={'Eg. Street 1'}
                         containerStyles={{ paddingHorizontal: 20 }}
                         labelStyle={{
@@ -514,10 +538,10 @@ const EditProfile = () => {
                           color: colors.yellowHeading,
                           fontSize: 15,
                         }}
-                        onChange={handleChange('street_name')}
-                        value={values.street_name}
-                        error={touched.street_name ? errors.street_name : ''}
-                        onBlur={() => setFieldTouched('street_name')}
+                        onChange={handleChange('address')}
+                        value={values.address}
+                        error={touched.address ? errors.address : ''}
+                        onBlur={() => setFieldTouched('address')}
                       />
                       {/* <InputWithLabel
                         label="State"
@@ -533,7 +557,7 @@ const EditProfile = () => {
                         error={touched.state ? errors.state : ''}
                         onBlur={() => setFieldTouched('state')}
                       /> */}
-                      <View style={{ paddingHorizontal: 20 }}>
+                      {/* <View style={{ paddingHorizontal: 20 }}>
                         <Text
                           style={{
                             fontFamily: 'Rubik-Regular',
@@ -553,14 +577,14 @@ const EditProfile = () => {
                           //search
                           maxHeight={300}
                           labelField="label"
-                          valueField="value"
+                          valueField="label"
                           placeholder="Select State"
                           //searchPlaceholder="Search..."
                           value={stateValue}
                           onChange={item => {
                             setStateValue(item);
-                            getCitiesData(item.value);
-                            getLgaData(item.value);
+                            // getCitiesData(item.value);
+                            // getLgaData(item.value);
                           }}
                         // renderLeftIcon={() => (
                         //   <AntDesign
@@ -571,8 +595,8 @@ const EditProfile = () => {
                         //   />
                         // )}
                         />
-                      </View>
-
+                      </View> */}
+                      {/* 
                       {cityData.length > 0 && (
                         <View style={{ paddingHorizontal: 20 }}>
                           <Text
@@ -650,7 +674,7 @@ const EditProfile = () => {
                           // )}
                           />
                         </View>
-                      )}
+                      )} */}
                     </View>
 
                     <View
