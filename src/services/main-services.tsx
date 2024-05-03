@@ -173,6 +173,14 @@ const orderAccessory = (data: any) => {
   return client.post(backend_URLS.ORDER_ACCESSORY, data);
 }
 
+const getFeedbacks = (data: any) => {
+  return client.get(backend_URLS.GET_FEEDBACKS);
+}
+
+const postFeedback = (data: any) => {
+  return client.post(backend_URLS.POST_FEEDBACK, data);
+}
+
 export const mainServics = {
   getWalletTopupDetails,
   getCities,
@@ -211,5 +219,7 @@ export const mainServics = {
   checkBusinessProfile,
   myTotalOrders,
   changeOnlineStatus,
-  orderAccessory
+  orderAccessory,
+  getFeedbacks,
+  postFeedback
 };

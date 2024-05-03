@@ -387,7 +387,7 @@ export default function DashBoard({ navigation, props }) {
               </TouchableOpacity>
 
               <TouchableOpacity
-                // onPress={() => navigation.navigate(SCREENS.SWAP_CYLINDER)}
+                onPress={() => navigation.navigate(SCREENS.FEEDBACK)}
                 style={{ alignItems: 'center' }}>
                 <View style={styles.circleView}>
                   <Icon3

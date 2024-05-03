@@ -64,7 +64,9 @@ const backend_URLS = {
   ONLINE: '/backend/vendor/branch_status_online',
   OFFLINE: '/backend/vendor/branch_status_offline',
 
-  ORDER_ACCESSORY: '/backend/orders/addOrderAccessory'
+  ORDER_ACCESSORY: '/backend/orders/addOrderAccessory',
+  GET_FEEDBACKS: '/backend/user/getAllFeedback',
+  POST_FEEDBACK: '/backend/user/submitFeedback'
 
 };
 

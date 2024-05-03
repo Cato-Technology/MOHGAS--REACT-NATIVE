@@ -1,7 +1,7 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 
 // import colors from 'assets/colors';
-import {RFValue} from 'react-native-responsive-fontsize';
+import { RFValue } from 'react-native-responsive-fontsize';
 import {
   heightPercentageToDP,
   widthPercentageToDP,
@@ -50,7 +50,7 @@ export const makeStyles = (colors: any) =>
       fontSize: RFValue(15),
       color: colors.black,
     },
-    dash: {height: 0.5, backgroundColor: colors.blue, width: '40%'},
+    dash: { height: 0.5, backgroundColor: colors.blue, width: '40%' },
     orView: {
       flexDirection: 'row',
       alignItems: 'center',
@@ -179,5 +179,9 @@ export const makeStyles = (colors: any) =>
       textAlign: 'left',
       lineHeight: 15,
     },
+    boxContent: {
+      backgroundColor: 'green',
+      width: widthPercentageToDP(80),
+    }
   });
 export default makeStyles;
