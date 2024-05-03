@@ -149,7 +149,7 @@ export default function ViewProduct({ navigation, route }) {
     let data = {
       user_id: auth?.userData?.user_id,
       accessory_id: item?.id,
-      accessory_name: item?.name,
+      accessory_name: item?.accessory_name,
       price: item?.price,
       picture: ""
     }
@@ -203,7 +203,7 @@ export default function ViewProduct({ navigation, route }) {
               resizeMode={'center'}
             />
             <View style={{ height: 8 }} />
-            <Text style={{ color: 'gray', fontSize: 16 }}>{item?.name}</Text>
+            <Text style={{ color: 'gray', fontSize: 16 }}>{item?.accessories_name}</Text>
             <Text style={{ color: '#000000', fontSize: 16 }}>N{item?.price}</Text>
             <View style={{ height: 8 }} />
             <Text style={{ color: '#000000', fontSize: 12 }}>

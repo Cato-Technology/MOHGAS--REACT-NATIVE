@@ -189,7 +189,7 @@ export default function Accessories({ navigation }) {
               }
               renderItem={({ item, index }) => (
                 <ProductView
-                  title={item?.name}
+                  title={item?.accessories_name}
                   price={`N${item?.price}`}
                   // image={{ uri: item?.images[0]?.image_url }}
                   onPress={() =>
