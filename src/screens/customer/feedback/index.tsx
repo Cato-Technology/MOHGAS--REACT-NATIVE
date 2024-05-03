@@ -201,7 +201,6 @@ export default function Feedback({ navigation, route }) {
             color: colors.yellowHeading,
             fontSize: 15,
           }}
-          keyboardType={'numeric'}
           onChange={txt => setText(txt)}
           placeholder={'Type here...'}
         />

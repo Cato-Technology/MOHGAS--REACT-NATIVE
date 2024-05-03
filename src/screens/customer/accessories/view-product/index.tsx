@@ -149,7 +149,7 @@ export default function ViewProduct({ navigation, route }) {
     let data = {
       user_id: auth?.userData?.user_id,
       accessory_id: item?.id,
-      accessory_name: item?.accessory_name,
+      accessory_name: item?.accessories_name,
       price: item?.price,
       picture: ""
     }
