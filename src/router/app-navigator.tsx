@@ -1,5 +1,6 @@
-import React, {useEffect, useState} from 'react';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import React, { useEffect, useState } from 'react';
+
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import BottomTabNavigator from './customer-navigator/bottom-tab-navigator';
 
@@ -13,9 +14,9 @@ import MohgasWallet from '../screens/customer/mogas-wallet';
 import FundWallet from '../screens/customer/mogas-wallet/fund-wallet';
 import CreateBvn from '../screens/customer/mogas-wallet/create-bvn';
 import messaging from '@react-native-firebase/messaging';
-import {useDispatch} from 'react-redux';
-import {NOTIFICATION} from '../redux/global/constants';
-import {configureNotificationService} from '../utils/NotificationService';
+import { useDispatch } from 'react-redux';
+import { NOTIFICATION } from '../redux/global/constants';
+import { configureNotificationService } from '../utils/NotificationService';
 const Stack = createNativeStackNavigator();
 
 const AppNavigator = () => {
@@ -24,7 +25,8 @@ const AppNavigator = () => {
   const [initialRoute, setInitialRoute] = useState('');
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
-  React.useEffect(() => {
+
+  useEffect(() => {
     // Fetch the token from storage then navigate to our appropriate place
     const bootstrapAsync = async () => {
       try {
@@ -46,19 +48,19 @@ const AppNavigator = () => {
   useEffect(() => {
     messaging().onMessage(async remoteMessage => {
       console.log('Notification caused', remoteMessage);
-      dispatch({type: NOTIFICATION, payload: remoteMessage});
+      dispatch({ type: NOTIFICATION, payload: remoteMessage });
     });
     // Assume a message-notification contains a "type" property in the data payload of the screen to open
     messaging().setBackgroundMessageHandler(async remoteMessage => {
       console.log('remoteMessageD', remoteMessage);
-      dispatch({type: NOTIFICATION, payload: remoteMessage});
+      dispatch({ type: NOTIFICATION, payload: remoteMessage });
     });
     messaging().onNotificationOpenedApp(remoteMessage => {
       console.log(
         'Notification caused app to open from background state:',
         remoteMessage?.data?.click_action,
       );
-      dispatch({type: NOTIFICATION, payload: remoteMessage});
+      dispatch({ type: NOTIFICATION, payload: remoteMessage });
     });
 
     // Check whether an initial notification is available
@@ -70,11 +72,13 @@ const AppNavigator = () => {
             'Notification caused app to open from quit state:===>',
             remoteMessage?.data?.click_action,
           );
-          dispatch({type: NOTIFICATION, payload: remoteMessage});
+          dispatch({ type: NOTIFICATION, payload: remoteMessage });
         }
         setLoading(false);
       });
   }, []);
+
+
 
   if (isLoading) {
     return null;

@@ -28,6 +28,7 @@ const backend_URLS = {
   SWAP_CYLINDER: '/backend/orders/swap',
   nearByGasAgencyAsPerRequiredSize: '/backend/nearByGasAgencyAsPerRequiredSize',
   GET_NEAREST_ACCESSORIES: '/backend/orders/nearest_products',
+  GET_ACCESSORIES: '/backend/orders/accessories',
   checkout: '/backend/checkout',
 
   //Support
@@ -61,7 +62,9 @@ const backend_URLS = {
   TOTAL_ORDERS_VENDOR: '/backend/vendor/total_orders',
 
   ONLINE: '/backend/vendor/branch_status_online',
-  OFFLINE: '/backend/vendor/branch_status_offline'
+  OFFLINE: '/backend/vendor/branch_status_offline',
+
+  ORDER_ACCESSORY: '/backend/orders/addOrderAccessory'
 
 };
 

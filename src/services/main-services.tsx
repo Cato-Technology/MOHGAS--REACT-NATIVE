@@ -59,6 +59,13 @@ const getAccessoriesAsPerNearestAgencies = (lat, lon) => {
     backend_URLS.GET_NEAREST_ACCESSORIES + `?latitude=${lat}&longitude=${lon}`,
   );
 };
+
+const getAccessories = () => {
+  return client.get(
+    backend_URLS.GET_ACCESSORIES
+  )
+}
+
 const checkOut = (detail: any) => {
   return client.post(backend_URLS.checkout, detail);
 };
@@ -162,6 +169,10 @@ const changeOnlineStatus = (status: any, id: any) => {
   }
 }
 
+const orderAccessory = (data: any) => {
+  return client.post(backend_URLS.ORDER_ACCESSORY, data);
+}
+
 export const mainServics = {
   getWalletTopupDetails,
   getCities,
@@ -174,6 +185,7 @@ export const mainServics = {
   swapCylinder,
   nearByGasAgencyAsPerRequiredSize,
   getAccessoriesAsPerNearestAgencies,
+  getAccessories,
   checkOut,
   getSupportHelpTopics,
   getSupportAccountRelatedIssues,
@@ -198,5 +210,6 @@ export const mainServics = {
   getVendorGasPrice,
   checkBusinessProfile,
   myTotalOrders,
-  changeOnlineStatus
+  changeOnlineStatus,
+  orderAccessory
 };

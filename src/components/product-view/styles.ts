@@ -1,5 +1,5 @@
-import {StyleSheet} from 'react-native';
-import {RFValue} from 'react-native-responsive-fontsize';
+import { StyleSheet } from 'react-native';
+import { RFValue } from 'react-native-responsive-fontsize';
 import {
   heightPercentageToDP,
   widthPercentageToDP,
@@ -15,14 +15,14 @@ export const makeStyles = (colors: any) =>
     middleText: {
       color: '#000000',
       marginTop: 2,
-      fontSize: 9,
+      fontSize: 11,
 
       //fontFamily: 'Poppins-SemiBold',
     },
     detailText: {
       color: 'red',
       marginTop: 2,
-      fontSize: 9,
+      fontSize: 11,
 
       //fontFamily: 'Poppins-Regular',
     },

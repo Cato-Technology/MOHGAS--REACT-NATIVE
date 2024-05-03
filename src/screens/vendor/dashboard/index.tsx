@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useContext, useEffect, useState } from 'react';
+import { AppState } from 'react-native';
 import {
   Keyboard,
   Platform,
@@ -183,7 +184,33 @@ export default function VendorDashBoard({ navigation }) {
     setOnline(data.vendor_id);
     getData(data);
     getTotalOrders(data.vendor_id);
-  }, [])
+  }, []);
+
+  // Subscribe to app state changes when the component mounts
+  useEffect(() => {
+    AppState.addEventListener('change', handleAppStateChange);
+
+    // Clean up by removing the event listener when the component unmounts
+    return () => {
+      AppState.removeEventListener('change', handleAppStateChange as any);
+    };
+  }, []);
+
+  // Function to handle app state changes
+  const handleAppStateChange = async (nextAppState) => {
+    console.log("appstate", nextAppState)
+    if (nextAppState === 'background') {
+
+      try {
+        // console.log('App is about to close', authContext?.userData?.user_id);
+        const response = await mainServics.changeOnlineStatus(false, authContext?.userData?.user_id);
+        // console.log("app[[[[[[22222[", response);
+      } catch (e) {
+        console.log(e);
+      }
+
+    }
+  };
 
   const getData = async (data: any) => {
     try {

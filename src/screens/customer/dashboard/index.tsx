@@ -123,7 +123,7 @@ export default function DashBoard({ navigation, props }) {
     React.useCallback(() => {
 
       getProfile();
-      console.log('second run')
+      // console.log('second run')
 
       return () => {
         // Clean up function (optional)
