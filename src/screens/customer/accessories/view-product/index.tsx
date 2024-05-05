@@ -77,11 +77,17 @@ export default function ViewProduct({ navigation, route }) {
   const [city, setCity] = useState();
   const [postal, setPostal] = useState();
   const [state, setState] = useState();
+  const [imageError, setImageError] = useState(false);
+
 
   const dispatch = useDispatch();
   let item = route?.params?.item;
   let size = item.size_of_product;
   const arr = size?.split(',');
+
+  const imageUrl = `https://admin.mohgasapp.com/assets/images/accessories/${item?.picture}`;
+  // Local image path for the fallback image
+  const fallbackImagePath = require('../../../../assets/noimage.png');
 
   console.log('item', item);
 
@@ -151,7 +157,7 @@ export default function ViewProduct({ navigation, route }) {
       accessory_id: item?.id,
       accessory_name: item?.accessories_name,
       price: item?.price,
-      picture: ""
+      picture: item?.picture
     }
 
     console.log("accessory order", data);
@@ -199,8 +205,9 @@ export default function ViewProduct({ navigation, route }) {
 
             <Image
               style={{ height: 200, width: '100%' }}
-              source={require('../../../../assets/noimage.png')}
+              source={imageError ? fallbackImagePath : { uri: imageUrl }}
               resizeMode={'center'}
+              onError={() => setImageError(true)}
             />
             <View style={{ height: 8 }} />
             <Text style={{ color: 'gray', fontSize: 16 }}>{item?.accessories_name}</Text>
