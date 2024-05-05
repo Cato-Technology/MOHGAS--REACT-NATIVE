@@ -181,7 +181,7 @@ export default function VendorDashBoard({ navigation }) {
     let data = { vendor_id: authContext?.userData?.user_id }
     getWallet(data.vendor_id);
     checkBusinessProfile(data.vendor_id);
-    setOnline(data.vendor_id);
+    setOnline(true, data.vendor_id);
     getData(data);
     getTotalOrders(data.vendor_id);
   }, []);
@@ -202,13 +202,21 @@ export default function VendorDashBoard({ navigation }) {
     if (nextAppState === 'background') {
 
       try {
-        // console.log('App is about to close', authContext?.userData?.user_id);
-        const response = await mainServics.changeOnlineStatus(false, authContext?.userData?.user_id);
-        // console.log("app[[[[[[22222[", response);
+        const response = await setOnline(false, authContext?.userData?.user_id);
+        // console.log(response, "this is it")
       } catch (e) {
         console.log(e);
       }
 
+    } else if (nextAppState === 'active') {
+
+      try {
+
+        const response = await setOnline(true, authContext?.userData?.user_id);
+        // console.log(response, "this is it")
+      } catch (e) {
+        console.log(e);
+      }
     }
   };
 
@@ -250,14 +258,16 @@ export default function VendorDashBoard({ navigation }) {
     }
   }
 
-  const setOnline = async (id) => {
+  const setOnline = async (online, id) => {
     try {
 
-      const response = await mainServics.changeOnlineStatus(true, id);
+      const response = await mainServics.changeOnlineStatus(online, id);
+      return response;
       // console.log("[[[[[[[[[[[[[[[[", response);
     } catch (e) {
       console.log(e);
     }
+
 
   }
 
@@ -386,11 +396,11 @@ export default function VendorDashBoard({ navigation }) {
               style={{
                 flexDirection: 'row',
                 width: '100%',
-                justifyContent: 'space-between',
+                justifyContent: 'space-evenly',
                 paddingTop: 30,
                 paddingHorizontal: 20,
               }}>
-              <View style={{ alignItems: 'center' }}>
+              {/* <View style={{ alignItems: 'center' }}>
                 <View style={styles.circleView}>
                   <Icon3
                     name="plus"
@@ -400,7 +410,7 @@ export default function VendorDashBoard({ navigation }) {
                   />
                 </View>
                 <Text style={styles.centerViewText}>Product</Text>
-              </View>
+              </View> */}
               <View style={{ alignItems: 'center' }}>
                 <View style={styles.circleView}>
                   <Icon name="money" size={25} color="#fff"

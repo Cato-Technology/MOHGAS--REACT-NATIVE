@@ -12,6 +12,8 @@ export const makeStyles = (colors: any) =>
     container: {
       flex: 1,
       backgroundColor: colors.primary,
+      // height: heightPercentageToDP(80),
+      width: widthPercentageToDP(100)
     },
     icon: {
       overflow: 'hidden',
@@ -218,6 +220,7 @@ export const makeStyles = (colors: any) =>
     },
     selectedTextStyle: {
       fontSize: 16,
+      color: 'green'
     },
     iconStyle: {
       width: 20,
@@ -226,6 +229,7 @@ export const makeStyles = (colors: any) =>
     inputSearchStyle: {
       height: 40,
       fontSize: 16,
+      backgroundColor: 'red'
     },
     boxContent: {
       backgroundColor: '#4ca757',

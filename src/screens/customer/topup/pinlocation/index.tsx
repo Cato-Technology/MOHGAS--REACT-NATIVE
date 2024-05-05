@@ -333,7 +333,7 @@ export default function PinLocation({ navigation }) {
           bottom: 10,
         }}>
         {hasLocationPermission ? <GradientButton
-          disabled={!hasLocationPermission}
+          disabled={!hasLocationPermission || !locationInfo}
           onPress={() => {
             // getOneTimeLocation();
             handleSubmitted();

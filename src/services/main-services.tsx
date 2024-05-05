@@ -173,8 +173,8 @@ const orderAccessory = (data: any) => {
   return client.post(backend_URLS.ORDER_ACCESSORY, data);
 }
 
-const getFeedbacks = (data: any) => {
-  return client.get(backend_URLS.GET_FEEDBACKS);
+const getFeedbacks = (id: any) => {
+  return client.get(backend_URLS.GET_FEEDBACKS, { params: { user_id: id } });
 }
 
 const postFeedback = (data: any) => {

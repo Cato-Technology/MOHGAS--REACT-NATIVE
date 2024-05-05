@@ -62,6 +62,13 @@ export default function Feedback({ navigation, route }) {
   const [loader, setLoader] = React.useState(false);
   const [feedbackData, setFeedbackData] = useState();
   const [text, setText] = useState(null);
+  const [issueType, setIssueType] = useState();
+
+  const issueTypeData = [
+    { label: 'Feedback', value: 'feedback' },
+    { label: 'Complaints', value: 'complaints' },
+    { label: 'Report a Bug', value: 'report a bug' },
+    { label: 'Request Feature', value: 'request feature' }]
 
   useEffect(() => {
 
@@ -89,10 +96,11 @@ export default function Feedback({ navigation, route }) {
 
       let data = {
         user_id: authContext?.userData?.user_id,
-        feedback_text: text
+        feedback_text: text,
+        type: issueType.value
       }
+      console.log('resu', data);
       const result = await mainServics.postFeedback(data);
-      console.log('result', result);
       if (result.status) {
         showMessage({
           message: result?.message,
@@ -136,20 +144,27 @@ export default function Feedback({ navigation, route }) {
       <View
         style={{
           width: '100%',
-          height: heightPercentageToDP(100),
           paddingHorizontal: 10,
           alignItems: 'center',
           // backgroundColor: 'red'
         }}>
         <View style={styles.icon} />
-        <Header
-          title={'Feedback'}
-          back={true}
-          rightIcon={
-            <AntDesign name="setting" size={25} color={colors.text} />
-          }
-        />
-        <View style={{ width: '100%', paddingHorizontal: 20 }}>
+        <View>
+          <Header
+            title={'Feedback'}
+            back={true}
+            rightIcon={
+              <AntDesign name="setting" size={25} color={colors.text} />
+            }
+          />
+        </View>
+
+        <View style={{
+          width: '100%',
+          paddingHorizontal: 20,
+          paddingBottom: 20,
+          height: heightPercentageToDP(55)
+        }}>
           <HeaderBottom
             subTitle={'Let us know what you think'}
             contentStyle={{ marginTop: 50 }}
@@ -165,10 +180,12 @@ export default function Feedback({ navigation, route }) {
             }
           />
 
-          {/* <ScrollView keyboardShouldPersistTaps={'handled'}> */}
+          {/* <ScrollView keyboardShouldPersistTaps={'handled'}>
+            <View> */}
+
           <FlatList
             data={feedbackData}
-            contentContainerStyle={{ marginTop: 10 }}
+            // contentContainerStyle={{ marginTop: 10 }}
             renderItem={({ item, index }) => (
               <FeedbackItem
                 data={item}
@@ -179,7 +196,9 @@ export default function Feedback({ navigation, route }) {
             )}
             keyExtractor={(item, index) => index.toString()}
           />
-          {/* </ScrollView> */}
+
+          {/* </View>
+          </ScrollView> */}
 
         </View>
 
@@ -195,7 +214,27 @@ export default function Feedback({ navigation, route }) {
           bottom: heightPercentageToDP(0),
           left: 0,
           right: 0,
+          backgroundColor: '#e6e6e6'
         }}>
+        <Dropdown
+          itemTextStyle={{ color: '#000000' }}
+          style={styles.dropdown}
+          placeholderStyle={styles.placeholderStyle}
+          selectedTextStyle={styles.selectedTextStyle}
+          inputSearchStyle={styles.inputSearchStyle}
+          iconStyle={styles.iconStyle}
+          data={issueTypeData}
+          //search
+          maxHeight={300}
+          labelField={"label"}
+          valueField={"value"}
+          placeholder="Select Feedback type"
+          value={issueType}
+          onChange={item => {
+            setIssueType(item);
+          }}
+
+        />
         <InputWithLabel
           labelStyle={{
             color: colors.yellowHeading,
@@ -206,9 +245,11 @@ export default function Feedback({ navigation, route }) {
         />
         <GradientButton
           onPress={() => handleSubmit()}
-          disabled={!text}
+          disabled={!text || !issueType}
           title="Submit"
         />
+
+
       </View>
     </View>
   );

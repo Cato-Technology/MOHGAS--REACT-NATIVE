@@ -62,6 +62,7 @@ import { GEO_LOCATION } from '../../../redux/global/constants';
 import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
 import { RefreshControl } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
+import FeedbackItem from '../feedback/feebackItem';
 
 
 export default function DashBoard({ navigation, props }) {
@@ -480,6 +481,8 @@ export default function DashBoard({ navigation, props }) {
             )}
             keyExtractor={(item, index) => index.toString()}
           />
+
+
           {/* {!authContext?.userData?.bvn_verification_date && (
             <View
               style={{

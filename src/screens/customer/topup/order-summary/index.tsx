@@ -328,7 +328,7 @@ export default function OrderSummary({ navigation, route }) {
                       </View>
                       <Text style={styles.heading}>Customer Details</Text>
                     </View>
-                    <Text style={styles.descText}>
+                    <Text style={styles.descText} selectable={true}>
                       {orderSummary?.customer_details?.full_name}
                       {'\n'}
                       {orderSummary?.customer_details?.address}
@@ -348,7 +348,7 @@ export default function OrderSummary({ navigation, route }) {
                       </View>
                       <Text style={styles.heading}>Vendor Details</Text>
                     </View>
-                    <Text style={styles.descText}>
+                    <Text style={styles.descText} selectable={true}>
                       {' '}
                       {orderSummary?.vendor_details?.vendor_branch_name}
                       {'\n'}
