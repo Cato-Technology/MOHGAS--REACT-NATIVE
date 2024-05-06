@@ -95,11 +95,14 @@ export default function Login({ navigation }) {
         });
         setLoader(false);
         setLoginError(result?.message);
-        
+
+        console.log('otp data', result)
+
 
         navigation.navigate(SCREENS.OTP_VERIFICATION, {
           userId: result?.response?.id,
-          phNumber: result?.response?.email,
+          phNumber: result?.response?.phone_no,
+          email: result?.response?.email
         });
         return;
       }

@@ -280,6 +280,22 @@ const VendorEditProfile = () => {
     }
   };
 
+  const handleDeleteUser = async () => {
+
+    try {
+
+      const response = await mainServics.deleteuser({ user_id: authContext?.userData?.user_id });
+
+      if (response) {
+        authContext.signOut();
+      }
+
+    } catch (e) {
+      console.log('error', e);
+    }
+
+  }
+
   return (
     <View
       style={{
@@ -663,6 +679,12 @@ const VendorEditProfile = () => {
                         onPress={() => handleSubmit()}
                         disabled={!isValid}
                         title="Update"
+                      />
+                      <GradientButton
+                        onPress={() => handleDeleteUser()}
+                        disabled={!isValid}
+                        title="Delete"
+                        btnColor={"red"}
                       />
                     </View>
                   </>

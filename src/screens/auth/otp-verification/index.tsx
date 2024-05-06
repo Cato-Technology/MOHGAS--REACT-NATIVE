@@ -98,6 +98,7 @@ export default function OtpVerification({ navigation, route }) {
       let data = new FormData();
       data.append('user_id', route?.params?.userId);
       data.append('phone', route?.params?.phNumber);
+      data.append('email', route?.params?.email)
       data.append('otp', otpManual || code);
 
       console.log('data->', data);

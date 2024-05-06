@@ -181,6 +181,11 @@ const postFeedback = (data: any) => {
   return client.post(backend_URLS.POST_FEEDBACK, data);
 }
 
+const deleteuser = (data: any) => {
+  console.log(data)
+  return client.post(backend_URLS.DELETE_USER, data);
+}
+
 export const mainServics = {
   getWalletTopupDetails,
   getCities,
@@ -221,5 +226,6 @@ export const mainServics = {
   changeOnlineStatus,
   orderAccessory,
   getFeedbacks,
-  postFeedback
+  postFeedback,
+  deleteuser
 };

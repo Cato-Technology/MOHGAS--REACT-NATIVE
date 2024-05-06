@@ -213,13 +213,13 @@ export default function ViewProduct({ navigation, route }) {
             <Text style={{ color: 'gray', fontSize: 16 }}>{item?.accessories_name}</Text>
             <Text style={{ color: '#000000', fontSize: 16 }}>N{item?.price}</Text>
             <View style={{ height: 8 }} />
-            <Text style={{ color: '#000000', fontSize: 12 }}>
+            {/* <Text style={{ color: '#000000', fontSize: 12 }}>
               <AntDesign name="star" size={12} color={'#debf5a'} />
               {item?.rating ? item?.rating : '-'}
               {'   '}|{'   '}
               {item?.no_of_solds ? item?.no_of_solds : '-'} Solid{'   '}|{'   '}
               {item?.reviews ? item?.reviews : '-'}
-            </Text>
+            </Text> */}
             <View style={{ height: 8 }} />
             <Text style={{ color: 'gray', fontSize: 13 }}>
               {item?.description}

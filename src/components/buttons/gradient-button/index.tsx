@@ -1,9 +1,9 @@
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React from 'react';
 
 import makeStyles from './styles';
-import {Button as PaperButton} from 'react-native-paper';
-import {useTheme} from '@react-navigation/native';
+import { Button as PaperButton } from 'react-native-paper';
+import { useTheme } from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 
 type Props = {
@@ -17,7 +17,7 @@ type Props = {
 };
 
 export default function GradientButton(props: Props) {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
   const styles = makeStyles(colors);
   const horizontal = props.marginHorizontal ? props.marginHorizontal : 20;
   const vertical = props.marginVertical ? props.marginVertical : 20;
@@ -26,7 +26,7 @@ export default function GradientButton(props: Props) {
     <TouchableOpacity
       onPress={props.onPress}
       disabled={props.disabled}
-      style={{paddingVertical: 5}}>
+      style={{ paddingVertical: 5 }}>
       <View
         style={[
           styles.btnContainer,
@@ -34,8 +34,8 @@ export default function GradientButton(props: Props) {
             backgroundColor: props.disabled
               ? '#808080'
               : props.btnColor
-              ? props.btnColor
-              : '#4ca757',
+                ? props.btnColor
+                : '#4ca757',
           },
         ]}>
         <Text style={styles.label}>{props.title}</Text>

@@ -6,6 +6,7 @@ const backend_URLS = {
   VERIFY_OTP: '/backend/register/otp_verification',
   VERIFY_OTP_ACCOUNT: '/backend/register/verification',
   REGISTER_VENDOR: '/backend/register/vendor',
+  DELETE_USER: '/backend/user/deleteUser',
 
   SEND_ACC_VERIFY: '/backend/register/new_otp',
 

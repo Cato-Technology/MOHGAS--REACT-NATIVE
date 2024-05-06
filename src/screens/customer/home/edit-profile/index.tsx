@@ -318,7 +318,16 @@ const EditProfile = () => {
         email: values.email,
         city: stateValue?.label,
         state: stateValue?.label,
-        phone_number: values.phone_no
+        phone_number: values.phone_no,
+        image: (Platform.OS == 'android') ? {
+          uri: image?.uri,
+          type: image?.type,
+          name: 'image.jpg',
+        } : {
+          uri: 'file:///' + image?.uri,
+          type: image?.type,
+          name: 'image.jpg',
+        }
       }
 
       console.log('data==>', data);
@@ -387,6 +396,35 @@ const EditProfile = () => {
 
     }
   };
+
+  const handleDeleteUser = async () => {
+
+    try {
+
+      const response = await mainServics.deleteuser({ user_id: authContext?.userData?.user_id });
+
+      if (response) {
+        authContext.signOut();
+
+        console.log(response?.message);
+      }
+
+      showMessage({
+        message: response?.message,
+        type: 'info',
+        icon: 'warning',
+      });
+
+    } catch (e) {
+      console.log('error', e);
+      showMessage({
+        message: e?.errMsg?.message,
+        type: 'warning',
+        icon: 'warning',
+      });
+    }
+
+  }
 
   return (
     <View
@@ -687,6 +725,12 @@ const EditProfile = () => {
                         onPress={() => handleSubmit()}
                         disabled={!isValid}
                         title="Update"
+                      />
+                      <GradientButton
+                        onPress={() => handleDeleteUser()}
+                        disabled={!isValid}
+                        title="Delete"
+                        btnColor={"red"}
                       />
                     </View>
                   </>

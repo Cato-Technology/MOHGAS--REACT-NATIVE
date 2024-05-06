@@ -134,7 +134,7 @@ export default function VendorDashBoard({ navigation }) {
           //  - ERR00 : The user has clicked on Cancel button in the popup
           //  - ERR01 : If the Settings change are unavailable
           //  - ERR02 : If the popup has failed to open
-          alert('Error ' + err.message + ', Code : ' + err.code);
+          // alert('Error ' + err.message + ', Code : ' + err.code);
         });
     }
   };
