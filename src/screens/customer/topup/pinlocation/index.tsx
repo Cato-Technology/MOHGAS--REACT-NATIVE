@@ -205,7 +205,7 @@ export default function PinLocation({ navigation }) {
       <View style={styles.searchContainer}>
         <GooglePlacesAutocomplete
           placeholder='delivery address'
-          styles={{ textInput: styles.searchInput }}
+          styles={{ textInput: styles.searchInput, description: { color: 'black' } }}
           onPress={(data, details = null) => {
             setUserAddress(data.description);
             const addrComp = details?.vicinity.split(',');

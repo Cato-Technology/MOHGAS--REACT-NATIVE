@@ -251,7 +251,7 @@ export default function OrderDetails({ navigation, route }) {
 
               <View style={styles.dropdown}>
 
-                {true && <PromptButton
+                {order?.status === "Completed" && <PromptButton
                   title={"Approve"}
                   onPress={() => { orderActionSelect(4) }}
                   btnColor={"green"}
