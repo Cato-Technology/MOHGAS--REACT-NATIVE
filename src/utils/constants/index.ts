@@ -78,4 +78,6 @@ export default {
   CREATE_BVN: 'CREATE_BVN',
 
   VENDOR_NEW_ORDER: 'VENDOR_NEW_ORDER',
+
+  FEEDBACK: 'FEEDBACK'
 };

@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useContext, useEffect, useMemo, useState} from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import {
   Keyboard,
   Platform,
@@ -27,9 +27,9 @@ import {
 import SCREENS from '../../../utils/constants';
 
 import makeStyles from './styles';
-import {RFValue} from 'react-native-responsive-fontsize';
+import { RFValue } from 'react-native-responsive-fontsize';
 import * as Yup from 'yup';
-import {Formik} from 'formik';
+import { Formik } from 'formik';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -42,19 +42,19 @@ export const PASS_REGIX =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AuthContext from '../../../utils/auth-context';
-import {useTheme} from '@react-navigation/native';
+import { useTheme } from '@react-navigation/native';
 import GradientButton from '../../../components/buttons/gradient-button';
-import {authService, mainServics} from '../../../services';
+import { authService, mainServics } from '../../../services';
 import ErrorModal from '../../../components/error-modal';
 import Logo from '../../../assets/images/logo.png';
-import {NAME} from '../../../utils/regix';
-import {showMessage} from 'react-native-flash-message';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import { NAME } from '../../../utils/regix';
+import { showMessage } from 'react-native-flash-message';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import ImagePicker from 'react-native-image-crop-picker';
 import Images from '../../../assets/images';
-import {Dropdown} from 'react-native-element-dropdown';
-export default function SignUpCustomer({navigation}) {
-  const {colors} = useTheme();
+import { Dropdown } from 'react-native-element-dropdown';
+export default function SignUpCustomer({ navigation }) {
+  const { colors } = useTheme();
   const styles = makeStyles(colors);
   const [showModal, setShowModal] = React.useState(false);
   const [image, setImage] = useState('');
@@ -66,7 +66,7 @@ export default function SignUpCustomer({navigation}) {
   const [countryCode, setCountryCode] = useState('NG');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [selectCountryCode, setSelectCountryCode] = useState('');
-  const [numberCondition, setNumberCondition] = useState({min: 8, max: 11});
+  const [numberCondition, setNumberCondition] = useState({ min: 8, max: 11 });
   const [stateData, setStateData] = useState([]);
   const [cityData, setCityData] = useState([]);
   const [lgaData, setLgaData] = useState([]);
@@ -123,6 +123,7 @@ export default function SignUpCustomer({navigation}) {
       console.log('eer', e);
     }
   };
+
   const getStateData = async () => {
     try {
       const result = await mainServics.getStates();
@@ -237,9 +238,9 @@ export default function SignUpCustomer({navigation}) {
       console.log('result', result);
 
       if (result.status) {
-        navigation.navigate(SCREENS.PHONE_VERIFY, {
+        navigation.navigate(SCREENS.OTP_VERIFICATION, {
           userId: result?.data?.user_id,
-          phNumber: result?.data?.phone_num,
+          phNumber: result?.data?.email,
         });
         setLoader(false);
       } else {
@@ -260,6 +261,7 @@ export default function SignUpCustomer({navigation}) {
       });
     }
   };
+
   const imagePickerFromGallery = () => {
     // setImageModal(false);
 
@@ -355,7 +357,7 @@ export default function SignUpCustomer({navigation}) {
       />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={{flex: 1}}>
+        style={{ flex: 1 }}>
         <ScrollView keyboardShouldPersistTaps={'handled'}>
           <View
             style={{
@@ -366,7 +368,7 @@ export default function SignUpCustomer({navigation}) {
             <View style={styles.icon}>
               <Image style={styles.logo} source={Logo} />
             </View>
-            <View style={{marginTop: 80, paddingHorizontal: 25}}>
+            <View style={{ marginTop: 80, paddingHorizontal: 25 }}>
               <Text
                 style={{
                   color: '#000000',
@@ -385,11 +387,11 @@ export default function SignUpCustomer({navigation}) {
                 source={
                   image
                     ? {
-                        uri:
-                          Platform.OS == 'ios' || !cam
-                            ? `data:${image?.mime};base64,${image?.data}`
-                            : `data:${image?.type};base64,${image?.base64}`,
-                      }
+                      uri:
+                        Platform.OS == 'ios' || !cam
+                          ? `data:${image?.mime};base64,${image?.data}`
+                          : `data:${image?.type};base64,${image?.base64}`,
+                    }
                     : Images.avatar
                 }
                 style={styles.image}
@@ -412,7 +414,7 @@ export default function SignUpCustomer({navigation}) {
               </View>
             </View>
 
-            <View style={{marginTop: 40, paddingHorizontal: 25}}>
+            <View style={{ marginTop: 40, paddingHorizontal: 25 }}>
               <Formik
                 initialValues={{
                   fullname: '',
@@ -445,7 +447,7 @@ export default function SignUpCustomer({navigation}) {
                           fontSize: 15,
                         }}
                         placeholder={'Eg. Amit'}
-                        containerStyles={{paddingHorizontal: 20}}
+                        containerStyles={{ paddingHorizontal: 20 }}
                         onChange={handleChange('fullname')}
                         value={values.fullname}
                         error={touched.fullname ? errors.fullname : ''}
@@ -455,7 +457,7 @@ export default function SignUpCustomer({navigation}) {
                       <InputWithLabel
                         label={'Email'}
                         placeholder={'Eg. abc@abc.com'}
-                        containerStyles={{paddingHorizontal: 20}}
+                        containerStyles={{ paddingHorizontal: 20 }}
                         labelStyle={{
                           //   fontFamily: fonts.mulishSemiBold,
                           color: colors.yellowHeading,
@@ -466,7 +468,7 @@ export default function SignUpCustomer({navigation}) {
                         error={touched.email ? errors.email : ''}
                         onBlur={() => setFieldTouched('email')}
                       />
-                      <View style={{height: 20}} />
+                      <View style={{ height: 20 }} />
                       <Text style={styles.inputLablel}>Phone</Text>
                       <PhoneNumber
                         countryCode={countryCode}
@@ -504,12 +506,12 @@ export default function SignUpCustomer({navigation}) {
                           )
                         ))}
 
-                      <View style={{height: 20}} />
+                      <View style={{ height: 20 }} />
 
                       <InputWithLabel
                         label="Referral Code"
                         placeholder={'Eg. gzQ304MwqS '}
-                        containerStyles={{paddingHorizontal: 20}}
+                        containerStyles={{ paddingHorizontal: 20 }}
                         labelStyle={{
                           // fontFamily: fonts.mulishSemiBold,
                           color: colors.yellowHeading,
@@ -520,7 +522,7 @@ export default function SignUpCustomer({navigation}) {
                         error={touched.referal_code ? errors.referal_code : ''}
                         onBlur={() => setFieldTouched('referal_code')}
                       />
-                      <View style={{paddingHorizontal: 20}}>
+                      <View style={{ paddingHorizontal: 20 }}>
                         <Text
                           style={{
                             fontFamily: 'Rubik-Regular',
@@ -532,7 +534,7 @@ export default function SignUpCustomer({navigation}) {
                         </Text>
                         <Dropdown
                           style={styles.dropdown}
-                          itemTextStyle={{color: '#000000'}}
+                          itemTextStyle={{ color: '#000000' }}
                           placeholderStyle={styles.placeholderStyle}
                           selectedTextStyle={styles.selectedTextStyle}
                           inputSearchStyle={styles.inputSearchStyle}
@@ -550,19 +552,19 @@ export default function SignUpCustomer({navigation}) {
                             getCitiesData(item.value);
                             getLgaData(item.value);
                           }}
-                          // renderLeftIcon={() => (
-                          //   <AntDesign
-                          //     style={styles.icon2}
-                          //     color="black"
-                          //     name="Safety"
-                          //     size={20}
-                          //   />
-                          // )}
+                        // renderLeftIcon={() => (
+                        //   <AntDesign
+                        //     style={styles.icon2}
+                        //     color="black"
+                        //     name="Safety"
+                        //     size={20}
+                        //   />
+                        // )}
                         />
                       </View>
 
                       {cityData.length > 0 && (
-                        <View style={{paddingHorizontal: 20}}>
+                        <View style={{ paddingHorizontal: 20 }}>
                           <Text
                             style={{
                               fontFamily: 'Rubik-Regular',
@@ -573,7 +575,7 @@ export default function SignUpCustomer({navigation}) {
                             Select City
                           </Text>
                           <Dropdown
-                            itemTextStyle={{color: '#000000'}}
+                            itemTextStyle={{ color: '#000000' }}
                             style={styles.dropdown}
                             placeholderStyle={styles.placeholderStyle}
                             selectedTextStyle={styles.selectedTextStyle}
@@ -590,19 +592,19 @@ export default function SignUpCustomer({navigation}) {
                             onChange={item => {
                               setCityValue(item.value);
                             }}
-                            // renderLeftIcon={() => (
-                            //   <AntDesign
-                            //     style={styles.icon2}
-                            //     color="black"
-                            //     name="Safety"
-                            //     size={20}
-                            //   />
-                            // )}
+                          // renderLeftIcon={() => (
+                          //   <AntDesign
+                          //     style={styles.icon2}
+                          //     color="black"
+                          //     name="Safety"
+                          //     size={20}
+                          //   />
+                          // )}
                           />
                         </View>
                       )}
                       {lgaData.length > 0 && (
-                        <View style={{paddingHorizontal: 20}}>
+                        <View style={{ paddingHorizontal: 20 }}>
                           <Text
                             style={{
                               fontFamily: 'Rubik-Regular',
@@ -614,7 +616,7 @@ export default function SignUpCustomer({navigation}) {
                           </Text>
                           <Dropdown
                             style={styles.dropdown}
-                            itemTextStyle={{color: '#000000'}}
+                            itemTextStyle={{ color: '#000000' }}
                             placeholderStyle={styles.placeholderStyle}
                             selectedTextStyle={styles.selectedTextStyle}
                             inputSearchStyle={styles.inputSearchStyle}
@@ -630,21 +632,21 @@ export default function SignUpCustomer({navigation}) {
                             onChange={item => {
                               setLgaValue(item.value);
                             }}
-                            // renderLeftIcon={() => (
-                            //   <AntDesign
-                            //     style={styles.icon2}
-                            //     color="black"
-                            //     name="Safety"
-                            //     size={20}
-                            //   />
-                            // )}
+                          // renderLeftIcon={() => (
+                          //   <AntDesign
+                          //     style={styles.icon2}
+                          //     color="black"
+                          //     name="Safety"
+                          //     size={20}
+                          //   />
+                          // )}
                           />
                         </View>
                       )}
                       <InputWithLabel
                         label={'Password'}
                         placeholder={'Enter your password here'}
-                        containerStyles={{paddingHorizontal: 20}}
+                        containerStyles={{ paddingHorizontal: 20 }}
                         labelStyle={{
                           // fontFamily: fonts.mulishSemiBold,
                           color: colors.yellowHeading,
@@ -659,7 +661,7 @@ export default function SignUpCustomer({navigation}) {
                       />
                       <InputWithLabel
                         label="Confirm Password"
-                        containerStyles={{paddingHorizontal: 20}}
+                        containerStyles={{ paddingHorizontal: 20 }}
                         labelStyle={{
                           // fontFamily: fonts.mulishSemiBold,
                           color: colors.yellowHeading,
@@ -690,7 +692,7 @@ export default function SignUpCustomer({navigation}) {
                               disableData: true,
                             })
                           }>
-                          {({pressed}) => (
+                          {({ pressed }) => (
                             <Text
                               style={[
                                 {
@@ -724,7 +726,7 @@ export default function SignUpCustomer({navigation}) {
                       <Text
                         style={[
                           styles.tcTextStyle,
-                          {textAlign: 'center', marginTop: 10},
+                          { textAlign: 'center', marginTop: 10 },
                         ]}>
                         <Text>Already have an account? </Text>
 
@@ -735,7 +737,7 @@ export default function SignUpCustomer({navigation}) {
                               disableData: true,
                             })
                           }>
-                          {({pressed}) => (
+                          {({ pressed }) => (
                             <Text
                               style={[
                                 {

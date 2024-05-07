@@ -101,6 +101,7 @@ function sendOtpVerification(data: any) {
       });
   });
 }
+
 function verifyOtp(data: any) {
   console.log('data', data);
 
@@ -124,6 +125,7 @@ function verifyOtp(data: any) {
       });
   });
 }
+
 function verifyOtpAccount(data: any) {
   console.log('data', data);
 

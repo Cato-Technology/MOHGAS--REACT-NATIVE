@@ -6,11 +6,12 @@ const backend_URLS = {
   VERIFY_OTP: '/backend/register/otp_verification',
   VERIFY_OTP_ACCOUNT: '/backend/register/verification',
   REGISTER_VENDOR: '/backend/register/vendor',
+  DELETE_USER: '/backend/user/deleteUser',
 
   SEND_ACC_VERIFY: '/backend/register/new_otp',
 
   //Profile constants
-  UPDATE_USER: '/backend/user',
+  UPDATE_USER: '/backend/user/updateuser',
   GET_USER: '/backend/user/all_detail',
 
   //order history contants
@@ -28,6 +29,7 @@ const backend_URLS = {
   SWAP_CYLINDER: '/backend/orders/swap',
   nearByGasAgencyAsPerRequiredSize: '/backend/nearByGasAgencyAsPerRequiredSize',
   GET_NEAREST_ACCESSORIES: '/backend/orders/nearest_products',
+  GET_ACCESSORIES: '/backend/orders/accessories',
   checkout: '/backend/checkout',
 
   //Support
@@ -58,7 +60,14 @@ const backend_URLS = {
 
   GET_PROFILE_CHECK: '/backend/vendor/check_user_business_profile',
   TOTAL_ORDERS_USER: '/backend/user/total_orders',
-  TOTAL_ORDERS_VENDOR: '/backend/vendor/total_orders'
+  TOTAL_ORDERS_VENDOR: '/backend/vendor/total_orders',
+
+  ONLINE: '/backend/vendor/branch_status_online',
+  OFFLINE: '/backend/vendor/branch_status_offline',
+
+  ORDER_ACCESSORY: '/backend/orders/addOrderAccessory',
+  GET_FEEDBACKS: '/backend/user/AllUserFeedback',
+  POST_FEEDBACK: '/backend/user/submitFeedback'
 
 };
 

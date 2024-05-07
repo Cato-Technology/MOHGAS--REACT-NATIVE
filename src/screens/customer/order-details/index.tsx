@@ -165,7 +165,7 @@ export default function OrderDetails({ navigation, route }) {
                       </View>
                       <Text style={styles.heading}>Order Details</Text>
                     </View>
-                    <Text style={styles.descText}>
+                    <Text style={styles.descText} selectable={true}>
                       Order ID - {order?.invoice}
                     </Text>
                     <Text style={styles.descText}>
@@ -193,7 +193,7 @@ export default function OrderDetails({ navigation, route }) {
                       </View>
                       <Text style={styles.heading}>Business Address</Text>
                     </View>
-                    <Text style={styles.descText}>
+                    <Text style={styles.descText} selectable={true}>
                       {order?.full_name}
                       {'\n'}
                       {order?.address}
@@ -213,9 +213,9 @@ export default function OrderDetails({ navigation, route }) {
                       </View>
                       <Text style={styles.heading}>Vendor Details</Text>
                     </View>
-                    <Text style={styles.descText}>Name: {order?.vendor_details?.branch_store_manager_name}</Text>
-                    <Text style={styles.descText}>Phone: 0{order?.vendor_details?.branch_phone}</Text>
-                    <Text style={styles.descText}>Email: {order?.vendor_details?.email}</Text>
+                    <Text style={styles.descText} selectable={true}>Name: {order?.vendor_details?.branch_store_manager_name}</Text>
+                    <Text style={styles.descText} selectable={true}>Phone: 0{order?.vendor_details?.branch_phone}</Text>
+                    <Text style={styles.descText} selectable={true}>Email: {order?.vendor_details?.email}</Text>
 
                   </View>
                   <View style={{ paddingBottom: 10 }}>
@@ -251,7 +251,7 @@ export default function OrderDetails({ navigation, route }) {
 
               <View style={styles.dropdown}>
 
-                {true && <PromptButton
+                {order?.status === "Completed" && <PromptButton
                   title={"Approve"}
                   onPress={() => { orderActionSelect(4) }}
                   btnColor={"green"}

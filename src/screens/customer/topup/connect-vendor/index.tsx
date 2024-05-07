@@ -114,6 +114,7 @@ export default function ConnectVendor({ navigation, route }) {
 
       console.log('resDataGet', resData);
       if (resData?.status) {
+        console.log(resData, ">>>")
         setData(resData?.data);
         setIsLoading(false);
       } else if (!resData?.status) {
@@ -303,6 +304,8 @@ export default function ConnectVendor({ navigation, route }) {
                         item?.distance_time ? item?.distance_time : '-' + 'mins'
                       }
                       pricePerKg={'Price Per Kg - ' + item?.price_per_kg}
+                      branchStatus={item?.branch_status}
+                      distance={item?.distance_km}
                     />
                   </View>
                 )}

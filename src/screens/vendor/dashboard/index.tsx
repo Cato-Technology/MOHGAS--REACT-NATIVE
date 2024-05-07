@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useContext, useEffect, useState } from 'react';
+import { AppState } from 'react-native';
 import {
   Keyboard,
   Platform,
@@ -89,7 +90,7 @@ export default function VendorDashBoard({ navigation }) {
   const [totalOrders, setTotalOrders] = useState();
 
 
-  React.useEffect(() => {
+  useEffect(() => {
     // Load the user data from storage when the app starts
     const loadUserData = async () => {
       try {
@@ -133,10 +134,11 @@ export default function VendorDashBoard({ navigation }) {
           //  - ERR00 : The user has clicked on Cancel button in the popup
           //  - ERR01 : If the Settings change are unavailable
           //  - ERR02 : If the popup has failed to open
-          alert('Error ' + err.message + ', Code : ' + err.code);
+          // alert('Error ' + err.message + ', Code : ' + err.code);
         });
     }
   };
+
   useEffect(() => {
     // Assume a message-notification contains a "type" property in the data payload of the screen to open
 
@@ -173,13 +175,50 @@ export default function VendorDashBoard({ navigation }) {
   useEffect(() => {
     dispatch(getVendorBusinessProfileR());
     dispatch(getVendorAccountDetials());
-    let data = { vendor_id: authContext?.userData?.user_id }
-    getData(data);
-    getWallet(data.vendor_id);
-    getTotalOrders(data.vendor_id);
-    checkBusinessProfile(data.vendor_id);
-
   }, [dispatch]);
+
+  useEffect(() => {
+    let data = { vendor_id: authContext?.userData?.user_id }
+    getWallet(data.vendor_id);
+    checkBusinessProfile(data.vendor_id);
+    setOnline(true, data.vendor_id);
+    getData(data);
+    getTotalOrders(data.vendor_id);
+  }, []);
+
+  // Subscribe to app state changes when the component mounts
+  useEffect(() => {
+    AppState.addEventListener('change', handleAppStateChange);
+
+    // Clean up by removing the event listener when the component unmounts
+    return () => {
+      AppState.removeEventListener('change', handleAppStateChange as any);
+    };
+  }, []);
+
+  // Function to handle app state changes
+  const handleAppStateChange = async (nextAppState) => {
+    console.log("appstate", nextAppState)
+    if (nextAppState === 'background') {
+
+      try {
+        const response = await setOnline(false, authContext?.userData?.user_id);
+        // console.log(response, "this is it")
+      } catch (e) {
+        console.log(e);
+      }
+
+    } else if (nextAppState === 'active') {
+
+      try {
+
+        const response = await setOnline(true, authContext?.userData?.user_id);
+        // console.log(response, "this is it")
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  };
 
   const getData = async (data: any) => {
     try {
@@ -213,10 +252,23 @@ export default function VendorDashBoard({ navigation }) {
     try {
       const getTotal = await mainServics.myTotalOrders(id, "vendor");
       setTotalOrders(getTotal?.total_orders);
-      console.log(getTotal, "////////////////////");
+      // console.log(getTotal, "////////////////////");
     } catch (e) {
       console.log('error', e);
     }
+  }
+
+  const setOnline = async (online, id) => {
+    try {
+
+      const response = await mainServics.changeOnlineStatus(online, id);
+      return response;
+      // console.log("[[[[[[[[[[[[[[[[", response);
+    } catch (e) {
+      console.log(e);
+    }
+
+
   }
 
   const checkBusinessProfile = async (id) => {
@@ -344,11 +396,11 @@ export default function VendorDashBoard({ navigation }) {
               style={{
                 flexDirection: 'row',
                 width: '100%',
-                justifyContent: 'space-between',
+                justifyContent: 'space-evenly',
                 paddingTop: 30,
                 paddingHorizontal: 20,
               }}>
-              <View style={{ alignItems: 'center' }}>
+              {/* <View style={{ alignItems: 'center' }}>
                 <View style={styles.circleView}>
                   <Icon3
                     name="plus"
@@ -358,7 +410,7 @@ export default function VendorDashBoard({ navigation }) {
                   />
                 </View>
                 <Text style={styles.centerViewText}>Product</Text>
-              </View>
+              </View> */}
               <View style={{ alignItems: 'center' }}>
                 <View style={styles.circleView}>
                   <Icon name="money" size={25} color="#fff"

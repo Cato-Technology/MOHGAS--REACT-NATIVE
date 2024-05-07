@@ -1,4 +1,4 @@
-import React, {Component, useEffect, useMemo, useState} from 'react';
+import React, { Component, useEffect, useMemo, useState } from 'react';
 import {
   Text,
   View,
@@ -21,33 +21,33 @@ import {
 //import TopTabButton from '../../../../../../components/top-tab-buttons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {useNavigation, useTheme} from '@react-navigation/native';
-import {AccountMenu} from '../../../../components/ui';
+import { useNavigation, useTheme } from '@react-navigation/native';
+import { AccountMenu } from '../../../../components/ui';
 import makeStyles from './styles';
 import SCREENS from '../../../../utils/constants';
 import AuthContext from '../../../../utils/auth-context';
 import Images from '../../../../assets/images';
 import * as Yup from 'yup';
-import {Formik} from 'formik';
-import {NAME} from '../../../../utils/regix';
+import { Formik } from 'formik';
+import { NAME } from '../../../../utils/regix';
 import GradientButton from '../../../../components/buttons/gradient-button';
 import {
   heightPercentageToDP,
   widthPercentageToDP,
 } from 'react-native-responsive-screen';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import ImagePicker from 'react-native-image-crop-picker';
-import {mainServics, profileService} from '../../../../services';
-import {showMessage} from 'react-native-flash-message';
+import { mainServics, profileService } from '../../../../services';
+import { showMessage } from 'react-native-flash-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import RNFetchBlob from 'rn-fetch-blob';
 import moment from 'moment';
-import {Dropdown} from 'react-native-element-dropdown';
+import { Dropdown } from 'react-native-element-dropdown';
 let cameraIs = false;
 
 const EditProfile = () => {
   const navigation = useNavigation();
-  const {colors} = useTheme();
+  const { colors } = useTheme();
 
   const styles = makeStyles(colors);
   const [EditprofileLoader, setProfileLoader] = React.useState(false);
@@ -62,10 +62,11 @@ const EditProfile = () => {
   const [isPickerShow, setIsPickerShow] = useState(false);
   const [stateData, setStateData] = useState([]);
   const [cityData, setCityData] = useState([]);
-  const [stateValue, setStateValue] = useState(stateData[0]);
+  const [stateValue, setStateValue] = useState();
   const [cityValue, setCityValue] = useState();
   const [lgaData, setLgaData] = useState([]);
   const [lgaValue, setLgaValue] = useState(lgaData[0]);
+  const [user, setUser] = useState(authContext?.userData)
 
   const [value, setValue] = useState(null);
   console.log('uuser', authContext?.userData);
@@ -76,9 +77,12 @@ const EditProfile = () => {
       setDate(new Date(authContext?.userData?.dateOfBirth));
     }
   }, []);
+
   useEffect(() => {
     getStateData();
+    // setStateValue({ label: "Enugu" })
   }, []);
+
   const getLgaData = async id => {
     try {
       const result = await mainServics.getLga(id);
@@ -100,6 +104,7 @@ const EditProfile = () => {
       console.log('eer', e);
     }
   };
+
   const getStateData = async () => {
     try {
       const result = await mainServics.getStates();
@@ -108,7 +113,7 @@ const EditProfile = () => {
         let arr = [];
         result?.data?.map(ele => {
           console.log('ele', ele);
-          arr.push({
+          let state = {
             label: ele.name,
             value: ele.id,
             country_id: ele?.country_id,
@@ -125,16 +130,22 @@ const EditProfile = () => {
             price_per_kg: ele?.price_per_kg,
             service_charge: ele?.service_charge,
             delivery_cost_per_km: ele?.delivery_cost_per_km,
-          });
+          }
+          arr.push(state);
+          console.log(state.label.toLowerCase(), authContext?.userData?.city?.toLowerCase())
+          if (state.label.toLowerCase() === authContext?.userData?.city?.toLowerCase()) {
+            setStateValue(state);
+          };
         });
         setStateData(arr);
-        setStateValue(arr[0]);
+        // setStateValue(arr[0]);
         console.log('arr', arr);
       }
     } catch (e) {
       console.log('eer', e);
     }
   };
+
   const getCitiesData = async id => {
     try {
       const result = await mainServics.getCities(id);
@@ -167,6 +178,7 @@ const EditProfile = () => {
       console.log('eer', e);
     }
   };
+
   const signUpSchema = useMemo(
     () =>
       Yup.object({
@@ -186,6 +198,7 @@ const EditProfile = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   );
+
   const imagePickerFromGallery = () => {
     // setImageModal(false);
 
@@ -264,8 +277,9 @@ const EditProfile = () => {
   };
   console.log('image', image);
 
-  const handleUpdateUser = async values => {
+  const handleUpdateUser = async (values) => {
     console.log('vvalue', values);
+    console.log("authenticated user", authContext?.userData, lgaData)
 
     try {
       // setLoader(true);
@@ -284,19 +298,56 @@ const EditProfile = () => {
         });
       }
 
-      data.append('dateOfBirth', moment(date).format('YYYY-MM-DD'));
-      data.append('fullname', values.fullname);
-      data.append('phone_no', values.phone_no.toString());
-      data.append('email', values.email);
-      data.append('street_name', values.street_name);
-      data.append('lga_id', lgaValue?.value);
-      data.append('state_id', stateValue?.value);
-      data.append('city_id', cityValue?.value);
+      // data.append('date_of_birth', moment(date).format('YYYY-MM-DD'));
+      // data.append('fullname', values.fullname);
+      // data.append('phone_number', values.phone_no.toString());
+      // data.append('email', values.email);
+      // data.append('street_name', values.street_name);
+      // data.append('lga_id', lgaValue?.label);
+      // data.append('state_id', stateValue?.label);
+      // data.append('city', cityValue?.label);
+      // data.append('user_id', authContext?.userData?.user_id)
+      // data.append('address', `${values.street_name} ${lgaValue?.label} ${stateValue?.label}`);
+
+      let details = {
+        user_id: authContext?.userData?.user_id,
+        // address: `${values.street_name} ${lgaValue?.label} ${stateValue?.label}`,
+        address: values?.address,
+        date_of_birth: moment(date).format('YYYY-MM-DD'),
+        fullname: values.fullname,
+        email: values.email,
+        city: stateValue?.label,
+        state: stateValue?.label,
+        phone_number: values.phone_no,
+        image: (Platform.OS == 'android') ? {
+          uri: image?.uri,
+          type: image?.type,
+          name: 'image.jpg',
+        } : {
+          uri: 'file:///' + image?.uri,
+          type: image?.type,
+          name: 'image.jpg',
+        }
+      }
 
       console.log('data==>', data);
+      try {
 
-      const result = await profileService.updateProfile(data);
-      console.log('result', result);
+        const result = await profileService.updateProfile(details);
+        console.log('result', result);
+        showMessage({
+          message: result?.message,
+          type: 'success',
+          icon: 'success',
+        });
+      } catch (e) {
+        showMessage({
+          message: result?.message,
+          type: 'danger',
+          icon: 'danger',
+        });
+      }
+
 
       if (result?.status) {
         try {
@@ -320,6 +371,11 @@ const EditProfile = () => {
 
             authContext.setUserData(updatedUserData);
             setLoader(false);
+            showMessage({
+              message: JSON.stringify(e),
+              type: 'danger',
+              icon: 'danger',
+            });
             navigation.goBack();
           }
         } catch (e) {
@@ -337,13 +393,38 @@ const EditProfile = () => {
     } catch (e) {
       setLoader(false);
       console.log('error', e);
-      showMessage({
-        message: JSON.stringify(e),
-        type: 'danger',
-        icon: 'danger',
-      });
+
     }
   };
+
+  const handleDeleteUser = async () => {
+
+    try {
+
+      const response = await mainServics.deleteuser({ user_id: authContext?.userData?.user_id });
+
+      if (response) {
+        authContext.signOut();
+
+        console.log(response?.message);
+      }
+
+      showMessage({
+        message: response?.message,
+        type: 'info',
+        icon: 'warning',
+      });
+
+    } catch (e) {
+      console.log('error', e);
+      showMessage({
+        message: e?.errMsg?.message,
+        type: 'warning',
+        icon: 'warning',
+      });
+    }
+
+  }
 
   return (
     <View
@@ -365,7 +446,7 @@ const EditProfile = () => {
       />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={{flex: 1}}>
+        style={{ flex: 1 }}>
         <ScrollView keyboardShouldPersistTaps={'handled'}>
           <View style={styles.contentView}>
             <View style={[styles.image]}>
@@ -375,13 +456,13 @@ const EditProfile = () => {
                 source={
                   image
                     ? {
-                        uri: image?.uri,
-                      }
+                      uri: image?.uri,
+                    }
                     : !authContext?.userData?.image
-                    ? authContext?.userData?.gender == 'Female'
-                      ? Images.femaleAvatar
-                      : Images.avatar
-                    : {uri: authContext?.userData?.image}
+                      ? authContext?.userData?.gender == 'Female'
+                        ? Images.femaleAvatar
+                        : Images.avatar
+                      : { uri: authContext?.userData?.image }
                 }
                 style={styles.image}
               />
@@ -402,16 +483,17 @@ const EditProfile = () => {
                 />
               </View>
             </View>
-            <View style={{marginTop: 40, paddingHorizontal: 25}}>
+            <View style={{ marginTop: 40, paddingHorizontal: 25 }}>
               <Formik
                 initialValues={{
                   fullname: authContext?.userData?.full_name,
                   email: authContext?.userData?.email,
-                  phone_no: authContext?.userData?.phone_no.toString(),
-                  street_name: authContext?.userData?.street_name,
+                  phone_no: authContext?.userData?.phone_no,
+                  address: authContext?.userData?.faddress,
                 }}
                 onSubmit={values => handleUpdateUser(values)}
-                validationSchema={signUpSchema}>
+              // validationSchema={signUpSchema}
+              >
                 {({
                   handleSubmit,
                   errors,
@@ -424,8 +506,8 @@ const EditProfile = () => {
                   setFieldTouched,
                 }) => (
                   <>
-                    {console.log('errors', errors)}
-                    <View style={{width: '90%'}}>
+                    {/* {console.log('errors', errors)} */}
+                    <View style={{ width: '90%' }}>
                       <InputWithLabel
                         label="Full Name"
                         labelStyle={{
@@ -434,15 +516,15 @@ const EditProfile = () => {
                           fontSize: 15,
                         }}
                         placeholder={'Eg. Amit'}
-                        containerStyles={{paddingHorizontal: 20}}
+                        containerStyles={{ paddingHorizontal: 20 }}
                         onChange={handleChange('fullname')}
                         value={values.fullname}
                         error={touched.fullname ? errors.fullname : ''}
                         onBlur={() => setFieldTouched('fullname')}
                       />
-                      <View style={{height: 20}} />
+                      <View style={{ height: 20 }} />
                       <Text style={styles.inputLablel}>Date of Birth</Text>
-                      <View style={{paddingHorizontal: 20}}>
+                      <View style={{ paddingHorizontal: 20 }}>
                         <DatePickerModal
                           isPickerShow={isPickerShow}
                           setIsPickerShow={setIsPickerShow}
@@ -452,12 +534,12 @@ const EditProfile = () => {
                           minimumDate={new Date('jan-01-1922')}
                         />
                       </View>
-                      <View style={{height: 20}} />
+                      <View style={{ height: 20 }} />
 
                       <InputWithLabel
                         label={'Phone number'}
                         placeholder={'Eg. 564564565'}
-                        containerStyles={{paddingHorizontal: 20}}
+                        containerStyles={{ paddingHorizontal: 20 }}
                         labelStyle={{
                           //   fontFamily: fonts.mulishSemiBold,
                           color: colors.yellowHeading,
@@ -468,11 +550,11 @@ const EditProfile = () => {
                         error={touched.phone_no ? errors.phone_no : ''}
                         onBlur={() => setFieldTouched('phone_no')}
                       />
-                      <View style={{height: 20}} />
+                      <View style={{ height: 20 }} />
                       <InputWithLabel
                         label={'Email'}
                         placeholder={'Eg. abc@abc.com'}
-                        containerStyles={{paddingHorizontal: 20}}
+                        containerStyles={{ paddingHorizontal: 20 }}
                         labelStyle={{
                           //   fontFamily: fonts.mulishSemiBold,
                           color: colors.yellowHeading,
@@ -483,21 +565,21 @@ const EditProfile = () => {
                         error={touched.email ? errors.email : ''}
                         onBlur={() => setFieldTouched('email')}
                       />
-                      <View style={{height: 20}} />
+                      <View style={{ height: 20 }} />
 
                       <InputWithLabel
-                        label="Street Address"
+                        label="Address"
                         placeholder={'Eg. Street 1'}
-                        containerStyles={{paddingHorizontal: 20}}
+                        containerStyles={{ paddingHorizontal: 20 }}
                         labelStyle={{
                           // fontFamily: fonts.mulishSemiBold,
                           color: colors.yellowHeading,
                           fontSize: 15,
                         }}
-                        onChange={handleChange('street_name')}
-                        value={values.street_name}
-                        error={touched.street_name ? errors.street_name : ''}
-                        onBlur={() => setFieldTouched('street_name')}
+                        onChange={handleChange('address')}
+                        value={values.address}
+                        error={touched.address ? errors.address : ''}
+                        onBlur={() => setFieldTouched('address')}
                       />
                       {/* <InputWithLabel
                         label="State"
@@ -513,7 +595,7 @@ const EditProfile = () => {
                         error={touched.state ? errors.state : ''}
                         onBlur={() => setFieldTouched('state')}
                       /> */}
-                      <View style={{paddingHorizontal: 20}}>
+                      {/* <View style={{ paddingHorizontal: 20 }}>
                         <Text
                           style={{
                             fontFamily: 'Rubik-Regular',
@@ -533,28 +615,28 @@ const EditProfile = () => {
                           //search
                           maxHeight={300}
                           labelField="label"
-                          valueField="value"
+                          valueField="label"
                           placeholder="Select State"
                           //searchPlaceholder="Search..."
                           value={stateValue}
                           onChange={item => {
                             setStateValue(item);
-                            getCitiesData(item.value);
-                            getLgaData(item.value);
+                            // getCitiesData(item.value);
+                            // getLgaData(item.value);
                           }}
-                          // renderLeftIcon={() => (
-                          //   <AntDesign
-                          //     style={styles.icon2}
-                          //     color="black"
-                          //     name="Safety"
-                          //     size={20}
-                          //   />
-                          // )}
+                        // renderLeftIcon={() => (
+                        //   <AntDesign
+                        //     style={styles.icon2}
+                        //     color="black"
+                        //     name="Safety"
+                        //     size={20}
+                        //   />
+                        // )}
                         />
-                      </View>
-
+                      </View> */}
+                      {/* 
                       {cityData.length > 0 && (
-                        <View style={{paddingHorizontal: 20}}>
+                        <View style={{ paddingHorizontal: 20 }}>
                           <Text
                             style={{
                               fontFamily: 'Rubik-Regular',
@@ -581,19 +663,19 @@ const EditProfile = () => {
                             onChange={item => {
                               setCityValue(item);
                             }}
-                            // renderLeftIcon={() => (
-                            //   <AntDesign
-                            //     style={styles.icon2}
-                            //     color="black"
-                            //     name="Safety"
-                            //     size={20}
-                            //   />
-                            // )}
+                          // renderLeftIcon={() => (
+                          //   <AntDesign
+                          //     style={styles.icon2}
+                          //     color="black"
+                          //     name="Safety"
+                          //     size={20}
+                          //   />
+                          // )}
                           />
                         </View>
                       )}
                       {lgaData.length > 0 && (
-                        <View style={{paddingHorizontal: 20}}>
+                        <View style={{ paddingHorizontal: 20 }}>
                           <Text
                             style={{
                               fontFamily: 'Rubik-Regular',
@@ -620,17 +702,17 @@ const EditProfile = () => {
                             onChange={item => {
                               setLgaValue(item);
                             }}
-                            // renderLeftIcon={() => (
-                            //   <AntDesign
-                            //     style={styles.icon2}
-                            //     color="black"
-                            //     name="Safety"
-                            //     size={20}
-                            //   />
-                            // )}
+                          // renderLeftIcon={() => (
+                          //   <AntDesign
+                          //     style={styles.icon2}
+                          //     color="black"
+                          //     name="Safety"
+                          //     size={20}
+                          //   />
+                          // )}
                           />
                         </View>
-                      )}
+                      )} */}
                     </View>
 
                     <View
@@ -643,6 +725,12 @@ const EditProfile = () => {
                         onPress={() => handleSubmit()}
                         disabled={!isValid}
                         title="Update"
+                      />
+                      <GradientButton
+                        onPress={() => handleDeleteUser()}
+                        disabled={!isValid}
+                        title="Delete"
+                        btnColor={"red"}
                       />
                     </View>
                   </>

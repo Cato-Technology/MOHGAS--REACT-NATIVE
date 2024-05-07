@@ -59,6 +59,13 @@ const getAccessoriesAsPerNearestAgencies = (lat, lon) => {
     backend_URLS.GET_NEAREST_ACCESSORIES + `?latitude=${lat}&longitude=${lon}`,
   );
 };
+
+const getAccessories = () => {
+  return client.get(
+    backend_URLS.GET_ACCESSORIES
+  )
+}
+
 const checkOut = (detail: any) => {
   return client.post(backend_URLS.checkout, detail);
 };
@@ -152,6 +159,33 @@ const myTotalOrders = (id: any, type: string) => {
   }
 }
 
+const changeOnlineStatus = (status: any, id: any) => {
+  console.log(status, id)
+
+  if (status) {
+    return client.post(backend_URLS.ONLINE, { id });
+  } else {
+    return client.post(backend_URLS.OFFLINE, { id });
+  }
+}
+
+const orderAccessory = (data: any) => {
+  return client.post(backend_URLS.ORDER_ACCESSORY, data);
+}
+
+const getFeedbacks = (id: any) => {
+  return client.get(backend_URLS.GET_FEEDBACKS, { params: { user_id: id } });
+}
+
+const postFeedback = (data: any) => {
+  return client.post(backend_URLS.POST_FEEDBACK, data);
+}
+
+const deleteuser = (data: any) => {
+  console.log(data)
+  return client.post(backend_URLS.DELETE_USER, data);
+}
+
 export const mainServics = {
   getWalletTopupDetails,
   getCities,
@@ -164,6 +198,7 @@ export const mainServics = {
   swapCylinder,
   nearByGasAgencyAsPerRequiredSize,
   getAccessoriesAsPerNearestAgencies,
+  getAccessories,
   checkOut,
   getSupportHelpTopics,
   getSupportAccountRelatedIssues,
@@ -187,5 +222,10 @@ export const mainServics = {
   requestWithdrawal,
   getVendorGasPrice,
   checkBusinessProfile,
-  myTotalOrders
+  myTotalOrders,
+  changeOnlineStatus,
+  orderAccessory,
+  getFeedbacks,
+  postFeedback,
+  deleteuser
 };

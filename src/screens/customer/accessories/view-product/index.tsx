@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Keyboard,
   Platform,
@@ -22,7 +22,7 @@ import Icon4 from 'react-native-vector-icons/FontAwesome5';
 import Icon5 from 'react-native-vector-icons/MaterialIcons';
 import card from '../../../../assets/card.png';
 import aImage from '../../../../assets/avatar.jpg';
-import {Avatar} from 'react-native-paper';
+import { Avatar } from 'react-native-paper';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
 import {
@@ -37,7 +37,7 @@ import {
 import SCREENS from '../../../../utils/constants';
 
 import makeStyles from './styles';
-import {RFValue} from 'react-native-responsive-fontsize';
+import { RFValue } from 'react-native-responsive-fontsize';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -51,18 +51,19 @@ export const PASS_REGIX =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AuthContext from '../../../../utils/auth-context';
-import {useTheme} from '@react-navigation/native';
+import { useTheme, useNavigation } from '@react-navigation/native';
 import GradientButton from '../../../../components/buttons/gradient-button';
 import HeaderBottom from '../../../../components/header-bottom';
-import {useDispatch, useSelector} from 'react-redux';
-import {showMessage} from 'react-native-flash-message';
-import {mainServics} from '../../../../services';
-import {getAddress} from '../../../../utils/functions/get-address';
+import { useDispatch, useSelector } from 'react-redux';
+import { showMessage } from 'react-native-flash-message';
+import { mainServics } from '../../../../services';
+import { getAddress } from '../../../../utils/functions/get-address';
 import Geolocation from '@react-native-community/geolocation';
-import {GlobalState} from '../../../../redux/global/GlobalState';
-import {ORDER_SUMMARY} from '../../../../redux/global/constants';
-export default function ViewProduct({navigation, route}) {
-  const {colors} = useTheme();
+import { GlobalState } from '../../../../redux/global/GlobalState';
+import { ORDER_SUMMARY } from '../../../../redux/global/constants';
+export default function ViewProduct({ navigation, route }) {
+  const { colors } = useTheme();
+  const navigations = useNavigation();
   const styles = makeStyles(colors);
   const auth = React.useContext(AuthContext);
   const authContext = React.useContext(AuthContext);
@@ -76,11 +77,17 @@ export default function ViewProduct({navigation, route}) {
   const [city, setCity] = useState();
   const [postal, setPostal] = useState();
   const [state, setState] = useState();
+  const [imageError, setImageError] = useState(false);
+
 
   const dispatch = useDispatch();
   let item = route?.params?.item;
   let size = item.size_of_product;
   const arr = size?.split(',');
+
+  const imageUrl = `https://admin.mohgasapp.com/assets/images/accessories/${item?.picture}`;
+  // Local image path for the fallback image
+  const fallbackImagePath = require('../../../../assets/noimage.png');
 
   console.log('item', item);
 
@@ -144,6 +151,32 @@ export default function ViewProduct({navigation, route}) {
     }
   };
 
+  const placeOrder = async () => {
+    let data = {
+      user_id: auth?.userData?.user_id,
+      accessory_id: item?.id,
+      accessory_name: item?.accessories_name,
+      price: item?.price,
+      picture: item?.picture
+    }
+
+    console.log("accessory order", data);
+    try {
+      const response = await mainServics.orderAccessory(data);
+      console.log("accessory order response", response);
+      showMessage({
+        message: response?.message,
+        type: 'success',
+        icon: 'success',
+      });
+      navigations.goBack()
+    } catch (e) {
+      console.log("accessory order error", e)
+    }
+
+
+  }
+
   return (
     <View style={styles.container}>
       <ActivityIndicator visible={isLoading} />
@@ -167,39 +200,40 @@ export default function ViewProduct({navigation, route}) {
               <AntDesign name="setting" size={25} color={colors.text} />
             }
           />
-          <View style={{width: '100%', paddingHorizontal: 20}}>
-            <View style={{height: 8}} />
+          <View style={{ width: '100%', paddingHorizontal: 20 }}>
+            <View style={{ height: 8 }} />
 
             <Image
-              style={{height: 200, width: '100%'}}
-              source={{uri: item?.images[0]?.image_url}}
+              style={{ height: 200, width: '100%' }}
+              source={imageError ? fallbackImagePath : { uri: imageUrl }}
               resizeMode={'center'}
+              onError={() => setImageError(true)}
             />
-            <View style={{height: 8}} />
-            <Text style={{color: 'gray', fontSize: 16}}>{item?.name}</Text>
-            <Text style={{color: '#000000', fontSize: 16}}>N{item?.price}</Text>
-            <View style={{height: 8}} />
-            <Text style={{color: '#000000', fontSize: 12}}>
+            <View style={{ height: 8 }} />
+            <Text style={{ color: 'gray', fontSize: 16 }}>{item?.accessories_name}</Text>
+            <Text style={{ color: '#000000', fontSize: 16 }}>N{item?.price}</Text>
+            <View style={{ height: 8 }} />
+            {/* <Text style={{ color: '#000000', fontSize: 12 }}>
               <AntDesign name="star" size={12} color={'#debf5a'} />
               {item?.rating ? item?.rating : '-'}
               {'   '}|{'   '}
               {item?.no_of_solds ? item?.no_of_solds : '-'} Solid{'   '}|{'   '}
               {item?.reviews ? item?.reviews : '-'}
-            </Text>
-            <View style={{height: 8}} />
-            <Text style={{color: 'gray', fontSize: 13}}>
+            </Text> */}
+            <View style={{ height: 8 }} />
+            <Text style={{ color: 'gray', fontSize: 13 }}>
               {item?.description}
             </Text>
-            <View style={{height: 8}} />
-            <Text
+            <View style={{ height: 8 }} />
+            {/* <Text
               style={{
                 color: '#000000',
                 fontFamily: 'Rubik-Bold',
                 fontSize: 16,
               }}>
               Size
-            </Text>
-            <View style={{flexDirection: 'row', marginTop: 10}}>
+            </Text> */}
+            <View style={{ flexDirection: 'row', marginTop: 10 }}>
               {arr?.map(ele => (
                 <Text
                   onPress={() => setWeight(ele)}
@@ -232,9 +266,9 @@ export default function ViewProduct({navigation, route}) {
                 marginTop: 50,
               }}>
               <GradientButton
-                onPress={() => handleOrder()}
+                onPress={() => placeOrder()}
                 // disabled={!isValid || loader || !checked}
-                title="Countinue to Checkout"
+                title="Place Order"
               />
             </View>
           </View>

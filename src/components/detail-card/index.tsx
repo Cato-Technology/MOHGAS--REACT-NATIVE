@@ -100,12 +100,12 @@ const BranchCard = ({
       {/* dropdown with options */}
       {dropdown &&
         <View style={styles.dropdown}>
-          {actionOne && <PromptButton
+          {(actionOne && data?.status === "Paid") && <PromptButton
             title={"accept"}
             onPress={actionOne}
           />}
 
-          {actionTwo && <PromptButton
+          {(actionTwo && data?.status === "Paid") && <PromptButton
             title={"decline"}
             onPress={actionTwo}
             btnColor={"red"}

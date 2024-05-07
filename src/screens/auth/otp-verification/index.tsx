@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useContext, useEffect, useMemo, useState} from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import {
   Keyboard,
   Platform,
@@ -29,9 +29,9 @@ import SCREENS from '../../../utils/constants';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 
 import makeStyles from './styles';
-import {RFValue} from 'react-native-responsive-fontsize';
+import { RFValue } from 'react-native-responsive-fontsize';
 import * as Yup from 'yup';
-import {Formik} from 'formik';
+import { Formik } from 'formik';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -44,20 +44,20 @@ export const PASS_REGIX =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AuthContext from '../../../utils/auth-context';
-import {useTheme} from '@react-navigation/native';
+import { useTheme } from '@react-navigation/native';
 import GradientButton from '../../../components/buttons/gradient-button';
-import {authService} from '../../../services';
+import { authService } from '../../../services';
 import ErrorModal from '../../../components/error-modal';
 import Logo from '../../../assets/images/logo.png';
-import {NAME} from '../../../utils/regix';
-import {showMessage} from 'react-native-flash-message';
+import { NAME } from '../../../utils/regix';
+import { showMessage } from 'react-native-flash-message';
 
-export default function OtpVerification({navigation, route}) {
+export default function OtpVerification({ navigation, route }) {
   console.log('route', route?.params?.item?.business_id);
   let item = route.params.item;
   console.log('ii', item);
 
-  const {colors} = useTheme();
+  const { colors } = useTheme();
   const styles = makeStyles(colors);
   const auth = React.useContext(AuthContext);
   const authContext = React.useContext(AuthContext);
@@ -98,6 +98,7 @@ export default function OtpVerification({navigation, route}) {
       let data = new FormData();
       data.append('user_id', route?.params?.userId);
       data.append('phone', route?.params?.phNumber);
+      data.append('email', route?.params?.email)
       data.append('otp', otpManual || code);
 
       console.log('data->', data);
@@ -109,6 +110,7 @@ export default function OtpVerification({navigation, route}) {
 
       if (result?.message == 'OTP Verification success ') {
         setConfirmed(true);
+        navigation.navigate(SCREENS.LOGIN);
       } else {
         setConfirmed(false);
         showMessage({
@@ -174,7 +176,7 @@ export default function OtpVerification({navigation, route}) {
       />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={{flex: 1}}>
+        style={{ flex: 1 }}>
         <ScrollView keyboardShouldPersistTaps={'handled'}>
           <View
             style={{
@@ -185,7 +187,7 @@ export default function OtpVerification({navigation, route}) {
             <View style={styles.icon}>
               <Image style={styles.logo} source={Logo} />
             </View>
-            <View style={{marginTop: 140, paddingHorizontal: 25}}>
+            <View style={{ marginTop: 140, paddingHorizontal: 25 }}>
               <Text
                 style={{
                   color: '#000000',
@@ -196,8 +198,8 @@ export default function OtpVerification({navigation, route}) {
               </Text>
             </View>
           </View>
-          <View style={{marginTop: 80, paddingHorizontal: 25}}>
-            <View style={{paddingHorizontal: 25}}>
+          <View style={{ marginTop: 80, paddingHorizontal: 25 }}>
+            <View style={{ paddingHorizontal: 25 }}>
               <View
                 style={{
                   justifyContent: 'space-between',
@@ -206,12 +208,12 @@ export default function OtpVerification({navigation, route}) {
                   alignItems: 'center',
                 }}>
                 <Text style={[styles.label]}>Verification Code</Text>
-                <Text style={[styles.label, {color: '#4ca735', fontSize: 15}]}>
+                <Text style={[styles.label, { color: '#4ca735', fontSize: 15 }]}>
                   Confirmed!
                 </Text>
               </View>
               <OTPInputView
-                style={{width: '100%', height: 50}}
+                style={{ width: '100%', height: 50 }}
                 pinCount={4}
                 // code={this.state.code} //You can supply this prop or not. The component will be used as a controlled / uncontrolled component respectively.
                 // onCodeChanged = {code => { this.setState({code})}}
@@ -233,7 +235,7 @@ export default function OtpVerification({navigation, route}) {
                 marginTop: 20,
                 paddingHorizontal: 20,
               }}>
-              <Text style={[styles.tcTextStyle, {color: '#4ca757'}]}>
+              <Text style={[styles.tcTextStyle, { color: '#4ca757' }]}>
                 Didn't receive code Resend?
               </Text>
 
@@ -243,7 +245,7 @@ export default function OtpVerification({navigation, route}) {
                 04:38
               </Text>
             </View>
-            <View style={{marginTop: 40, paddingHorizontal: 25}}>
+            <View style={{ marginTop: 40, paddingHorizontal: 25 }}>
               <Formik
                 initialValues={{
                   password: '',
@@ -264,7 +266,7 @@ export default function OtpVerification({navigation, route}) {
                 }) => (
                   <>
                     {confirmed && (
-                      <View style={{width: '100%'}}>
+                      <View style={{ width: '100%' }}>
                         <Text style={[styles.label]}>Set Password</Text>
                         <InputWithLabel
                           label={'Password'}
@@ -332,7 +334,7 @@ export default function OtpVerification({navigation, route}) {
                                 disableData: true,
                               })
                             }>
-                            {({pressed}) => (
+                            {({ pressed }) => (
                               <Text
                                 style={[
                                   {

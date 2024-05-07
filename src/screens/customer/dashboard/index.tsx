@@ -61,6 +61,10 @@ import { getAddress } from '../../../utils/functions/get-address';
 import { GEO_LOCATION } from '../../../redux/global/constants';
 import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
 import { RefreshControl } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
+import FeedbackItem from '../feedback/feebackItem';
+
+
 export default function DashBoard({ navigation, props }) {
   RNMonnify.initialize({
     apiKey: 'MK_TEST_3X874HXYN3',
@@ -69,7 +73,7 @@ export default function DashBoard({ navigation, props }) {
   });
   const { colors } = useTheme();
   const styles = makeStyles(colors);
-  const authContext = React.useContext(AuthContext);
+  const authContext = useContext(AuthContext);
   const dispatch = useDispatch();
   const recentHistory = useSelector(
     (state: OrderState) => state.order.recentOrderHistory,
@@ -79,7 +83,7 @@ export default function DashBoard({ navigation, props }) {
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
   });
-  const [refreshing, setRefreshing] = React.useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const [balance, setBalance] = useState();
   const [totalOrders, setTotalOrders] = useState();
 
@@ -111,10 +115,23 @@ export default function DashBoard({ navigation, props }) {
           //  - ERR00 : The user has clicked on Cancel button in the popup
           //  - ERR01 : If the Settings change are unavailable
           //  - ERR02 : If the popup has failed to open
-          alert('Error1 ' + err.message + ', Code : ' + err.code);
+          // alert('Error1 ' + err.message + ', Code : ' + err.code);
         });
     }
   };
+
+  useFocusEffect(
+    React.useCallback(() => {
+
+      getProfile();
+      // console.log('second run')
+
+      return () => {
+        // Clean up function (optional)
+      };
+    }, [])
+  );
+
   useEffect(() => {
     const requestLocationPermission = async () => {
       if (Platform.OS === 'ios') {
@@ -208,7 +225,7 @@ export default function DashBoard({ navigation, props }) {
 
   const getProfile = async () => {
     try {
-      const getProfile = await profileService.getProfile();
+      const getProfile = await profileService.getProfile({ user_id: authContext?.userData?.user_id });
       console.log('getProfile', getProfile?.response);
       if (getProfile?.status) {
         const updatedUserData = {
@@ -371,7 +388,7 @@ export default function DashBoard({ navigation, props }) {
               </TouchableOpacity>
 
               <TouchableOpacity
-                onPress={() => navigation.navigate(SCREENS.SWAP_CYLINDER)}
+                onPress={() => navigation.navigate(SCREENS.FEEDBACK)}
                 style={{ alignItems: 'center' }}>
                 <View style={styles.circleView}>
                   <Icon3
@@ -383,7 +400,7 @@ export default function DashBoard({ navigation, props }) {
                     }}
                   />
                 </View>
-                <Text style={styles.centerViewText}>Swap</Text>
+                <Text style={styles.centerViewText}>Feedback</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={{ alignItems: 'center' }}
@@ -464,6 +481,8 @@ export default function DashBoard({ navigation, props }) {
             )}
             keyExtractor={(item, index) => index.toString()}
           />
+
+
           {/* {!authContext?.userData?.bvn_verification_date && (
             <View
               style={{

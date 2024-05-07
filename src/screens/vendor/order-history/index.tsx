@@ -53,7 +53,9 @@ import { getVendorOrderHistory } from '../../../redux/global/actions';
 import { GlobalState } from '../../../redux/global/GlobalState';
 import moment from 'moment';
 import { orderServices } from '../../../services';
-// import  from '../../../services'
+import { useFocusEffect } from '@react-navigation/native';
+
+
 export default function OrderHistoryVendor({ navigation }) {
   const { colors } = useTheme();
   const styles = makeStyles(colors);
@@ -74,6 +76,17 @@ export default function OrderHistoryVendor({ navigation }) {
     getData(data);
     // dispatch(getVendorOrderHistory(data));
   }, [dispatch]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      let data = { vendor_id: authContext?.userData?.user_id }
+      getData(data);
+
+      return () => {
+        // Clean up function (optional)
+      };
+    }, [])
+  );
 
   const getData = async (data: any) => {
     try {
@@ -137,9 +150,9 @@ export default function OrderHistoryVendor({ navigation }) {
       /> */}
 
       <ScrollView keyboardShouldPersistTaps={'handled'}
-             refreshControl={
-              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-            }>
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
         <View
           style={{
             width: '100%',
@@ -186,7 +199,7 @@ export default function OrderHistoryVendor({ navigation }) {
                       : '--'
                   }
                   style={{ backgroundColor: '#eaf5fc' }}
-                  showOptions={true}
+                  // showOptions={true}
                   price={`N${item?.grand_total}`}
                   srNo={capitalizeFirstLetter(item?.status)}
                   icon={<Icon3 name="arrow-up" size={25} color="#455F9B" />}
@@ -194,9 +207,9 @@ export default function OrderHistoryVendor({ navigation }) {
                     console.log('item?', item?._id);
                   }}
                   data={item}
-                  actionOne={() => { orderActionSelect(1, item?.id) }}
-                  actionTwo={() => { orderActionSelect(2, item?.id) }}
-                  actionThree={() => { orderActionSelect(3, item?.id) }}
+                // actionOne={() => { orderActionSelect(1, item?.id) }}
+                // actionTwo={() => { orderActionSelect(2, item?.id) }}
+                // actionThree={() => { orderActionSelect(3, item?.id) }}
 
                 // onPressEdit={() =>
                 //   navigation.navigate(SCREENS.ADDPAYMENTMETHOD, {

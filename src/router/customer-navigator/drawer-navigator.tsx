@@ -1,5 +1,5 @@
-import React from 'react';
-import {Text, View} from 'react-native';
+import React, { useState } from 'react';
+import { Text, View, Image } from 'react-native';
 import SCREENS from '../../utils/constants';
 import {
   createDrawerNavigator,
@@ -15,7 +15,7 @@ import Icon2 from 'react-native-vector-icons/Ionicons';
 import Icon3 from 'react-native-vector-icons/Fontisto';
 import Icon4 from 'react-native-vector-icons/MaterialIcons';
 import Icon5 from 'react-native-vector-icons/Entypo';
-import {Avatar} from 'react-native-paper';
+import { Avatar } from 'react-native-paper';
 import aImage from '../../assets/avatar.jpg';
 import EditUsername from '../../screens/customer/home/edit-username';
 
@@ -26,10 +26,13 @@ const Drawer = createDrawerNavigator();
 
 const CustomDrawerContent = props => {
   const auth = React.useContext(AuthContext);
+  const [imageError, setImageError] = useState(false);
+
+  const fallbackImagePath = require('../../assets/noimage.png');
 
   return (
     <DrawerContentScrollView {...props}>
-      <View style={{marginTop: 10, paddingHorizontal: 10}}>
+      <View style={{ marginTop: 10, paddingHorizontal: 10 }}>
         <Icon2
           name="arrow-back"
           size={30}
@@ -44,12 +47,23 @@ const CustomDrawerContent = props => {
             alignItems: 'center',
             marginTop: 10,
           }}>
-          <Avatar.Image size={45} source={aImage} />
-          <View style={{marginLeft: 10}}>
-            <Text style={{fontFamily: 'Rubik-Bold', fontSize: 22}}>
+          {/* <Image
+            style={{ height: 200, width: '100%' }}
+            source={imageError ? fallbackImagePath : { uri: auth?.userData?.image }}
+            resizeMode={'contain'}
+            onError={() => setImageError(true)}
+          /> */}
+          <Avatar.Image
+            size={45}
+            // source={aImage} 
+            source={imageError ? fallbackImagePath : { uri: auth?.userData?.image }}
+            onError={() => setImageError(true)}
+          />
+          <View style={{ marginLeft: 10 }}>
+            <Text style={{ fontFamily: 'Rubik-Bold', fontSize: 22 }}>
               {auth?.userData?.full_name}
             </Text>
-            <Text style={{fontSize: 12, textAlign: 'left'}}>
+            <Text style={{ fontSize: 12, textAlign: 'left' }}>
               {auth?.userData?.email}
             </Text>
           </View>
@@ -58,8 +72,8 @@ const CustomDrawerContent = props => {
       <DrawerItemList {...props} />
       <DrawerItem
         label="Edit Profile"
-        labelStyle={{color: '#000000'}}
-        style={{marginVertical: -4, borderRadius: 0}}
+        labelStyle={{ color: '#000000' }}
+        style={{ marginVertical: -4, borderRadius: 0 }}
         onPress={() =>
           props.navigation.navigate(SCREENS.PROFILE_NAVIGATOR, {
             screen: SCREENS.EDIT_PROFILE,
@@ -69,15 +83,15 @@ const CustomDrawerContent = props => {
       />
       <DrawerItem
         label="Fund Wallet"
-        labelStyle={{color: '#000000'}}
-        style={{marginVertical: -4, borderRadius: 0}}
+        labelStyle={{ color: '#000000' }}
+        style={{ marginVertical: -4, borderRadius: 0 }}
         onPress={() => props.navigation.navigate(SCREENS.FUND_WALLET)}
         icon={() => <Icon5 name="credit-card" size={20} color="#000000" />}
       />
       <DrawerItem
         label="Logout"
-        labelStyle={{color: '#000000'}}
-        style={{marginVertical: -4, borderRadius: 0}}
+        labelStyle={{ color: '#000000' }}
+        style={{ marginVertical: -4, borderRadius: 0 }}
         onPress={() => auth.authContext.signOut()}
         icon={() => <Icon4 name="logout" size={22} color="#000000" />}
       />
@@ -97,7 +111,8 @@ const DrawerNavigator = () => {
         drawerItemStyle: {
           marginVertical: 4,
           borderRadius: 0,
-          backgroundColor: '#FFFFFF',        },
+          backgroundColor: '#FFFFFF',
+        },
       }}
       drawerContent={props => <CustomDrawerContent {...props} />}>
       <Drawer.Screen
@@ -105,7 +120,7 @@ const DrawerNavigator = () => {
         component={BottomTabNavigator}
         options={{
           drawerLabel: () => null,
-          drawerItemStyle: {height: 0, marginBottom: 10, padding: 0},
+          drawerItemStyle: { height: 0, marginBottom: 10, padding: 0 },
         }}
       />
 

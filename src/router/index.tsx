@@ -1,4 +1,5 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
+
 import {
   DarkTheme,
   DefaultTheme,
@@ -6,15 +7,17 @@ import {
 } from '@react-navigation/native';
 import AuthNavigator from './auth-navigator';
 import AppNavigator from './app-navigator';
-import {useColorScheme} from 'react-native';
+import { useColorScheme } from 'react-native';
 import darkColors from '../utils/themes/dark-colors';
 import lightColors from '../utils/themes/light-colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AuthContext from '../utils/auth-context';
 import { setSignOutFunction } from '../services/client';
 import SCREENS from '../utils/constants';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {configureNotificationService} from '../utils/NotificationService';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { configureNotificationService } from '../utils/NotificationService';
+import { mainServics } from '../services';
+
 const Router = () => {
   const Stack = createNativeStackNavigator();
   const scheme = useColorScheme();
@@ -85,12 +88,11 @@ const Router = () => {
 
       // This will switch to the App screen or Auth screen and this loading
       // screen will be unmounted and thrown away.
-      dispatch({type: 'RESTORE_TOKEN', token: userToken});
+      dispatch({ type: 'RESTORE_TOKEN', token: userToken });
     };
 
     bootstrapAsync();
   }, []);
-
 
 
   const authContext = React.useMemo(
@@ -101,10 +103,10 @@ const Router = () => {
         // After getting token, we need to persist the token using `SecureStore`
         // In the example, we'll use a dummy token
 
-        dispatch({type: 'SIGN_IN', token: 'dummy-auth-token'});
+        dispatch({ type: 'SIGN_IN', token: 'dummy-auth-token' });
       },
       signOut: () => {
-        dispatch({type: 'SIGN_OUT'});
+        dispatch({ type: 'SIGN_OUT' });
         AsyncStorage.clear();
       },
       signUp: async data => {
@@ -113,7 +115,7 @@ const Router = () => {
         // After getting token, we need to persist the token using `SecureStore`
         // In the example, we'll use a dummy token
 
-        dispatch({type: 'SIGN_IN', token: 'dummy-auth-token'});
+        dispatch({ type: 'SIGN_IN', token: 'dummy-auth-token' });
       },
     }),
     [],
@@ -138,8 +140,11 @@ const Router = () => {
     setSignOutFunction(authContext.signOut);
   }, [authContext.signOut]);
 
+
+
+
   return (
-    <AuthContext.Provider value={{authContext, userData, setUserData}}>
+    <AuthContext.Provider value={{ authContext, userData, setUserData }}>
       <NavigationContainer theme={scheme === 'dark' ? MyDarkTheme : MyThemes}>
         {state.userToken == null ? <AuthNavigator /> : <AppNavigator />}
       </NavigationContainer>
